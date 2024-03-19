@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Code adapted from: https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/recipes"
+        android:title="Recipes"
+        android:icon="@drawable/recipes_icon"/>
+    <item
+        android:id="@+id/pantry"
+        android:title="Pantry"
+        android:icon="@drawable/pantry_icon"/>
+    <item
+        android:id="@+id/shopping"
+        android:title="Shopping"
+        android:icon="@drawable/shopping_cart_icon"/>
+    <item
+        android:id="@+id/settings"
+        android:title="Settings"
+        android:icon="@drawable/settings_gear"/>
+</menu>
