@@ -44,7 +44,6 @@ public class FoodItemView extends RelativeLayout implements View.OnClickListener
         setOnClickListener(this);
     }
 
-    // TODO: Does this work?
     public void setFoodName(String foodName) {
         foodNameTextView.setText(foodName);
     }

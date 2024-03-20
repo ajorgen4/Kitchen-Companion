@@ -29,7 +29,6 @@ public class Tab2 extends Fragment {
 
         // Initialize the list of food items
         foodList = new ArrayList<>();
-        // Add some sample data
         foodList.add("Apple");
         foodList.add("Banana");
         foodList.add("Orange");
