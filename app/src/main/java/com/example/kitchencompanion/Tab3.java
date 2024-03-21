@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+// Shopping tab
 public class Tab3 extends Fragment {
     public Tab3(){
         // require a empty public constructor

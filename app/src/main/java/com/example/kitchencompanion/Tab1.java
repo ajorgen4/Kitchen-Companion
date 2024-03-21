@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+// Recipies Tab
 public class Tab1 extends Fragment {
     public Tab1(){
         // require a empty public constructor
