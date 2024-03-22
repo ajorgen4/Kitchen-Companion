@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+// Pantry Tab
 public class Tab2 extends Fragment {
 
     private ListView foodListView;

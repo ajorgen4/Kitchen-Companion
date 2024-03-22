@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+// Settings Tab
 public class Tab4 extends Fragment {
     public Tab4(){
         // require a empty public constructor
