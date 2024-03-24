@@ -29,7 +29,6 @@ public class FoodItemView extends RelativeLayout implements View.OnClickListener
         initializeViewsAndSetListener(context);
     }
 
-
     private void initializeViewsAndSetListener(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.pantry_list_item, this, true);

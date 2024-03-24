@@ -3,7 +3,7 @@ package com.example.kitchencompanion;
 import java.util.ArrayList;
 import java.util.List;
 
-// This file stores the recipies to be shown int he Recipie Tab(Tab1)
+// This file stores the recipes to be shown int he Recipe Tab(Tab1)
 public class RecipeDatabase {
     private List<Recipe> recipes;
 
