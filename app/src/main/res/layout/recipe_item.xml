@@ -61,12 +61,22 @@
                     android:text="Recipe Name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" />
                 <!-- Recipe calories -->
-                <TextView
-                    android:id="@+id/recipeCalories"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Calories"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/recipeCalories"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Calories"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Calories"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                </LinearLayout>
                 <!-- Recipe cooking time -->
                 <TextView
                     android:id="@+id/recipeCookTime"
@@ -87,19 +97,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:gravity="center">
-                <!-- Favorite icon -->
-                <ImageView
-                    android:id="@+id/favoriteIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/btn_star_big_off" />
+                android:gravity="center_vertical">
+
                 <!-- Close icon, to remove item or close the panel -->
                 <ImageView
-                    android:id="@+id/closeButton"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_close_clear_cancel" />
+                    android:id="@+id/closeRecipeItemButton"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="top"
+                    android:src="@drawable/x_icon" />
+
+                <!-- Spacing between the icons -->
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <!-- Favorite icon -->
+                <ImageView
+                    android:id="@+id/favoriteRecipeItemButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:src="@drawable/heart_outline" />
+
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

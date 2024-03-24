@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/pantrySearchBarContainer"
+        android:id="@+id/recipeSearchBarContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -19,7 +19,7 @@
         app:endIconMode="none">
 
         <EditText
-            android:id="@+id/pantrySearchBar"
+            android:id="@+id/recipeSearchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Search..."
@@ -33,19 +33,20 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:src="@drawable/search_icon"
-        app:layout_constraintBottom_toBottomOf="@id/pantrySearchBarContainer"
+        app:layout_constraintBottom_toBottomOf="@id/recipeSearchBarContainer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/pantrySearchBarContainer" />
+        app:layout_constraintTop_toTopOf="@id/recipeSearchBarContainer" />
 
     <Button
-        android:id="@+id/pantryFiltersButton"
+        android:id="@+id/recipeFiltersButton"
         android:layout_width="60dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@android:color/transparent"
-        android:drawableTint="@android:color/black"
         android:drawableBottom="@drawable/filter_icon"
-        app:layout_constraintTop_toBottomOf="@id/pantrySearchBarContainer"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:drawableTint="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="@id/filtersScrollView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipeSearchBarContainer" />
 
     <HorizontalScrollView
         android:id="@+id/filtersScrollView"
@@ -53,8 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@id/pantryFiltersButton"
-        app:layout_constraintTop_toBottomOf="@id/pantrySearchBarContainer"
+        app:layout_constraintStart_toEndOf="@id/recipeFiltersButton"
+        app:layout_constraintTop_toBottomOf="@id/recipeSearchBarContainer"
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
@@ -195,7 +196,7 @@
         tools:listitem="@layout/recipe_item" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_food"
+        android:id="@+id/add_recipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="36dp"

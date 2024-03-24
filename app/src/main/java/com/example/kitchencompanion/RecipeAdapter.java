@@ -43,8 +43,8 @@ public class RecipeAdapter extends RecyclerView.Adapter < RecipeAdapter.ViewHold
         holder.recipeDifficulty.setText(recipe.getDifficulty());
 
         holder.favoriteIcon.setImageResource(recipe.isFavorited() ?
-                android.R.drawable.btn_star_big_on :
-                android.R.drawable.btn_star_big_off);
+                R.drawable.heart_solid :
+                R.drawable.heart_outline);
 
         holder.favoriteIcon.setOnClickListener(v -> {
             recipe.toggleFavorite();
@@ -74,8 +74,8 @@ public class RecipeAdapter extends RecyclerView.Adapter < RecipeAdapter.ViewHold
             recipeCalories = itemView.findViewById(R.id.recipeCalories);
             recipeCookTime = itemView.findViewById(R.id.recipeCookTime);
             recipeDifficulty = itemView.findViewById(R.id.recipeDifficulty);
-            closeButton = itemView.findViewById(R.id.closeButton);
-            favoriteIcon = itemView.findViewById(R.id.favoriteIcon);
+            closeButton = itemView.findViewById(R.id.closeRecipeItemButton);
+            favoriteIcon = itemView.findViewById(R.id.favoriteRecipeItemButton);
         }
     }
 }
