@@ -31,6 +31,8 @@ public class RecipeAdapter extends RecyclerView.Adapter < RecipeAdapter.ViewHold
         return new ViewHolder(view);
     }
 
+    // https://www.javatpoint.com/android-recyclerview-list-example
+    // https://abhiandroid.com/materialdesign/recyclerview#gsc.tab=0
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);

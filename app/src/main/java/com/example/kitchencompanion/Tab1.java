@@ -21,6 +21,7 @@ public class Tab1 extends Fragment {
 
     }
 
+    // Code for below copied from Tab2.java and edited
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab1, container, false);
