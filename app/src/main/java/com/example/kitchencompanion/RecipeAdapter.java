@@ -6,30 +6,55 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
+// Some links(cite code more):
+// https://www.codevscolor.com/android-kotlin-delete-item-recyclerview
+// https://www.digitalocean.com/community/tutorials/android-recyclerview-swipe-to-delete-undo
+// https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 
-    private final List<Recipe> recipes;
-    private final LayoutInflater inflater;
 
-    RecipeAdapter(Context context, List<Recipe> recipes) {
-        this.inflater = LayoutInflater.from(context);
+public class RecipeAdapter extends RecyclerView.Adapter < RecipeAdapter.ViewHolder > {
+
+    private List < Recipe > recipes;
+    private Context context;
+
+    public RecipeAdapter(Context context, List < Recipe > recipes) {
+        this.context = context;
         this.recipes = recipes;
     }
 
     @Override
-    public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.recipe_item, parent, false);
-        return new RecipeViewHolder(view);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.recipe_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
-        holder.bind(recipe);
+
+        holder.recipeName.setText(recipe.getName());
+        holder.recipeCookTime.setText(recipe.getCookTime());
+        holder.recipeCalories.setText(String.valueOf(recipe.getCalories()));
+        holder.recipeDifficulty.setText(recipe.getDifficulty());
+
+        holder.favoriteIcon.setImageResource(recipe.isFavorited() ?
+                android.R.drawable.btn_star_big_on :
+                android.R.drawable.btn_star_big_off);
+
+        holder.favoriteIcon.setOnClickListener(v -> {
+            recipe.toggleFavorite();
+            notifyItemChanged(position);
+        });
+
+        holder.closeButton.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
+            recipes.remove(currentPosition);
+            notifyItemRemoved(currentPosition);
+            notifyItemRangeChanged(currentPosition, recipes.size());
+        });
     }
 
     @Override
@@ -37,35 +62,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         return recipes.size();
     }
 
-    public class RecipeViewHolder extends RecyclerView.ViewHolder {
-        TextView recipeName;
-        TextView recipeCalories;
-        TextView recipeCookTime;
-        TextView recipeDifficulty;
-        TextView ingredientsCount;
-        ImageView favoriteIcon;
-        ImageView closeButton;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView recipeName, recipeCalories, recipeCookTime, recipeDifficulty;
+        ImageView closeButton, favoriteIcon;
 
-        RecipeViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             recipeName = itemView.findViewById(R.id.recipeName);
             recipeCalories = itemView.findViewById(R.id.recipeCalories);
             recipeCookTime = itemView.findViewById(R.id.recipeCookTime);
             recipeDifficulty = itemView.findViewById(R.id.recipeDifficulty);
-            ingredientsCount = itemView.findViewById(R.id.ingredientsCount);
-            favoriteIcon = itemView.findViewById(R.id.favoriteIcon);
             closeButton = itemView.findViewById(R.id.closeButton);
-        }
-
-        void bind(Recipe recipe) {
-            recipeName.setText(recipe.getName());
-            recipeCalories.setText(String.format("%d Calories", recipe.getCalories()));
-            recipeCookTime.setText(String.format("%s", recipe.getCookTime()));
-            recipeDifficulty.setText(String.format("%s", recipe.getDifficulty()));
-            ingredientsCount.setText("Ingredients Placeholder");
-            favoriteIcon.setImageResource(R.drawable.heart_outline);  //add logic for ifFavorited()
-            closeButton.setImageResource(R.drawable.x_icon);
+            favoriteIcon = itemView.findViewById(R.id.favoriteIcon);
         }
     }
-
 }

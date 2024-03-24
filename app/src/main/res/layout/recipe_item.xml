@@ -1,115 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
-
-    <!-- Swipeable thing(fix) -->
-    <LinearLayout
-        android:id="@+id/addMissingLayout"
+    android:layout_margin="4dp"
+    app:cardElevation="2dp"
+    android:foreground="?android:attr/selectableItemBackground">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="vertical"
-        android:background="#ececec"
-        android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:visibility="invisible">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/shopping_cart_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Missing..."
-            android:textSize="18sp"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
-
-    <!-- Recipe Item View -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@android:drawable/list_selector_background"
-        android:orientation="horizontal">
-
-        <!-- Recipe Image -->
-        <ImageView
-            android:id="@+id/recipeImage"
-            android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+        <!-- The 'Add Missing' panel, which is by default invisible -->
+        <FrameLayout
+            android:id="@+id/addMissingLayout"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background" /> <!-- Placeholder-->
-
-        <!-- Recipe Information -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:padding="8dp">
-
-            <TextView
-                android:id="@+id/recipeName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Recipe Name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <TextView
-                android:id="@+id/recipeCalories"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="500 Calories"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-            <TextView
-                android:id="@+id/recipeCookTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="45 min"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-            <TextView
-                android:id="@+id/recipeDifficulty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Difficulty: Easy"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-        </LinearLayout>
-
-        <!-- Favorite and Ingredients Indicator -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
-
+            android:background="#DDDDDD"
+            android:visibility="invisible">
             <ImageView
-                android:id="@+id/favoriteIcon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/heart_outline" /> <!-- Favorite Icon -->
-
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical"
+                android:src="@android:drawable/ic_menu_add" />
             <TextView
-                android:id="@+id/ingredientsCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4/5 Ingredients"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
+                android:layout_marginStart="48dp"
+                android:layout_gravity="center_vertical"
+                android:text="Add Missing"
+                android:textSize="18sp" />
+        </FrameLayout>
+        <!-- The main content layout of the list item -->
+        <LinearLayout
+            android:id="@+id/recipeItemLayout"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:background="@android:drawable/list_selector_background">
+            <!-- Recipe image -->
+            <ImageView
+                android:id="@+id/recipeImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_launcher_background"
+                android:scaleType="centerCrop" />
+            <!-- Recipe details -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="16dp">
+                <!-- Recipe name -->
+                <TextView
+                    android:id="@+id/recipeName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recipe Name"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                <!-- Recipe calories -->
+                <TextView
+                    android:id="@+id/recipeCalories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Calories"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                <!-- Recipe cooking time -->
+                <TextView
+                    android:id="@+id/recipeCookTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cook Time"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                <!-- Recipe difficulty -->
+                <TextView
+                    android:id="@+id/recipeDifficulty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Difficulty"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            </LinearLayout>
+            <!-- Favorite and close button -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+                <!-- Favorite icon -->
+                <ImageView
+                    android:id="@+id/favoriteIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/btn_star_big_off" />
+                <!-- Close icon, to remove item or close the panel -->
+                <ImageView
+                    android:id="@+id/closeButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel" />
+            </LinearLayout>
         </LinearLayout>
-
-        <!-- Close Button -->
-        <ImageView
-            android:id="@+id/closeButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/x_icon" /> <!-- Close Button -->
-
-    </LinearLayout>
-
-</RelativeLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
