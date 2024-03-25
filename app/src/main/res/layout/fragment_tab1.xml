@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:text="Favorites"
                     android:textSize="24sp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/black" />
             </LinearLayout>
 
             <LinearLayout
@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:text="Make Now"
                     android:textSize="24sp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/black" />
             </LinearLayout>
 
             <LinearLayout
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:text="Low Calorie"
                     android:textSize="24sp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/black" />
             </LinearLayout>
 
             <LinearLayout
@@ -145,7 +145,7 @@
                     android:layout_height="wrap_content"
                     android:text="Breakfast"
                     android:textSize="24sp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/black" />
             </LinearLayout>
 
         </LinearLayout>
@@ -170,7 +170,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="36dp"
         android:src="@drawable/plus_icon"
-        app:backgroundTint="?attr/colorSecondaryVariant"
+        app:backgroundTint="?attr/colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

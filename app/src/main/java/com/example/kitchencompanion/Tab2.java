@@ -100,13 +100,11 @@ public class Tab2 extends Fragment {
                     // If filter key is selected, deselect it
                     if (keyBackground != null && keyBackground.getConstantState().equals(selected.getConstantState())) {
                         filterButtonMap.get(key).setBackground(unselected);
-                        filterTextMap.get(key).setTextColor(Color.WHITE);
                     }
                 }
             }
 
             filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
-            filterTextMap.get(filter).setTextColor(isFilterSelected ? Color.WHITE : Color.BLACK);
             // Here, we will need to make a call to actually apply the filter in the backend
         });
     }
