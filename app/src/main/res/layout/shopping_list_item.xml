@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/closeShopListItemButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="3dp"
+        android:src="@drawable/x_icon"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/shopListFoodName"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:layout_marginEnd = "205dp"
+        android:text="Item text"/>
+
+    <ImageView
+        android:id="@+id/shopListQuantityMinusButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/minus_icon"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:id="@+id/shopListQuantityEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center"/>
+
+    <ImageView
+        android:id="@+id/shopListQuantityPlusButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/plus_icon" />
+
+
+</LinearLayout>
