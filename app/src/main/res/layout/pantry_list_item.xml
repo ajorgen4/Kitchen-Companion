@@ -12,20 +12,41 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/closePantryItemButton"
+            android:id="@+id/pantryQuantityMinusButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginStart="3dp"
-            android:src="@drawable/x_icon"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/minus_icon"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/pantryQuantityDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="2"
+            android:text="3"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:background="@drawable/quantity_background"/>
+
+        <ImageView
+            android:id="@+id/pantryQuantityPlusButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/plus_icon"
             android:layout_gravity="center"/>
 
         <TextView
             android:id="@+id/foodName"
-            android:layout_width="250dp"
+            android:layout_width="290dp"
             android:layout_height="wrap_content"
             android:textSize="32sp"
-            android:text="Item text"/>
+            android:text="Item text"
+            android:layout_marginStart="3dp" />
 
         <ImageView
             android:id="@+id/lowIcon"
@@ -55,32 +76,12 @@
             android:layout_gravity="center"/>
 
         <ImageView
-            android:id="@+id/pantryQuantityMinusButton"
+            android:id="@+id/closePantryItemButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/minus_icon"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:id="@+id/pantryQuantityDisplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="2"
-            android:text="3"
-            android:textColor="@android:color/black"
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            android:background="@drawable/quantity_background"/>
-
-        <ImageView
-            android:id="@+id/pantryQuantityPlusButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/plus_icon"
+            android:layout_marginStart="3dp"
+            android:src="@drawable/x_icon"
             android:layout_gravity="center"/>
     </LinearLayout>
 
