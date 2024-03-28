@@ -25,7 +25,7 @@ public class PantryItem {
     }
 
     // (PantryStorageObject).removeItem looks for the (PantryItem) object with the matching name, if found call (PantryItems)'s removeItemCount to lower count
-    public void removeItemCount(int count) {
+    public void removeItemCount(int count) { // Broken
         FoodBatch nextExpiringBatch = findnextExpiringBatch();
         if (nextExpiringBatch != null && nextExpiringBatch.getItemCount() >= count) {
             System.out.println("Removing " + count + " from batch ID: " + nextExpiringBatch.getBatchId() + " with expiration date: " + nextExpiringBatch.getExpirationDate());
