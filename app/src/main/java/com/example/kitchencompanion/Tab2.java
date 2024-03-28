@@ -1,8 +1,10 @@
 package com.example.kitchencompanion;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,21 +32,19 @@ public class Tab2 extends Fragment {
     private List<String> foodList;
     private FoodAdapter adapter;
     private View view;
+    private FloatingActionButton addFoodButton;
 
 
     public Tab2(){
-        // require a empty public constructor
+        foodList = new ArrayList<>();
+        foodList.add("Apple");
+        foodList.add("Banana");
+        foodList.add("Orange");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tab2, container, false);
-
-        // Initialize the list of food items
-        foodList = new ArrayList<>();
-        foodList.add("Apple");
-        foodList.add("Banana");
-        foodList.add("Orange");
 
         // The view
         foodListView = view.findViewById(R.id.foodListView);
@@ -51,10 +53,38 @@ public class Tab2 extends Fragment {
         // Tie the adapter to the view
         foodListView.setAdapter(adapter);
 
+        addFoodButton = view.findViewById(R.id.addFoodButton);
+        addFoodButton.setOnClickListener(v -> showAddFoodDialog());
+
         // Filter UI management
         setFilters();
 
         return view;
+    }
+
+    private void showAddFoodDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.add_food_dialog, null);
+
+        // Find and set up the views inside the dialog layout
+        // ...
+
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        // Set the dialog to occupy approximately 75% of the screen
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = (int) (displayMetrics.widthPixels * 0.75);
+        int height = (int) (displayMetrics.heightPixels * 0.75);
+        dialog.getWindow().setLayout(width, height);
+
+        // Dim the background
+        dialog.getWindow().setDimAmount(0.5f);
+
+        dialog.show();
     }
 
     // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java

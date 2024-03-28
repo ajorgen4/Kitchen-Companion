@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class FoodAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        final int itemPosition = position;
         FoodItemView foodItemView;
 
         if (convertView == null) {
@@ -45,6 +47,13 @@ public class FoodAdapter extends BaseAdapter {
         }
 
         foodItemView.setFoodName(foodList.get(position));
+
+        ImageView deleteButton = foodItemView.findViewById(R.id.closePantryItemButton);
+        // If they click the delete button, remove the item from the list
+        deleteButton.setOnClickListener(v -> {
+            foodList.remove(itemPosition);
+            notifyDataSetChanged();
+        });
 
         return foodItemView;
     }

@@ -23,7 +23,7 @@
             android:id="@+id/pantrySearchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search..."
+            android:hint="Search Item..."
             android:textSize="32sp"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
