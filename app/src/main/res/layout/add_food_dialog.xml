@@ -50,8 +50,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Count"
-                android:textSize="15sp"
+                android:textSize="25sp"
                 android:inputType="number"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pantryAddFoodFoodTypeSelector"
@@ -62,12 +63,24 @@
                 android:id="@+id/pantryAddFoodPrivateCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Private"
-                android:textSize="15sp"
+                android:text="In Private Storage"
+                android:textSize="30sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pantryAddFoodCountInput"
                 android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/pantryAddFoodExpirationDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expiration Date:"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pantryAddFoodPrivateCheckBox"
+                android:layout_marginTop="10dp" />
 
             <DatePicker
                 android:id="@+id/pantryAddFoodExpirationDatePicker"
@@ -77,7 +90,7 @@
                 android:datePickerMode="spinner"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pantryAddFoodPrivateCheckBox"
+                app:layout_constraintTop_toBottomOf="@+id/pantryAddFoodExpirationDateLabel"
                 android:layout_marginTop="10dp"/>
 
             <androidx.constraintlayout.widget.Barrier
@@ -89,12 +102,13 @@
 
             <Button
                 android:id="@+id/pantryAddFoodCreateButton"
-                style="?android:attr/borderlessButtonStyle"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Create"
                 android:textSize="30sp"
                 android:textColor="@android:color/black"
+                app:strokeWidth="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/pantryAddFoodCancelButton"
                 app:layout_constraintHorizontal_chainStyle="packed"
@@ -103,12 +117,13 @@
 
             <Button
                 android:id="@+id/pantryAddFoodCancelButton"
-                style="?android:attr/borderlessButtonStyle"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
                 android:textSize="30sp"
                 android:textColor="@android:color/black"
+                app:strokeWidth="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/pantryAddFoodCreateButton"
