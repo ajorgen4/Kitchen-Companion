@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -33,6 +34,7 @@ public class Tab2 extends Fragment {
     private FoodAdapter adapter;
     private View view;
     private FloatingActionButton addFoodButton;
+    private Button filterButton;
 
 
     public Tab2(){
@@ -56,18 +58,22 @@ public class Tab2 extends Fragment {
         addFoodButton = view.findViewById(R.id.addFoodButton);
         addFoodButton.setOnClickListener(v -> showAddFoodDialog());
 
+        filterButton = view.findViewById(R.id.pantryFiltersButton);
+        filterButton.setOnClickListener(v -> showFilterDialog());
+
         // Filter UI management
         setFilters();
 
         return view;
     }
 
-    private void showAddFoodDialog() {
+    private void showFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.add_food_dialog, null);
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.pantry_filter_dialog, null);
 
         // Find and set up the views inside the dialog layout
         // ...
+        Button cancelButton = dialogView.findViewById(R.id.pantryFilterCancelButton);
 
         builder.setView(dialogView);
 
@@ -83,6 +89,36 @@ public class Tab2 extends Fragment {
 
         // Dim the background
         dialog.getWindow().setDimAmount(0.5f);
+
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+    private void showAddFoodDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.add_food_dialog, null);
+
+        // Find and set up the views inside the dialog layout
+        // ...
+        Button cancelButton = dialogView.findViewById(R.id.pantryAddFoodCancelButton);
+
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        // Set the dialog to occupy approximately 75% of the screen
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = (int) (displayMetrics.widthPixels * 0.75);
+        int height = (int) (displayMetrics.heightPixels * 0.75);
+        dialog.getWindow().setLayout(width, height);
+
+        // Dim the background
+        dialog.getWindow().setDimAmount(0.5f);
+
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
     }

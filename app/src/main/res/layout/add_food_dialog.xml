@@ -22,7 +22,7 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/titleTextView"
+                android:id="@+id/pantryAddFoodTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New Item"
@@ -33,7 +33,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
-                android:id="@+id/foodTypeSelector"
+                android:id="@+id/pantryAddFoodFoodTypeSelector"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:entries="@array/empty_array"
@@ -41,12 +41,12 @@
                 android:textSize="40sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleTextView"
+                app:layout_constraintTop_toBottomOf="@+id/pantryAddFoodTitle"
                 app:layout_constraintWidth_percent="0.8"
                 android:layout_marginTop="50dp"/>
 
             <EditText
-                android:id="@+id/pantryCountInput"
+                android:id="@+id/pantryAddFoodCountInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Count"
@@ -54,19 +54,30 @@
                 android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/foodTypeSelector"
+                app:layout_constraintTop_toBottomOf="@+id/pantryAddFoodFoodTypeSelector"
                 app:layout_constraintWidth_percent="0.8"
                 android:layout_marginTop="10dp"/>
 
+            <CheckBox
+                android:id="@+id/pantryAddFoodPrivateCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Private"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pantryAddFoodCountInput"
+                android:layout_marginTop="10dp"/>
+
             <DatePicker
-                android:id="@+id/expirationDatePicker"
+                android:id="@+id/pantryAddFoodExpirationDatePicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:calendarViewShown="false"
                 android:datePickerMode="spinner"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pantryCountInput"
+                app:layout_constraintTop_toBottomOf="@+id/pantryAddFoodPrivateCheckBox"
                 android:layout_marginTop="10dp"/>
 
             <androidx.constraintlayout.widget.Barrier
