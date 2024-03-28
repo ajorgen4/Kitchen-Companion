@@ -10,12 +10,14 @@ import java.util.Set;
 public class PantryItem {
     private Set<FoodBatch> batches;
     private String itemName;
+    private boolean low;
 
     public PantryItem(FoodBatch batch) {
         this.batches = new HashSet<>();
         // Add the "founding" batch, the first batch of this item type added to the pantry
         this.batches.add(batch);
         this.itemName = batch.getFoodType().getItemName();
+        this.low = false; // by default, assumed to not be low
     }
 
     public void addBatch(FoodBatch batch) {
@@ -67,5 +69,9 @@ public class PantryItem {
         for (FoodBatch batch : batches) {
             System.out.println("Batch ID: " + batch.getBatchId() + " - Count: " + batch.getItemCount() + ", Expiration Date: " + batch.getExpirationDate());
         }
+    }
+
+    public void setLow(boolean low) {
+        this.low = low;
     }
 }
