@@ -1,6 +1,9 @@
 package com.example.kitchencompanion;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,29 +97,36 @@ public class RecipeAdapter extends RecyclerView.Adapter < RecipeAdapter.ViewHold
             favoriteIcon = itemView.findViewById(R.id.favoriteRecipeItemButton);
             recipeImage = itemView.findViewById(R.id.recipeImage);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    Recipe recipe = recipes.get(position);
-                    showDescPopup(context, recipe.getDescription());
-                }
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                Recipe recipe = recipes.get(position);
+                showDescPopup(context, recipe.getDescription());
             });
         }
     }
 
     // https://stackoverflow.com/questions/34383763/how-to-open-a-popup-window-from-an-adapter-class
     // https://stackoverflow.com/questions/36661775/android-popup-window-with-variable-text
+    // Code from Tab2.java
     private void showDescPopup(Context context, String description) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.popup_recipe_desc, null, false);
-        PopupWindow popupWindow = new PopupWindow(layout, 300, 190, true);
-        TextView descriptionTextView = layout.findViewById(R.id.descriptionTextView);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.popup_recipe_desc, null);
+        TextView descriptionTextView = dialogView.findViewById(R.id.descriptionTextView);
         descriptionTextView.setText(description);
-        ImageView closeButton = layout.findViewById(R.id.closeButtonRecipePopup);
-        closeButton.setOnClickListener(v -> popupWindow.dismiss());
-        popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
+
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = (int) (displayMetrics.widthPixels * 0.75);
+        int height = (int) (displayMetrics.heightPixels * 0.75);
+        dialog.getWindow().setLayout(width, height);
+
+        dialog.show();
     }
+
 
 
 }
