@@ -101,7 +101,7 @@
 
                 <!-- Close icon, to remove item or close the panel -->
                 <ImageView
-                    android:id="@+id/closeRecipeItemButton"
+                    android:id="@+id/closeButtonRecipes"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="top"

@@ -1,10 +1,12 @@
 package com.example.kitchencompanion;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
@@ -33,6 +35,7 @@ public class RecipeAdapter extends RecyclerView.Adapter < RecipeAdapter.ViewHold
 
     // https://www.javatpoint.com/android-recyclerview-list-example
     // https://abhiandroid.com/materialdesign/recyclerview#gsc.tab=0
+    // https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
@@ -57,6 +60,19 @@ public class RecipeAdapter extends RecyclerView.Adapter < RecipeAdapter.ViewHold
             notifyItemRemoved(currentPosition);
             notifyItemRangeChanged(currentPosition, recipes.size());
         });
+
+        // Load image for recipe
+        int imageResourceId = context.getResources().getIdentifier(
+                recipe.getImageFile(),
+                "drawable",
+                context.getPackageName()
+        );
+
+        if (imageResourceId > 0) { // Range check
+            holder.recipeImage.setImageResource(imageResourceId);
+        } else { // If fail, sue default
+            holder.recipeImage.setImageResource(R.drawable.ic_launcher_background);
+        }
     }
 
     @Override
@@ -66,7 +82,7 @@ public class RecipeAdapter extends RecyclerView.Adapter < RecipeAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView recipeName, recipeCalories, recipeCookTime, recipeDifficulty;
-        ImageView closeButton, favoriteIcon;
+        ImageView closeButton, favoriteIcon, recipeImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -74,8 +90,33 @@ public class RecipeAdapter extends RecyclerView.Adapter < RecipeAdapter.ViewHold
             recipeCalories = itemView.findViewById(R.id.recipeCalories);
             recipeCookTime = itemView.findViewById(R.id.recipeCookTime);
             recipeDifficulty = itemView.findViewById(R.id.recipeDifficulty);
-            closeButton = itemView.findViewById(R.id.closeRecipeItemButton);
+            closeButton = itemView.findViewById(R.id.closeButtonRecipes);
             favoriteIcon = itemView.findViewById(R.id.favoriteRecipeItemButton);
+            recipeImage = itemView.findViewById(R.id.recipeImage);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Recipe recipe = recipes.get(position);
+                    showDescPopup(context, recipe.getDescription());
+                }
+            });
         }
     }
+
+    // https://stackoverflow.com/questions/34383763/how-to-open-a-popup-window-from-an-adapter-class
+    // https://stackoverflow.com/questions/36661775/android-popup-window-with-variable-text
+    private void showDescPopup(Context context, String description) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.popup_recipe_desc, null, false);
+        PopupWindow popupWindow = new PopupWindow(layout, 300, 190, true);
+        TextView descriptionTextView = layout.findViewById(R.id.descriptionTextView);
+        descriptionTextView.setText(description);
+        ImageView closeButton = layout.findViewById(R.id.closeButtonRecipePopup);
+        closeButton.setOnClickListener(v -> popupWindow.dismiss());
+        popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
+    }
+
+
 }

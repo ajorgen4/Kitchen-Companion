@@ -13,8 +13,10 @@ public class Recipe {
     private String cookTime;
     private int calories;
     private String difficulty;
+
+    private String imageFile;
     public Recipe(int recipeId, String name, String description, List<Integer> ingredientIds,
-                  int servings, boolean isFavorited, String cookTime, int calories, String difficulty) {
+                  int servings, boolean isFavorited, String cookTime, int calories, String difficulty, String imageFile) {
         this.recipeId = recipeId;
         this.name = name;
         this.description = description;
@@ -24,6 +26,7 @@ public class Recipe {
         this.cookTime = cookTime;
         this.calories = calories;
         this.difficulty = difficulty;
+        this.imageFile = imageFile;
     }
 
     // favorite
@@ -66,6 +69,12 @@ public class Recipe {
 
     public String getDifficulty() {
         return difficulty;
+    }
+
+    public String getImageFile() { return imageFile;}
+
+    public void setImageFile(String name) {
+        this.imageFile = name;
     }
 
     public void setRecipeId(int recipeId) {
