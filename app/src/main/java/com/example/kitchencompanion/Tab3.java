@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,8 @@ public class Tab3 extends Fragment {
     private View view;
     private ShopListAdapter adapter;
     private List<String> shopList;
+
+    private boolean shoppingMode = false;
     public Tab3(){
         // require a empty public constructor
     }
@@ -35,6 +38,24 @@ public class Tab3 extends Fragment {
         shopListView = view.findViewById(R.id.shopListView);
         adapter = new ShopListAdapter(getContext(), shopList);
         shopListView.setAdapter(adapter);
+        Button submitShop = view.findViewById(R.id.submitListButton);
+        Button shopMode = view.findViewById(R.id.buyModeButton);
+        shopMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shoppingMode = !shoppingMode;
+                adapter.changeMode();
+                if(shoppingMode){
+                    shopMode.setText("Edit List");
+                    submitShop.setVisibility(View.VISIBLE);
+                }
+                else{
+                    shopMode.setText("Shopping");
+                    submitShop.setVisibility(View.GONE);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
         return view;
     }
 }

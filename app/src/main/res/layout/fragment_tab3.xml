@@ -49,22 +49,10 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/shopListSearchBarContainer" />
 
-    <View
-        android:id="@+id/shopListColorBackground"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buyModeButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="?attr/colorPrimaryVariant">
-
-    </View>
     <ListView
         android:id="@+id/shopListView"
 
-        app:layout_constraintTop_toTopOf="@+id/shopListColorBackground"
+        app:layout_constraintTop_toBottomOf="@+id/buyModeButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,6 +71,18 @@
         app:backgroundTint="?attr/colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/submitListButton"
+        android:text="Buy"
+        android:layout_width="400dp"
+        android:layout_height="75dp"
+        android:textSize="32sp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
