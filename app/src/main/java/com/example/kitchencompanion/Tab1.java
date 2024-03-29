@@ -1,13 +1,17 @@
 package com.example.kitchencompanion;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -23,7 +27,7 @@ import java.util.stream.Collectors;
 // https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 
 public class Tab1 extends Fragment {
-
+    private FloatingActionButton addRecipeButton;
     private RecyclerView recipeRecyclerView;
     private RecipeAdapter recipeAdapter;
     private View view;
@@ -35,72 +39,67 @@ public class Tab1 extends Fragment {
     // Code for below copied from Tab2.java and edited
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_tab1, container, false);
-
-        // Recipe list
+        View view = inflater.inflate(R.layout.fragment_tab1, container, false);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Get recipes from database
+        addRecipeButton = view.findViewById(R.id.addRecipeButton);
+        addRecipeButton.setOnClickListener(v -> showAddRecipeDialog());
         RecipeDatabase recipeDatabase = new RecipeDatabase();
         recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes());
         recipeRecyclerView.setAdapter(recipeAdapter);
-
-        // Filter UI management
-        setFilters();
-
+        setFilters(view);
         return view;
     }
 
-    // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java
-    private void setFilters() {
+    private void setFilters(View view) {
         Map<String, LinearLayout> filterButtonMap = new HashMap<>();
         Map<String, TextView> filterTextMap = new HashMap<>();
-
-        // Private filter elements
         filterButtonMap.put("favorites", view.findViewById(R.id.favoriteFilterButton));
         filterTextMap.put("favorites", view.findViewById(R.id.favoritesFilterText));
-        // Meats filter elements
         filterButtonMap.put("make now", view.findViewById(R.id.makeNowFilterButton));
         filterTextMap.put("make now", view.findViewById(R.id.makeNowFilterText));
-        // Expires filter elements
         filterButtonMap.put("low calorie", view.findViewById(R.id.lowCalorieFilterButton));
         filterTextMap.put("low calorie", view.findViewById(R.id.lowCalorieFilterText));
-        // Fruits/Vegetables filter elements
         filterButtonMap.put("breakfast", view.findViewById(R.id.breakfastFilterButton));
         filterTextMap.put("breakfast", view.findViewById(R.id.breakfastFilterText));
-
-        // Create filters
         createFilter("favorites", filterButtonMap, filterTextMap);
         createFilter("make now", filterButtonMap, filterTextMap);
         createFilter("low calorie", filterButtonMap, filterTextMap);
         createFilter("breakfast", filterButtonMap, filterTextMap);
     }
 
-    // In the future (when the backend model is made), these will need to pass filter instructions to FoodAdapter.java
     private void createFilter(String filter, Map<String, LinearLayout> filterButtonMap, Map<String, TextView> filterTextMap) {
         Drawable selected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_selected);
         Drawable unselected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_unselected);
-
         filterButtonMap.get(filter).setOnClickListener(v -> {
             Drawable currentBackground = filterButtonMap.get(filter).getBackground();
-            // If true, we are unselecting. If false, we are selecting
             boolean isFilterSelected = currentBackground != null && currentBackground.getConstantState().equals(selected.getConstantState());
-
-            // If we are activating a new filter, deactivate the previous one
             if (!isFilterSelected) {
-                // For all filters that are not filter
                 for (String key: filterButtonMap.entrySet().stream().filter(e -> !e.getKey().equals(filter)).map(Map.Entry::getKey).collect(Collectors.toList())) {
                     Drawable keyBackground = filterButtonMap.get(key).getBackground();
-                    // If filter key is selected, deselect it
                     if (keyBackground != null && keyBackground.getConstantState().equals(selected.getConstantState())) {
                         filterButtonMap.get(key).setBackground(unselected);
                     }
                 }
             }
-
             filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
-            // Here, we will need to make a call to actually apply the filter in the backend
         });
     }
+
+    private void showAddRecipeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.add_recipe_dialog, null);
+        Button cancelButton = dialogView.findViewById(R.id.addRecipeCancelButton);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = (int) (displayMetrics.widthPixels * 0.75);
+        int height = (int) (displayMetrics.heightPixels * 0.75);
+        dialog.getWindow().setLayout(width, height);
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
 }
