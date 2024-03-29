@@ -24,28 +24,34 @@ public class PantryItem {
         this.batches.add(batch);
     }
 
-    // (PantryStorageObject).removeItem looks for the (PantryItem) object with the matching name, if found call (PantryItems)'s removeItemCount to lower count
-    public void removeItemCount(int count) { // Broken
-        FoodBatch nextExpiringBatch = findnextExpiringBatch();
-        if (nextExpiringBatch != null && nextExpiringBatch.getItemCount() >= count) {
-            System.out.println("Removing " + count + " from batch ID: " + nextExpiringBatch.getBatchId() + " with expiration date: " + nextExpiringBatch.getExpirationDate());
-            nextExpiringBatch.removeItemCount(count);
-            if (nextExpiringBatch.getItemCount() == 0) {
-                System.out.println("Batch ID: " + nextExpiringBatch.getBatchId() + " is now empty and will be removed.");
-                batches.remove(nextExpiringBatch);
+    // Removes items from batches in order of expiration date
+    public void removeItemCount(int count) {
+        do {
+            FoodBatch nextExpiringBatch = findnextExpiringBatch();
+
+            if (nextExpiringBatch != null) {
+                count -= nextExpiringBatch.removeItemCount(count);
+                if (count != 0) {
+                    batches.remove(nextExpiringBatch);
+                }
+            } else {
+                // We have run out of items to remove
+                break;
             }
-        }
+        } while (count != 0); // repeat until all items removed
     }
 
-    // Finds the batch in this Pantry Item with the expiration date closest expiration date
+    // Finds the batch in this Pantry Item with the closest expiration date
     private FoodBatch findnextExpiringBatch() {
         FoodBatch nextExpiringBatch = null;
+
         for (FoodBatch batch : batches) {
             if (nextExpiringBatch == null || batch.getExpirationDate().isBefore(nextExpiringBatch.getExpirationDate()) ||
                     (batch.getExpirationDate().isEqual(nextExpiringBatch.getExpirationDate()) && batch.getBatchId() < nextExpiringBatch.getBatchId())) {
                 nextExpiringBatch = batch;
             }
         }
+
         return nextExpiringBatch;
     }
 

@@ -19,8 +19,11 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,18 +33,64 @@ public class Tab2 extends Fragment {
 
     private ListView foodListView;
     // Example items
-    private List<String> foodList;
+    private List<PantryItem> foodList;
     private FoodAdapter adapter;
     private View view;
     private FloatingActionButton addFoodButton;
     private Button filterButton;
 
 
-    public Tab2(){
-        foodList = new ArrayList<>();
-        foodList.add("Apple");
-        foodList.add("Banana");
-        foodList.add("Orange");
+    public Tab2() {
+        foodList = new ArrayList<PantryItem>();
+
+        /*
+        public FoodType(String itemName, Enums.Category category, Set<String> allergens,
+                    Set<Enums.DietaryAttribute> dietaryAttributes, int expirationPeriod) {
+         */
+
+        // Right now, initial expiration dates hardcoded. Change this to be today + expirationPeriod when the database is done
+        foodList.add(
+                new PantryItem(
+                        new FoodBatch(
+                                new FoodType(
+                                        "Apple",
+                                        Enums.Category.PRODUCE,
+                                        new HashSet<Enums.DietaryAttribute>(Collections.singleton(Enums.DietaryAttribute.ORGANIC)),
+                                        7
+                                ),
+                                5,
+                                LocalDate.of(2024, 4, 10)
+                        )
+                )
+        );
+        foodList.add(
+                new PantryItem(
+                        new FoodBatch(
+                                new FoodType(
+                                        "Banana",
+                                        Enums.Category.PRODUCE,
+                                        new HashSet<Enums.DietaryAttribute>(Collections.singleton(Enums.DietaryAttribute.ORGANIC)),
+                                        7
+                                ),
+                                3,
+                                LocalDate.of(2024, 4, 10)
+                        )
+                )
+        );
+        foodList.add(
+                new PantryItem(
+                        new FoodBatch(
+                                new FoodType(
+                                        "Orange",
+                                        Enums.Category.PRODUCE,
+                                        new HashSet<Enums.DietaryAttribute>(Collections.singleton(Enums.DietaryAttribute.ORGANIC)),
+                                        7
+                                ),
+                                3,
+                                LocalDate.of(2024, 4, 10)
+                        )
+                )
+        );
     }
 
     @Override

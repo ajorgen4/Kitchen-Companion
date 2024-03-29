@@ -6,7 +6,7 @@ import java.time.LocalDate;
 // Aggregates items Added during the same time into a singular batch to keep track of expiration date
 
 public class FoodBatch {
-    private static int nextBatchId = 1000;  // Start from 1000, arbitrary choice
+    private static int nextBatchId = 0;
     private int batchId;
     private FoodType food;
     int itemCount;
@@ -35,7 +35,9 @@ public class FoodBatch {
         return expirationDate;
     }
 
-    public void removeItemCount(int count) {
+    public int removeItemCount(int count) {
+        int prev = this.itemCount;
         this.itemCount = Math.max(0, this.itemCount - count); //Item count >= 0
+        return (itemCount == 0) ? prev : count; // Return the number of items removed
     }
 }

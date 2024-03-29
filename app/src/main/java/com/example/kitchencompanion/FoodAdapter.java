@@ -11,10 +11,10 @@ import java.util.List;
 // Maybe change this to extend ArrayAdapter<Type> like in Phase 1.2?
 public class FoodAdapter extends BaseAdapter {
 
-    private List<String> foodList;
+    private List<PantryItem> foodList;
     private Context context;
 
-    public FoodAdapter(Context context, List<String> foodList) {
+    public FoodAdapter(Context context, List<PantryItem> foodList) {
         this.foodList = foodList;
         this.context = context;
     }
@@ -46,7 +46,7 @@ public class FoodAdapter extends BaseAdapter {
             foodItemView = (FoodItemView) convertView;
         }
 
-        foodItemView.setFoodName(foodList.get(position));
+        foodItemView.setFoodName(foodList.get(position).getItemName());
 
         ImageView deleteButton = foodItemView.findViewById(R.id.closePantryItemButton);
         // If they click the delete button, remove the item from the list

@@ -8,7 +8,7 @@ public class Enums {
     }
 
     // Attributes per food item
-    enum DietaryAttribute {
+    public enum DietaryAttribute {
         VEGAN, ORGANIC, CONTAINS_NUTS
     }
 }

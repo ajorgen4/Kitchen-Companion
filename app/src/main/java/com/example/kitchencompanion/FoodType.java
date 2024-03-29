@@ -9,16 +9,15 @@ public class FoodType {
     private int itemId;
     private String itemName;
     private Enums.Category category;
-    private Set<String> allergens; // Not used for now, I combined with dietary attributes
     private Set<Enums.DietaryAttribute> dietaryAttributes;
+    private int expirationPeriod;
 
-    public FoodType(String itemName, Enums.Category category, Set<String> allergens,
-                    Set<Enums.DietaryAttribute> dietaryAttributes) {
+    public FoodType(String itemName, Enums.Category category, Set<Enums.DietaryAttribute> dietaryAttributes, int expirationPeriod) {
         this.itemId = totalFoods++;
         this.itemName = itemName;
         this.category = category;
-        this.allergens = allergens;
         this.dietaryAttributes = dietaryAttributes;
+        this.expirationPeriod = expirationPeriod;
     }
 
     public String getItemName() {
@@ -29,11 +28,11 @@ public class FoodType {
         return category;
     }
 
-    public Set<String> getAllergens() {
-        return allergens;
-    }
-
     public Set<Enums.DietaryAttribute> getDietaryAttributes() {
         return dietaryAttributes;
+    }
+
+    public int getExpirationPeriod() {
+        return expirationPeriod;
     }
 }
