@@ -43,12 +43,13 @@
 
             <Button
                 android:id="@+id/pantryFilterApplyButton"
-                style="?android:attr/borderlessButtonStyle"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Apply"
                 android:textSize="30sp"
                 android:textColor="@android:color/black"
+                app:strokeWidth="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/pantryFilterCancelButton"
                 app:layout_constraintHorizontal_chainStyle="packed"
@@ -57,12 +58,13 @@
 
             <Button
                 android:id="@+id/pantryFilterCancelButton"
-                style="?android:attr/borderlessButtonStyle"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
                 android:textSize="30sp"
                 android:textColor="@android:color/black"
+                app:strokeWidth="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/pantryFilterApplyButton"
