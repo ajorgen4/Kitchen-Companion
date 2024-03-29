@@ -1,0 +1,10 @@
+// CITE YOUR IMAGES HERE
+// Save as PNG in /res/food_images or recipe_images
+// Add string of image file to the Recipe/Food objects - if invalid or blank default is used
+// Ensure image size is:
+
+// Recipes
+oven_backed_risotto.png : https://www.thekitchn.com/easy-oven-baked-risotto-256190
+chicken_parm.png : https://www.bonappetit.com/recipe/bas-best-chicken-parm
+
+// Food

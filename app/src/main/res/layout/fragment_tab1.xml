@@ -4,97 +4,174 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Tab1">
+    tools:context=".MainActivity">
 
-    <!-- Search Bar Container -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/recipeSearchBarContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        app:boxBackgroundMode="outline"
-        app:endIconDrawable="@drawable/search_icon"
-        app:endIconMode="custom"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:boxBackgroundMode="outline"
+        app:endIconMode="none">
 
         <EditText
             android:id="@+id/recipeSearchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Search..."
-            android:inputType="text"
-            android:textSize="16sp" />
+            android:textSize="32sp"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Filter Icon -->
     <ImageView
-        android:id="@+id/filter_icon"
+        android:id="@+id/recipeSearchIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/filter_icon"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/search_icon"
         app:layout_constraintBottom_toBottomOf="@id/recipeSearchBarContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/recipeSearchBarContainer" />
 
-    <!-- Filters Container -->
-    <LinearLayout
-        android:id="@+id/filtersContainer"
+    <Button
+        android:id="@+id/recipeFiltersButton"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:drawableBottom="@drawable/filter_icon"
+        android:drawableTint="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="@id/recipeFiltersScrollView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipeSearchBarContainer" />
+
+    <HorizontalScrollView
+        android:id="@+id/recipeFiltersScrollView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/recipeSearchBarContainer"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/recipeFiltersButton"
+        app:layout_constraintTop_toBottomOf="@id/recipeSearchBarContainer"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Filter Button: Favorites -->
-        <TextView
+        <LinearLayout
+            android:id="@+id/recipeFiltersContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/filter_background"
-            android:text="Favorites"
-            android:padding="8dp" />
+            android:orientation="horizontal">
 
-        <!-- Filter Button: Make Now -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/filter_background"
-            android:text="Make Now"
-            android:padding="8dp" />
+            <LinearLayout
+                android:id="@+id/favoriteFilterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/filter_background_unselected"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
 
-        <!-- Filter Button: Low Calorie -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/filter_background"
-            android:text="Low Calorie"
-            android:padding="8dp" />
+                <TextView
+                    android:id="@+id/favoritesFilterText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Favorites"
+                    android:textSize="24sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
 
-        <!-- Filter Button: Breakfast -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/filter_background"
-            android:text="Breakfast"
-            android:padding="8dp" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/makeNowFilterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/filter_background_unselected"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
 
-    <!-- Recipe Item Card List -->
+                <TextView
+                    android:id="@+id/makeNowFilterText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Make Now"
+                    android:textSize="24sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lowCalorieFilterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/filter_background_unselected"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/lowCalorieFilterText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Low Calorie"
+                    android:textSize="24sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/breakfastFilterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/filter_background_unselected"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/breakfastFilterText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Breakfast"
+                    android:textSize="24sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipeRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/filtersContainer"
+        app:layout_constraintTop_toBottomOf="@id/recipeFiltersScrollView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/recipe_item" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addRecipeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="36dp"
+        android:src="@drawable/plus_icon"
+        app:backgroundTint="?attr/colorSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

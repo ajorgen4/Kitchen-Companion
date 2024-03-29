@@ -7,18 +7,82 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tab3"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/shopListSearchBarContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:boxBackgroundMode="outline"
+        app:endIconMode="none">
+
+        <EditText
+            android:id="@+id/shopListSearchBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search..."
+            android:textSize="32sp"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/pantrySearchIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shopping Tab"
-        android:textColor="?attr/colorSecondaryVariant"
-        android:textSize="40sp"
-        android:textStyle="italic|bold"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/search_icon"
+        app:layout_constraintBottom_toBottomOf="@id/shopListSearchBarContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/shopListSearchBarContainer" />
+
+    <Button
+        android:id="@+id/buyModeButton"
+        android:layout_width="600dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="10dp"
+        android:text="Shopping"
+        android:textSize="32sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shopListSearchBarContainer" />
+
+    <ListView
+        android:id="@+id/shopListView"
+
+        app:layout_constraintTop_toBottomOf="@+id/buyModeButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:background="@color/white">
+
+    </ListView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addFoodButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="36dp"
+        android:src="@drawable/plus_icon"
+        app:backgroundTint="?attr/colorSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/submitListButton"
+        android:text="Buy"
+        android:layout_width="400dp"
+        android:layout_height="75dp"
+        android:textSize="32sp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

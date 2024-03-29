@@ -1,19 +1,22 @@
 package com.example.kitchencompanion;
+
 import java.util.List;
 
-// Class definition for Recipies
+// Represents a Recipe with relevant details
 public class Recipe {
+    private int recipeId;
     private String name;
-    private String description; // Recipie Text
-    private List<Integer> ingredientIds; // Item IDs
-    private int recipeId; // Recipie ID Unique
-    private int servings; // Amount served
-    private boolean isFavorited; // Yes or No favorited
-    private String cookTime; // ex. 45 mins"
-    private int calories; // ex. 650
-    private String difficulty; // ex. "Medium"
+    private String description;
+    private List<Integer> ingredientIds;
+    private int servings;
+    private boolean isFavorited;
+    private String cookTime;
+    private int calories;
+    private String difficulty;
 
-    public Recipe(int recipeId, String name, String description, List<Integer> ingredientIds, int servings, boolean isFavorited, String cookTime, int calories, String difficulty) {
+    private String imageFile;
+    public Recipe(int recipeId, String name, String description, List<Integer> ingredientIds,
+                  int servings, boolean isFavorited, String cookTime, int calories, String difficulty, String imageFile) {
         this.recipeId = recipeId;
         this.name = name;
         this.description = description;
@@ -23,34 +26,90 @@ public class Recipe {
         this.cookTime = cookTime;
         this.calories = calories;
         this.difficulty = difficulty;
+        this.imageFile = imageFile;
     }
 
-    public boolean toggleFavorite() {
+    // favorite
+    public void toggleFavorite() {
         this.isFavorited = !this.isFavorited;
-        return isFavorited;
+    }
+
+    // GET AND SET METHODS
+    public int getRecipeId() {
+        return recipeId;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getCalories() {
-        return calories;
+    public String getDescription() {
+        return description;
+    }
+
+    public List<Integer> getIngredientIds() {
+        return ingredientIds;
+    }
+
+    public int getServings() {
+        return servings;
+    }
+
+    public boolean isFavorited() {
+        return isFavorited;
     }
 
     public String getCookTime() {
         return cookTime;
     }
 
+    public int getCalories() {
+        return calories;
+    }
+
     public String getDifficulty() {
         return difficulty;
     }
 
-    public String getDescription() {
-        return difficulty;
+    public String getImageFile() { return imageFile;}
+
+    public void setImageFile(String name) {
+        this.imageFile = name;
     }
 
-    public Boolean isFavorited() {
-        return isFavorited;
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIngredientIds(List<Integer> ingredientIds) {
+        this.ingredientIds = ingredientIds;
+    }
+
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
+
+    public void setFavorited(boolean favorited) {
+        isFavorited = favorited;
+    }
+
+    public void setCookTime(String cookTime) {
+        this.cookTime = cookTime;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
     }
 }
