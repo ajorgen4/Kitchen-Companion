@@ -137,4 +137,16 @@ public class ShopListAdapter extends BaseAdapter {
         notifyDataSetChanged();
         return selectedItems;
     }
+
+    public void addShopListItem(ShopListItem item){
+        shopList.add(item);/*change to update item with new amount*/
+        notifyDataSetChanged();
+    }
+
+    public void addShopListItemBatch(List<ShopListItem> list){
+        for(ShopListItem item:list) {
+            shopList.add(item);/*fix to add amount to existing item if exists*/
+        }
+        notifyDataSetChanged();
+    }
 }
