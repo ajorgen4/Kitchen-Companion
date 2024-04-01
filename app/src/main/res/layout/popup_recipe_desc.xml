@@ -22,11 +22,21 @@
             android:padding="16dp">
 
             <TextView
+                android:id="@+id/attributesTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attributes: "
+                android:textSize="20sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <TextView
                 android:id="@+id/descriptionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recipe instructions go here."
-                android:textSize="40sp"
+                android:text="Steps: Recipe instructions go here."
+                android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

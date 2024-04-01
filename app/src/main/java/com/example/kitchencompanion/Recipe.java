@@ -1,5 +1,6 @@
 package com.example.kitchencompanion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // Represents a Recipe with relevant details
@@ -16,7 +17,8 @@ public class Recipe {
     private List<Enums.DietaryAttribute> dietaryAttributes;
     private String imageFile;
     public Recipe(int recipeId, String name, String description, List<Integer> ingredientIds,
-                  int servings, boolean isFavorited, String cookTime, int calories, String difficulty, List<Enums.DietaryAttribute> dietaryAttributes, String imageFile) {
+                  int servings, boolean isFavorited, String cookTime, int calories, String difficulty,
+                  List<Enums.DietaryAttribute> dietaryAttributes, String imageFile) {
         this.recipeId = recipeId;
         this.name = name;
         this.description = description;
@@ -26,8 +28,12 @@ public class Recipe {
         this.cookTime = cookTime;
         this.calories = calories;
         this.difficulty = difficulty;
+        this.dietaryAttributes = new ArrayList<>(dietaryAttributes);
         this.imageFile = imageFile;
+        // Debug print statement
+        System.out.println("In Constructor - Recipe ID: " + recipeId + " Dietary Attributes: " + dietaryAttributes);
     }
+
 
     // favorite
     public void toggleFavorite() {

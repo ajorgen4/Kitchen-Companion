@@ -35,7 +35,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.recipe_item, parent, false);
-        return new ViewHolder(view);
+        ViewHolder holder = new ViewHolder(view);
+        // Set warning icon visibility based on dietary attributes here if required
+        return holder;
     }
 
     @Override
@@ -46,23 +48,34 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         holder.recipeCalories.setText("Calories: " + String.valueOf(recipe.getCalories()));
         holder.recipeDifficulty.setText("Difficulty: " + recipe.getDifficulty());
         holder.favoriteIcon.setImageResource(recipe.isFavorited() ? R.drawable.heart_solid : R.drawable.heart_outline);
+
         holder.favoriteIcon.setOnClickListener(v -> {
             recipe.toggleFavorite();
             notifyItemChanged(position);
         });
+
         holder.closeButton.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();
             recipes.remove(currentPosition);
             notifyItemRemoved(currentPosition);
             notifyItemRangeChanged(currentPosition, recipes.size());
         });
+
         int imageResourceId = context.getResources().getIdentifier(recipe.getImageFile(), "drawable", context.getPackageName());
-        if (imageResourceId > 0) {
-            holder.recipeImage.setImageResource(imageResourceId);
+        holder.recipeImage.setImageResource(imageResourceId > 0 ? imageResourceId : R.drawable.ic_launcher_background);
+
+        // Warning Icon
+        // Debug print statements to check dietary attributes
+        if (recipe.getDietaryAttributes() != null && !recipe.getDietaryAttributes().isEmpty()) {
+            holder.warningIcon.setVisibility(View.VISIBLE);
         } else {
-            holder.recipeImage.setImageResource(R.drawable.ic_launcher_background);
+            holder.warningIcon.setVisibility(View.GONE);
         }
+
+        // Additional log for icon visibility
+        System.out.println("Icon Visibility for Recipe ID: " + recipe.getRecipeId() + ": " + holder.warningIcon.getVisibility());
     }
+
 
     @Override
     public int getItemCount() {
@@ -71,7 +84,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView recipeName, recipeCalories, recipeCookTime, recipeDifficulty;
-        ImageView closeButton, favoriteIcon, recipeImage;
+        ImageView closeButton, favoriteIcon, recipeImage, warningIcon;
         View viewForeground;
 
         public ViewHolder(View itemView) {
@@ -83,22 +96,32 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             closeButton = itemView.findViewById(R.id.closeButtonRecipes);
             favoriteIcon = itemView.findViewById(R.id.favoriteRecipeItemButton);
             recipeImage = itemView.findViewById(R.id.recipeImage);
+            warningIcon = itemView.findViewById(R.id.warningIcon);
             viewForeground = itemView.findViewById(R.id.recipeItemLayout);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 Recipe recipe = recipes.get(position);
-                showDescPopup(context, recipe.getDescription());
+                showDescPopup(context, recipe.getDescription(), recipe.getDietaryAttributes());
             });
         }
     }
 
-
-    private void showDescPopup(Context context, String description) {
+    private void showDescPopup(Context context, String description, List<Enums.DietaryAttribute> attributes) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.popup_recipe_desc, null);
+
+        TextView attributesTextView = dialogView.findViewById(R.id.attributesTextView); // Ensure this TextView is in popup_recipe_desc.xml
         TextView descriptionTextView = dialogView.findViewById(R.id.descriptionTextView);
-        descriptionTextView.setText(description);
+
+        // Convert attributes to String
+        StringBuilder attributesBuilder = new StringBuilder();
+        for(Enums.DietaryAttribute attribute : attributes) {
+            if(attributesBuilder.length() > 0) attributesBuilder.append(", ");
+            attributesBuilder.append(attribute.toString());
+        }
+        attributesTextView.setText("Attributes: " + attributesBuilder.toString());
+        descriptionTextView.setText("Steps: " + description);
 
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();

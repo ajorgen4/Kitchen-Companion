@@ -13,7 +13,10 @@ public class RecipeDatabase {
         recipes.add(new Recipe(1, "Oven-Baked Risotto", desc1, new ArrayList<>(), 4, true, "45 mins", 500, "Easy", Arrays.asList(Enums.DietaryAttribute.VEGAN, Enums.DietaryAttribute.ORGANIC), "recipe_image_risotto"));
         recipes.add(new Recipe(2, "Chicken Noodle Soup", "Lorem ipsum...", new ArrayList<>(), 2, false, "25 mins", 90, "Easy", new ArrayList<>() ,"invalid_image"));
         recipes.add(new Recipe(3, "Chicken Parmesan", "Lorem ipsum...", new ArrayList<>(), 2, false, "45 mins", 650, "Medium", new ArrayList<>(),"recipe_image_parm"));
-        recipes.add(new Recipe(3, "Test Recipe", "Lorem ipsum...", new ArrayList<>(), 2, false, "1 hour", 100, "Medium", new ArrayList<>(), ""));
+        recipes.add(new Recipe(4, "Test Recipe", "Lorem ipsum...", new ArrayList<>(), 2, false, "1 hour", 100, "Medium", new ArrayList<>(), ""));
+        for (Recipe recipe : recipes) {
+            System.out.println("TESTING Recipe ID: " + recipe.getRecipeId() + " Dietary Attributes: " + recipe.getDietaryAttributes());
+        }
     }
 
     private String desc1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
