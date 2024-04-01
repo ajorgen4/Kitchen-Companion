@@ -27,20 +27,18 @@ public class Tab3 extends Fragment {
 
     private boolean shoppingMode = false;
     public Tab3(){
-        // require a empty public constructor
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        view = inflater.inflate(R.layout.fragment_tab3, container, false);
-
         shopList = new ArrayList<ShopListItem>();
         shopList.add(new ShopListItem("Chicken Legs", 3));
         shopList.add(new ShopListItem("Banana", 4));
         shopList.add(new ShopListItem("Donuts", 2));
         shopList.add(new ShopListItem("Kale", 1));
         shopList.add(new ShopListItem("Pasta", 3));
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        view = inflater.inflate(R.layout.fragment_tab3, container, false);
 
         shopListView = view.findViewById(R.id.shopListView);
         adapter = new ShopListAdapter(getContext(), shopList);
