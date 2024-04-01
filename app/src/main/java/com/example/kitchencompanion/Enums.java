@@ -7,7 +7,7 @@ public class Enums {
         PRODUCE, CANNED_GOODS, BAKED_GOODS
     }
 
-    // Attributes per food item
+    // Attributes per food/Recipe item
     public enum DietaryAttribute {
         VEGAN, ORGANIC, CONTAINS_NUTS
     }

@@ -13,10 +13,10 @@ public class Recipe {
     private String cookTime;
     private int calories;
     private String difficulty;
-
+    private List<Enums.DietaryAttribute> dietaryAttributes;
     private String imageFile;
     public Recipe(int recipeId, String name, String description, List<Integer> ingredientIds,
-                  int servings, boolean isFavorited, String cookTime, int calories, String difficulty, String imageFile) {
+                  int servings, boolean isFavorited, String cookTime, int calories, String difficulty, List<Enums.DietaryAttribute> dietaryAttributes, String imageFile) {
         this.recipeId = recipeId;
         this.name = name;
         this.description = description;
@@ -71,6 +71,8 @@ public class Recipe {
         return difficulty;
     }
 
+    public List<Enums.DietaryAttribute> getDietaryAttributes() { return dietaryAttributes; }
+
     public String getImageFile() { return imageFile;}
 
     public void setImageFile(String name) {
@@ -109,6 +111,10 @@ public class Recipe {
         this.calories = calories;
     }
 
+    public void setDietaryAttributes(List<Enums.DietaryAttribute> dietaryAttributes) {
+        this.dietaryAttributes = dietaryAttributes;
+    }
+    
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
