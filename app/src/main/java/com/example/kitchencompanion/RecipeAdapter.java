@@ -111,7 +111,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.popup_recipe_desc, null);
 
-        TextView attributesTextView = dialogView.findViewById(R.id.attributesTextView); // Ensure this TextView is in popup_recipe_desc.xml
+        TextView attributesTextView = dialogView.findViewById(R.id.attributesTextView);
         TextView descriptionTextView = dialogView.findViewById(R.id.descriptionTextView);
 
         // Convert attributes to String
