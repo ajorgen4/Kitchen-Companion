@@ -1,7 +1,7 @@
 package com.example.kitchencompanion;
 
 import android.app.AlertDialog;
-import android.graphics.Color;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -11,44 +11,88 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-// Some links(cite code more):
-// https://www.codevscolor.com/android-kotlin-delete-item-recyclerview
-// https://www.digitalocean.com/community/tutorials/android-recyclerview-swipe-to-delete-undo
-// https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 
 public class Tab1 extends Fragment {
     private FloatingActionButton addRecipeButton;
     private RecyclerView recipeRecyclerView;
     private RecipeAdapter recipeAdapter;
-    private View view;
 
     public Tab1() {
-
     }
 
-    // Code for below copied from Tab2.java and edited
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab1, container, false);
+
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         addRecipeButton = view.findViewById(R.id.addRecipeButton);
         addRecipeButton.setOnClickListener(v -> showAddRecipeDialog());
+
         RecipeDatabase recipeDatabase = new RecipeDatabase();
         recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes());
         recipeRecyclerView.setAdapter(recipeAdapter);
+
         setFilters(view);
+        setUpItemTouchHelper();
+
         return view;
+    }
+
+    private void setUpItemTouchHelper() {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                final View foregroundView = ((RecipeAdapter.ViewHolder) viewHolder).viewForeground;
+                View addMissingLayout = viewHolder.itemView.findViewById(R.id.addMissingLayout);
+
+                float maxSwipeDistance = -addMissingLayout.getWidth();
+                float restrictedDX = Math.max(dX, maxSwipeDistance);
+
+                if (restrictedDX <= maxSwipeDistance) {
+                    addMissingLayout.setVisibility(View.VISIBLE);
+                } else {
+                    addMissingLayout.setVisibility(View.GONE);
+                }
+
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, restrictedDX, dY, actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                final View foregroundView = ((RecipeAdapter.ViewHolder) viewHolder).viewForeground;
+                getDefaultUIUtil().clearView(foregroundView);
+            }
+
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+                if (viewHolder != null) {
+                    final View foregroundView = ((RecipeAdapter.ViewHolder) viewHolder).viewForeground;
+                    getDefaultUIUtil().onSelected(foregroundView);
+                }
+            }
+        }).attachToRecyclerView(recipeRecyclerView);
     }
 
     private void setFilters(View view) {
@@ -74,14 +118,6 @@ public class Tab1 extends Fragment {
         filterButtonMap.get(filter).setOnClickListener(v -> {
             Drawable currentBackground = filterButtonMap.get(filter).getBackground();
             boolean isFilterSelected = currentBackground != null && currentBackground.getConstantState().equals(selected.getConstantState());
-            if (!isFilterSelected) {
-                for (String key: filterButtonMap.entrySet().stream().filter(e -> !e.getKey().equals(filter)).map(Map.Entry::getKey).collect(Collectors.toList())) {
-                    Drawable keyBackground = filterButtonMap.get(key).getBackground();
-                    if (keyBackground != null && keyBackground.getConstantState().equals(selected.getConstantState())) {
-                        filterButtonMap.get(key).setBackground(unselected);
-                    }
-                }
-            }
             filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
         });
     }
@@ -101,5 +137,4 @@ public class Tab1 extends Fragment {
         cancelButton.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
-
 }
