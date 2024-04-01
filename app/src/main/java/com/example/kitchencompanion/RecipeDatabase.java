@@ -19,8 +19,16 @@ public class RecipeDatabase {
         }
     }
 
-    private String desc1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
-
+    private String desc1 = "" +
+            "\n" + "1. Preheat oven to 375°F.\n"
+            + "2. Heat olive oil under medium heat in an oven safe pot.\n"
+            + "3. Add diced onions, cook until translucent.\n"
+            + "4. Stir in rice and cook for 2 more minutes.\n"
+            + "5. Pour in vegetable broth and stir.\n"
+            + "6. Cover the put and place into the oven.\n"
+            + "7. Bake 25-30 minutes or until liquid absorbed.\n"
+            + "8. Add grated parmesean cheese and parsely to the top and stir.\n"
+            + "9. Season with salt and pepper.\n";
 
     public List<Recipe> getRecipes() {
         return recipes;
