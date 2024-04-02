@@ -4,7 +4,7 @@ import java.util.Set;
 
 // Like an interface. Represents a type of food
 
-public class FoodType {
+public class FoodType implements Comparable<FoodType> {
     private static int totalFoods = 0;
     private int itemId;
     private String itemName;
@@ -32,5 +32,17 @@ public class FoodType {
 
     public int getExpirationPeriod() {
         return expirationPeriod;
+    }
+
+    @Override
+    public int compareTo(FoodType other) {
+        // compare item name primarily
+        int nameComparison = this.itemName.compareTo(other.itemName);
+        if (nameComparison != 0) {
+            return nameComparison;
+        }
+
+        // If names match, compare food groups
+        return this.foodGroup.compareTo(other.foodGroup);
     }
 }

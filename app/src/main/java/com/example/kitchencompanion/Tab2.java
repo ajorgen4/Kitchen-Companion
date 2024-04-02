@@ -2,13 +2,19 @@ package com.example.kitchencompanion;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,7 +28,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,11 +44,10 @@ public class Tab2 extends Fragment {
     private Button filterButton;
 
     // FoodType selector stuff
-    TextView foodTypeSelector;
     HashMap<Integer, FoodType> foodDictionary;
     // Used in FoodType selector
     ArrayList<FoodType> foodSelectorList;
-    Dialog foodSelector;
+    Dialog foodTypeSelector;
 
 
     public Tab2() {
@@ -72,20 +76,6 @@ public class Tab2 extends Fragment {
 
         filterButton = view.findViewById(R.id.pantryFiltersButton);
         filterButton.setOnClickListener(v -> showFilterDialog());
-
-        // textView = foodTypeSelector
-        // arrayList = foodSelectorList
-        // dialog = foodSelector
-        foodTypeSelector = view.findViewById(R.id.pantryAddFoodFoodTypeSelector);
-        foodSelectorList = new ArrayList<>(foodDictionary.values());
-        /*
-        foodTypeSelector.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                foodSelector = new Dialog(requireContext());
-            }
-        });
-        */
 
         // Filter UI management
         setFilters();
@@ -129,6 +119,7 @@ public class Tab2 extends Fragment {
         // ...
         Button cancelButton = dialogView.findViewById(R.id.pantryAddFoodCancelButton);
         DatePicker expirationDatePicker = dialogView.findViewById(R.id.pantryAddFoodExpirationDatePicker);
+        TextView foodTypeSelector = dialogView.findViewById(R.id.pantryAddFoodFoodTypeSelector);
 
         // Set the default date.
         // TODO: Update this to use the FoodType selected's expiration period
@@ -138,6 +129,57 @@ public class Tab2 extends Fragment {
                 defaultDate.getMonthValue() - 1, // DatePicker months are 0 indexed for some reason
                 defaultDate.getDayOfMonth()
         );
+
+        // textView = foodTypeSelector
+        // arrayList = foodSelectorList
+        // dialog = foodSelector
+        // xml element text_view = pantryAddFoodFoodTypeSelector
+        // dialog_searchable_spinner = food_type_selector
+        // Code adapted from: https://www.youtube.com/watch?v=5iIXg4-Iw3U
+
+        // This must stay here to ensure it remains up to date with foodDictionary
+        foodSelectorList = new ArrayList<FoodType>(foodDictionary.values());
+        foodTypeSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Tab2.this.foodTypeSelector = new Dialog(requireContext());
+                Tab2.this.foodTypeSelector.setContentView(R.layout.food_type_selector);
+                Tab2.this.foodTypeSelector.getWindow().setLayout(650, 800);
+                Tab2.this.foodTypeSelector.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                Tab2.this.foodTypeSelector.show();
+
+                EditText foodSelectorSearchBar = Tab2.this.foodTypeSelector.findViewById(R.id.foodSelectorSearchBar);
+                ListView foodSelectorListView = Tab2.this.foodTypeSelector.findViewById(R.id.foodSelectorListView);
+
+                FoodTypeSelectorAdapter adapter = new FoodTypeSelectorAdapter(getContext(), foodSelectorList);
+                foodSelectorListView.setAdapter(adapter);
+
+                foodSelectorSearchBar.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        adapter.getFilter().filter(s);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+                foodSelectorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        foodTypeSelector.setText(adapter.getItem(position).getItemName());
+                        Tab2.this.foodTypeSelector.dismiss();
+                    }
+                });
+            }
+        });
 
         builder.setView(dialogView);
 
