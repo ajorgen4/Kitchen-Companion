@@ -55,9 +55,9 @@ public class Tab2 extends Fragment {
         foodDictionary = createFoodDictionary();
 
         // Right now, initial expiration dates hardcoded. Change this to be today + expirationPeriod when the database is done
-        foodList.add(new PantryItem(new FoodBatch(new FoodType("Apple", Enums.FoodGroup.FRUIT, 7), 5, LocalDate.now().plusDays(7))));
-        foodList.add(new PantryItem(new FoodBatch(new FoodType("Banana", Enums.FoodGroup.FRUIT, 7), 3, LocalDate.now().plusDays(7))));
-        foodList.add(new PantryItem(new FoodBatch(new FoodType("Orange", Enums.FoodGroup.FRUIT, 7), 3, LocalDate.now().plusDays(7))));
+        foodList.add(new PantryItem(new FoodBatch(foodDictionary.get(0), 5, LocalDate.now().plusDays(7))));
+        foodList.add(new PantryItem(new FoodBatch(foodDictionary.get(1), 3, LocalDate.now().plusDays(7))));
+        foodList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(7))));
     }
 
     @Override
