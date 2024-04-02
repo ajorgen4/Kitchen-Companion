@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 // Shopping tab
@@ -24,9 +26,14 @@ public class Tab3 extends Fragment {
     private View view;
     private ShopListAdapter adapter;
     private List<ShopListItem> shopList;
+    // Reference to the set of all FoodType objects in the app.
+    // Maps FoodType.getID() to FoodType
+    HashMap<Integer, FoodType> foodDictionary;
 
     private boolean shoppingMode = false;
-    public Tab3(){
+    public Tab3(HashMap<Integer, FoodType> foodDictionary){
+        this.foodDictionary = foodDictionary;
+
         shopList = new ArrayList<ShopListItem>();
         shopList.add(new ShopListItem("Chicken Legs", 3));
         shopList.add(new ShopListItem("Banana", 4));

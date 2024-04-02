@@ -8,28 +8,26 @@ public class FoodType {
     private static int totalFoods = 0;
     private int itemId;
     private String itemName;
-    private Enums.Category category;
-    private Set<Enums.DietaryAttribute> dietaryAttributes;
+    private Enums.FoodGroup foodGroup;
     private int expirationPeriod;
 
-    public FoodType(String itemName, Enums.Category category, Set<Enums.DietaryAttribute> dietaryAttributes, int expirationPeriod) {
+    public FoodType(String itemName, Enums.FoodGroup foodGroup, int expirationPeriod) {
         this.itemId = totalFoods++;
         this.itemName = itemName;
-        this.category = category;
-        this.dietaryAttributes = dietaryAttributes;
+        this.foodGroup = foodGroup;
         this.expirationPeriod = expirationPeriod;
+    }
+
+    public int getID() {
+        return itemId;
     }
 
     public String getItemName() {
         return itemName;
     }
 
-    public Enums.Category getCategory() {
-        return category;
-    }
-
-    public Set<Enums.DietaryAttribute> getDietaryAttributes() {
-        return dietaryAttributes;
+    public Enums.FoodGroup getCategory() {
+        return foodGroup;
     }
 
     public int getExpirationPeriod() {

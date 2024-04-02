@@ -1,27 +1,25 @@
 package com.example.kitchencompanion;
 
 import android.app.AlertDialog;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,59 +36,20 @@ public class Tab2 extends Fragment {
     private View view;
     private FloatingActionButton addFoodButton;
     private Button filterButton;
+    TextView foodTypeSelector;
+    HashMap<Integer, FoodType> foodDictionary;
+    // Used in FoodType selector
+    ArrayList<FoodType> foodSelectorList;
 
 
     public Tab2() {
         foodList = new ArrayList<PantryItem>();
-
-        /*
-        public FoodType(String itemName, Enums.Category category, Set<String> allergens,
-                    Set<Enums.DietaryAttribute> dietaryAttributes, int expirationPeriod) {
-         */
+        foodDictionary = createFoodDictionary();
 
         // Right now, initial expiration dates hardcoded. Change this to be today + expirationPeriod when the database is done
-        foodList.add(
-                new PantryItem(
-                        new FoodBatch(
-                                new FoodType(
-                                        "Apple",
-                                        Enums.Category.PRODUCE,
-                                        new HashSet<Enums.DietaryAttribute>(Collections.singleton(Enums.DietaryAttribute.ORGANIC)),
-                                        7
-                                ),
-                                5,
-                                LocalDate.of(2024, 4, 10)
-                        )
-                )
-        );
-        foodList.add(
-                new PantryItem(
-                        new FoodBatch(
-                                new FoodType(
-                                        "Banana",
-                                        Enums.Category.PRODUCE,
-                                        new HashSet<Enums.DietaryAttribute>(Collections.singleton(Enums.DietaryAttribute.ORGANIC)),
-                                        7
-                                ),
-                                3,
-                                LocalDate.of(2024, 4, 10)
-                        )
-                )
-        );
-        foodList.add(
-                new PantryItem(
-                        new FoodBatch(
-                                new FoodType(
-                                        "Orange",
-                                        Enums.Category.PRODUCE,
-                                        new HashSet<Enums.DietaryAttribute>(Collections.singleton(Enums.DietaryAttribute.ORGANIC)),
-                                        7
-                                ),
-                                3,
-                                LocalDate.of(2024, 4, 10)
-                        )
-                )
-        );
+        foodList.add(new PantryItem(new FoodBatch(new FoodType("Apple", Enums.FoodGroup.FRUIT, 7), 5, LocalDate.now().plusDays(7))));
+        foodList.add(new PantryItem(new FoodBatch(new FoodType("Banana", Enums.FoodGroup.FRUIT, 7), 3, LocalDate.now().plusDays(7))));
+        foodList.add(new PantryItem(new FoodBatch(new FoodType("Orange", Enums.FoodGroup.FRUIT, 7), 3, LocalDate.now().plusDays(7))));
     }
 
     @Override
@@ -109,6 +68,9 @@ public class Tab2 extends Fragment {
 
         filterButton = view.findViewById(R.id.pantryFiltersButton);
         filterButton.setOnClickListener(v -> showFilterDialog());
+
+        foodTypeSelector = view.findViewById(R.id.pantryAddFoodFoodTypeSelector);
+        foodSelectorList = new ArrayList<>(foodDictionary.values());
 
         // Filter UI management
         setFilters();
@@ -151,13 +113,23 @@ public class Tab2 extends Fragment {
         // Find and set up the views inside the dialog layout
         // ...
         Button cancelButton = dialogView.findViewById(R.id.pantryAddFoodCancelButton);
+        DatePicker expirationDatePicker = dialogView.findViewById(R.id.pantryAddFoodExpirationDatePicker);
+
+        // Set the default date.
+        // TODO: Update this to use the FoodType selected's expiration period
+        LocalDate defaultDate = LocalDate.now().plusDays(7);
+        expirationDatePicker.updateDate(
+                defaultDate.getYear(),
+                defaultDate.getMonthValue() - 1, // DatePicker months are 0 indexed for some reason
+                defaultDate.getDayOfMonth()
+        );
 
         builder.setView(dialogView);
 
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        // Set the dialog to occupy approximately 75% of the screen
+        // Set the dialog to occupy ~75% of the screen
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = (int) (displayMetrics.widthPixels * 0.75);
@@ -167,6 +139,7 @@ public class Tab2 extends Fragment {
         // Dim the background
         dialog.getWindow().setDimAmount(0.5f);
 
+        // Cancel button functionality
         cancelButton.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
@@ -222,5 +195,23 @@ public class Tab2 extends Fragment {
             filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
             // Here, we will need to make a call to actually apply the filter in the backend
         });
+    }
+
+    private HashMap<Integer, FoodType> createFoodDictionary() {
+        HashMap<Integer, FoodType> tempFoodDictionary = new HashMap<Integer, FoodType>();
+        FoodType currItem;
+
+        currItem = new FoodType("Apple", Enums.FoodGroup.FRUIT, 7);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Banana", Enums.FoodGroup.FRUIT, 7);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Orange", Enums.FoodGroup.FRUIT, 7);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+
+        return tempFoodDictionary;
+    }
+
+    public HashMap<Integer, FoodType> getFoodDictionary() {
+        return foodDictionary;
     }
 }

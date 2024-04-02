@@ -143,6 +143,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class Tab4 extends Fragment {
@@ -153,8 +155,12 @@ public class Tab4 extends Fragment {
     private String[] dietaryOptions = {"Vegan", "Vegetarian", "Pescatarian", "Paleo", "Keto", "Low-carb", "Low-fat", "Mediterranean", "Flexitarian"};
     private String[] allergyOptions = {"Gluten", "Dairy", "Nuts", "Shellfish", "Soy", "Eggs", "Fish", "Wheat"};
 
-    public Tab4() {
-        // Required empty public constructor
+    // Reference to the set of all FoodType objects in the app
+    // Maps FoodType.getID() to FoodType
+    HashMap<Integer, FoodType> foodDictionary;
+
+    public Tab4(HashMap<Integer, FoodType> foodDictionary) {
+        this.foodDictionary = foodDictionary;
     }
 
     @Override

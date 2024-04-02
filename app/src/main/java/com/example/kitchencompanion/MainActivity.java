@@ -30,10 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        fragmentMap.put(R.id.recipes, new Tab1());
-        fragmentMap.put(R.id.pantry, new Tab2());
-        fragmentMap.put(R.id.shopping, new Tab3());
-        fragmentMap.put(R.id.settings, new Tab4());
+        Tab2 tab2 = new Tab2();
+        fragmentMap.put(R.id.pantry, tab2);
+        fragmentMap.put(R.id.recipes, new Tab1(tab2.getFoodDictionary()));
+        fragmentMap.put(R.id.shopping, new Tab3(tab2.getFoodDictionary()));
+        fragmentMap.put(R.id.settings, new Tab4(tab2.getFoodDictionary()));
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override

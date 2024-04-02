@@ -95,19 +95,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:gravity="center_vertical">
+                android:gravity="center_horizontal">
 
                 <ImageView
                     android:id="@+id/closeButtonRecipes"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
+                    android:gravity="top"
                     android:src="@drawable/x_icon" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
                 <ImageView
                     android:id="@+id/favoriteRecipeItemButton"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/heart_outline" />
+                    android:src="@drawable/heart_outline"
+                    android:gravity="bottom"/>
             </LinearLayout>
         </LinearLayout>
 

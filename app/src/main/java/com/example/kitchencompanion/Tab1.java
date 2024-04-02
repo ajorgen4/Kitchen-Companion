@@ -21,14 +21,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class Tab1 extends Fragment {
     private FloatingActionButton addRecipeButton;
     private RecyclerView recipeRecyclerView;
     private RecipeAdapter recipeAdapter;
+    // Reference to the set of all FoodType objects in the app
+    // Maps FoodType.getID() to FoodType
+    HashMap<Integer, FoodType> foodDictionary;
 
-    public Tab1() {
+    public Tab1(HashMap<Integer, FoodType> foodDictionary) {
+        this.foodDictionary = foodDictionary;
     }
 
     @Override
