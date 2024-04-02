@@ -23,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Tab1 extends Fragment {
     private FloatingActionButton addRecipeButton;
@@ -120,10 +121,26 @@ public class Tab1 extends Fragment {
     private void createFilter(String filter, Map<String, LinearLayout> filterButtonMap, Map<String, TextView> filterTextMap) {
         Drawable selected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_selected);
         Drawable unselected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_unselected);
+
         filterButtonMap.get(filter).setOnClickListener(v -> {
             Drawable currentBackground = filterButtonMap.get(filter).getBackground();
+            // If true, we are unselecting. If false, we are selecting
             boolean isFilterSelected = currentBackground != null && currentBackground.getConstantState().equals(selected.getConstantState());
+
+            // If we are activating a new filter, deactivate the previous one
+            if (!isFilterSelected) {
+                // For all filters that are not filter
+                for (String key: filterButtonMap.entrySet().stream().filter(e -> !e.getKey().equals(filter)).map(Map.Entry::getKey).collect(Collectors.toList())) {
+                    Drawable keyBackground = filterButtonMap.get(key).getBackground();
+                    // If filter key is selected, deselect it
+                    if (keyBackground != null && keyBackground.getConstantState().equals(selected.getConstantState())) {
+                        filterButtonMap.get(key).setBackground(unselected);
+                    }
+                }
+            }
+
             filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
+            // Here, we will need to make a call to actually apply the filter in the backend
         });
     }
 

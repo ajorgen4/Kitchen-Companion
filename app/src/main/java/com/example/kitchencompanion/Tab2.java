@@ -1,6 +1,7 @@
 package com.example.kitchencompanion;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -36,10 +37,13 @@ public class Tab2 extends Fragment {
     private View view;
     private FloatingActionButton addFoodButton;
     private Button filterButton;
+
+    // FoodType selector stuff
     TextView foodTypeSelector;
     HashMap<Integer, FoodType> foodDictionary;
     // Used in FoodType selector
     ArrayList<FoodType> foodSelectorList;
+    Dialog foodSelector;
 
 
     public Tab2() {
@@ -69,8 +73,19 @@ public class Tab2 extends Fragment {
         filterButton = view.findViewById(R.id.pantryFiltersButton);
         filterButton.setOnClickListener(v -> showFilterDialog());
 
+        // textView = foodTypeSelector
+        // arrayList = foodSelectorList
+        // dialog = foodSelector
         foodTypeSelector = view.findViewById(R.id.pantryAddFoodFoodTypeSelector);
         foodSelectorList = new ArrayList<>(foodDictionary.values());
+        /*
+        foodTypeSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                foodSelector = new Dialog(requireContext());
+            }
+        });
+        */
 
         // Filter UI management
         setFilters();
