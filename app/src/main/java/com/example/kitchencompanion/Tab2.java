@@ -80,6 +80,8 @@ public class Tab2 extends Fragment {
         // Filter UI management
         setFilters();
 
+        //printAllFoodTypes(); // Debugging, remove later
+
         return view;
     }
 
@@ -255,9 +257,10 @@ public class Tab2 extends Fragment {
     }
 
     private HashMap<Integer, FoodType> createFoodDictionary() {
-        HashMap<Integer, FoodType> tempFoodDictionary = new HashMap<Integer, FoodType>();
+        HashMap<Integer, FoodType> tempFoodDictionary = new HashMap<>();
         FoodType currItem;
 
+        // Existing items
         currItem = new FoodType("Apple", Enums.FoodGroup.FRUIT, 7);
         tempFoodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Banana", Enums.FoodGroup.FRUIT, 7);
@@ -265,10 +268,57 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Orange", Enums.FoodGroup.FRUIT, 7);
         tempFoodDictionary.put(currItem.getID(), currItem);
 
+        // New Items for Oven Baked Risotto
+        currItem = new FoodType("Onion", Enums.FoodGroup.VEGETABLE, 14);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Olive Oil", Enums.FoodGroup.CONDIMENT, 90);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Rice", Enums.FoodGroup.GRAIN, 180);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Vegetable Broth", Enums.FoodGroup.BEVERAGE, 30);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Parmesan", Enums.FoodGroup.DAIRY, 60);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Parsley", Enums.FoodGroup.HERB, 10);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Salt", Enums.FoodGroup.CONDIMENT, 180);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Pepper", Enums.FoodGroup.SPICE, 180);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+
+        // New Items for Chicken Noodle Soup
+        currItem = new FoodType("Chicken", Enums.FoodGroup.MEAT, 7);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Noodles", Enums.FoodGroup.GRAIN, 30);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        // Assuming carrots and celery are additional ingredients
+        currItem = new FoodType("Carrots", Enums.FoodGroup.VEGETABLE, 30);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Celery", Enums.FoodGroup.VEGETABLE, 30);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+
+        // New Items for Chicken Parmesan
+        currItem = new FoodType("Bread Crumbs", Enums.FoodGroup.GRAIN, 90);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Eggs", Enums.FoodGroup.PROTEIN, 21);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Marinara Sauce", Enums.FoodGroup.CONDIMENT, 60);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Mozzarella", Enums.FoodGroup.DAIRY, 21);
+        tempFoodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("TEST ITEM", Enums.FoodGroup.DAIRY, 21);
+        tempFoodDictionary.put(currItem.getID(), currItem);
         return tempFoodDictionary;
     }
 
     public HashMap<Integer, FoodType> getFoodDictionary() {
         return foodDictionary;
+    }
+
+    // Debugging - List all the IDs
+    public void printAllFoodTypes() {
+        for (Map.Entry<Integer, FoodType> entry : foodDictionary.entrySet()) {
+            System.out.println("ID: " + entry.getKey() + ", Name: " + entry.getValue().getItemName());
+        }
     }
 }

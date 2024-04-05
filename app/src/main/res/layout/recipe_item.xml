@@ -124,8 +124,8 @@
             android:layout_height="32dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="610dp"
+            android:layout_marginTop="6dp"
             android:visibility="gone"
             app:srcCompat="@drawable/warning"
             app:tint="#FF0000" />

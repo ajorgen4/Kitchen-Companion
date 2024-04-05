@@ -3,6 +3,11 @@ package com.example.kitchencompanion;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +32,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private List<Recipe> recipes;
     private Context context;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes) {
+    private RecipeDatabase recipeDatabase;
+
+    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase) {
         this.context = context;
         this.recipes = recipes;
+        this.recipeDatabase = recipeDatabase;
     }
 
     @Override
@@ -102,37 +110,65 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 Recipe recipe = recipes.get(position);
-                showDescPopup(context, recipe.getDescription(), recipe.getDietaryAttributes());
+                showDescPopup(context, recipe);
             });
         }
     }
 
-    private void showDescPopup(Context context, String description, List<Enums.DietaryAttribute> attributes) {
+    private void showDescPopup(Context context, Recipe recipe) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.popup_recipe_desc, null);
 
+
+
+        // Find TextViews
         TextView attributesTextView = dialogView.findViewById(R.id.attributesTextView);
+        TextView ingredientsTextView = dialogView.findViewById(R.id.ingredientsTextView);
         TextView descriptionTextView = dialogView.findViewById(R.id.descriptionTextView);
 
-        // Convert attributes to String
+        // Set the attributes
         StringBuilder attributesBuilder = new StringBuilder();
-        for(Enums.DietaryAttribute attribute : attributes) {
-            if(attributesBuilder.length() > 0) attributesBuilder.append(", ");
+        for (Enums.DietaryAttribute attribute : recipe.getDietaryAttributes()) {
+            if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append(attribute.toString());
         }
-        attributesTextView.setText("Attributes: " + attributesBuilder.toString());
-        descriptionTextView.setText("Steps: " + description);
+
+        // Tutorial Used for 3 textviews: https://stackoverflow.com/questions/37661755/how-to-have-bold-and-normal-text-in-same-textview-in-android
+        // Set the Attributes
+        String label = "Recipe Dietary Attributes/Allergens: ";
+        String attributes = attributesBuilder.toString();
+        SpannableString spannable = new SpannableString(label + attributes);
+        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        spannable.setSpan(new UnderlineSpan(), 0, label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        attributesTextView.setText(spannable);
+        String ingredientsLabel = "Ingredients: ";
+        String ingredientsText = recipeDatabase.printIngredientsForRecipe(recipe.getRecipeId());
+        SpannableString ingredientsSpannable = new SpannableString(ingredientsLabel + ingredientsText);
+        ingredientsSpannable.setSpan(new StyleSpan(Typeface.BOLD), 0, ingredientsLabel.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        ingredientsSpannable.setSpan(new UnderlineSpan(), 0, ingredientsLabel.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        ingredientsTextView.setText(ingredientsSpannable);
+        String instructionsLabel = "Recipe Instructions: ";
+        String instructionsText = recipe.getDescription();
+        SpannableString instructionsSpannable = new SpannableString(instructionsLabel + instructionsText);
+
+        instructionsSpannable.setSpan(new StyleSpan(Typeface.BOLD), 0, instructionsLabel.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        instructionsSpannable.setSpan(new UnderlineSpan(), 0, instructionsLabel.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        descriptionTextView.setText(instructionsSpannable);
+
 
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = (int) (displayMetrics.widthPixels * 0.75);
-        int height = (int) (displayMetrics.heightPixels * 0.75);
-        dialog.getWindow().setLayout(width, height);
+        // Close popup button
+        dialogView.findViewById(R.id.rightCloseButton).setOnClickListener(v -> dialog.dismiss());
+
+        // Mark cooked button
+        dialogView.findViewById(R.id.markCookedButton).setOnClickListener(v -> {
+            // Implement later
+        });
 
         dialog.show();
     }
+
 }

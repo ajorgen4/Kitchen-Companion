@@ -37,6 +37,8 @@ public class Tab1 extends Fragment {
         this.foodDictionary = foodDictionary;
     }
 
+    private RecipeDatabase recipeDatabase;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab1, container, false);
@@ -46,8 +48,8 @@ public class Tab1 extends Fragment {
         addRecipeButton = view.findViewById(R.id.addRecipeButton);
         addRecipeButton.setOnClickListener(v -> showAddRecipeDialog());
 
-        RecipeDatabase recipeDatabase = new RecipeDatabase();
-        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes());
+        recipeDatabase = new RecipeDatabase(foodDictionary);
+        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
         setFilters(view);
