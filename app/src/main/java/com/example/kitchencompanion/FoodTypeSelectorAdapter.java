@@ -68,6 +68,7 @@ public class FoodTypeSelectorAdapter extends ArrayAdapter<FoodType> implements F
 
         TextView nameTextView = listItem.findViewById(android.R.id.text1);
         nameTextView.setText(currentFoodType.getItemName());
+        nameTextView.setTextSize(20);
 
         return listItem;
     }
@@ -80,5 +81,16 @@ public class FoodTypeSelectorAdapter extends ArrayAdapter<FoodType> implements F
     @Override
     public int getCount() {
         return filteredData != null ? filteredData.size() : foodTypes.size();
+    }
+
+    @Override
+    public FoodType getItem(int position) {
+        // Return the item from the filteredData list if it's not null
+        if (filteredData != null) {
+            return filteredData.get(position);
+        } else {
+            // If filteredData is null, return the item from the original foodTypes list
+            return foodTypes.get(position);
+        }
     }
 }

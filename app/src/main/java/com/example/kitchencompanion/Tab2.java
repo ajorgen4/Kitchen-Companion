@@ -39,7 +39,7 @@ public class Tab2 extends Fragment {
 
     private ListView foodListView;
     // Example items
-    private List<PantryItem> foodList;
+    private ArrayList<PantryItem> pantryList;
     private FoodAdapter adapter;
     private View view;
     private FloatingActionButton addFoodButton;
@@ -55,13 +55,9 @@ public class Tab2 extends Fragment {
 
 
     public Tab2() {
-        foodList = new ArrayList<PantryItem>();
+        this.pantryList = new ArrayList<PantryItem>();;
         foodDictionary = createFoodDictionary();
-
-        // Right now, initial expiration dates hardcoded. Change this to be today + expirationPeriod when the database is done
-        foodList.add(new PantryItem(new FoodBatch(foodDictionary.get(0), 5, LocalDate.now().plusDays(7))));
-        foodList.add(new PantryItem(new FoodBatch(foodDictionary.get(1), 3, LocalDate.now().plusDays(7))));
-        foodList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(7))));
+        prePopulatePantry();
     }
 
     @Override
@@ -71,7 +67,7 @@ public class Tab2 extends Fragment {
         // The view
         foodListView = view.findViewById(R.id.foodListView);
         // The adapter model. foodList is initial items, empty in final product
-        adapter = new FoodAdapter(getContext(), foodList);
+        adapter = new FoodAdapter(getContext(), pantryList);
         // Tie the adapter to the view
         foodListView.setAdapter(adapter);
 
@@ -81,12 +77,19 @@ public class Tab2 extends Fragment {
         filterButton = view.findViewById(R.id.pantryFiltersButton);
         filterButton.setOnClickListener(v -> showFilterDialog());
 
+        // TODO: plus button functionality
+        // TODO: minus button functionality
+        // TODO: Low thing
+        // TODO: icon functionality
+        // TODO: Expiration date functionality (proper data and colors)
+
         // Filter UI management
         setFilters();
 
         return view;
     }
 
+    // TODO: Functionality
     private void showFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.pantry_filter_dialog, null);
@@ -173,7 +176,6 @@ public class Tab2 extends Fragment {
                 foodSelectorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // TODO: FILTER BUG: it selects by i. If you filter down to 1 item, it just takes apple every time. Ask Claude.
                         // Pass the selected food
                         selectedFood = foodSelectorListAdapter.getItem(position);
                         // Update visuals
@@ -297,15 +299,6 @@ public class Tab2 extends Fragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create new item
-                /*
-                DatePicker expirationDatePicker = dialogView.findViewById(R.id.pantryAddFoodExpirationDatePicker);
-                FoodType selectedFood;
-                EditText countEditText = dialogView.findViewById(R.id.pantryAddFoodCountInput);
-                CheckBox privateStorage = dialogView.findViewById(R.id.pantryAddFoodPrivateCheckBox);
-                 */
-                // TODO: implement create button
-                // TODO: verify they have entered all fields first
                 int count = Integer.parseInt(countEditText.getText().toString());
                 boolean privateStorageBool = privateStorage.isChecked();
                 LocalDate expirationDate = LocalDate.of(
@@ -324,17 +317,39 @@ public class Tab2 extends Fragment {
     // FOR INTERNAL USE ONLY
     // Allows support for custom expiration dates and private storage
     public void addItemInternal(FoodType foodType, int count, boolean privateStorage, LocalDate expirationDate) {
+        /*
+        foodList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(7))));
+        adapter is the adapter here, don't forget to notify it
+         */
+        boolean exists = false;
 
+        for (PantryItem item : pantryList) {
+            if (item.getType() == foodType) { // Can compare references because there is only 1 reference to each FoodType
+                exists = true;
+                item.addBatch(new FoodBatch(foodType, count, expirationDate));
+            }
+        }
+
+        if (!exists) { // If the proper item wasn't found (it isn't in their pantry)
+            pantryList.add(new PantryItem(new FoodBatch(foodType, count, expirationDate)));
+        }
+
+        adapter.notifyDataSetChanged();
     }
 
-    // Shopping list uses this
+    // Shopping list, plus button use this
     public void addItems(FoodType foodType, int count) {
-
+        // Assumed not private, default expiration period
+        addItemInternal(foodType, count, false, LocalDate.now().plusDays(foodType.getExpirationPeriod()));
     }
 
-    // Recipes uses this
+    // Recipes, minus button use this
     public void removeItems(FoodType foodType, int count) {
-
+        for (PantryItem item : pantryList) {
+            if (item.getType() == foodType) { // Can compare references because there is only 1 reference to each FoodType
+                item.removeItemCount(count);
+            }
+        }
     }
 
     // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java
@@ -363,6 +378,7 @@ public class Tab2 extends Fragment {
     }
 
     // In the future (when the backend model is made), these will need to pass filter instructions to FoodAdapter.java
+    // TODO: Filters
     private void createFilter(String filter, Map<String, LinearLayout> filterButtonMap, Map<String, TextView> filterTextMap) {
         Drawable selected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_selected);
         Drawable unselected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_unselected);
@@ -385,6 +401,7 @@ public class Tab2 extends Fragment {
             }
 
             filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
+            // TODO
             // Here, we will need to make a call to actually apply the filter in the backend
         });
     }
@@ -446,6 +463,16 @@ public class Tab2 extends Fragment {
 
     public HashMap<Integer, FoodType> getFoodDictionary() {
         return foodDictionary;
+    }
+
+    public void prePopulatePantry() {
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(0), 5, LocalDate.now().plusDays(7))));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(1), 3, LocalDate.now().plusDays(7))));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(7))));
+    }
+
+    public ArrayList<PantryItem> getPantryList() {
+        return pantryList;
     }
 
     // Debugging - List all the IDs

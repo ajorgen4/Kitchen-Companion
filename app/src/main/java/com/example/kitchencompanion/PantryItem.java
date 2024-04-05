@@ -11,6 +11,7 @@ public class PantryItem {
     private Set<FoodBatch> batches;
     private String itemName;
     private boolean low;
+    private FoodType type;
 
     public PantryItem(FoodBatch batch) {
         this.batches = new HashSet<>();
@@ -18,10 +19,7 @@ public class PantryItem {
         this.batches.add(batch);
         this.itemName = batch.getFoodType().getItemName();
         this.low = false; // by default, assumed to not be low
-    }
-
-    public void addBatch(FoodBatch batch) {
-        this.batches.add(batch);
+        this.type = batch.getFoodType();
     }
 
     // Removes items from batches in order of expiration date
@@ -69,6 +67,14 @@ public class PantryItem {
 
     public Set<FoodBatch> getBatches() {
         return new HashSet<>(batches);
+    }
+
+    public void addBatch(FoodBatch batch) {
+        this.batches.add(batch);
+    }
+
+    public FoodType getType() {
+        return type;
     }
 
     public void printBatches() {
