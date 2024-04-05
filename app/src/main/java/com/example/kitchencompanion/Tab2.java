@@ -13,10 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Button;
 
@@ -42,12 +44,14 @@ public class Tab2 extends Fragment {
     private View view;
     private FloatingActionButton addFoodButton;
     private Button filterButton;
-
-    // FoodType selector stuff
-    HashMap<Integer, FoodType> foodDictionary;
+    private HashMap<Integer, FoodType> foodDictionary;
     // Used in FoodType selector
-    ArrayList<FoodType> foodSelectorList;
-    Dialog foodTypeSelector;
+    private ArrayList<FoodType> foodSelectorList;
+    private FoodTypeSelectorAdapter foodSelectorListAdapter;
+    private Dialog foodTypeSelector;
+    // THIS IS WHERE YOU ACCESS THE FOOD SELECTED BY THE FOODTYPE SELECTOR
+    private FoodType selectedFood;
+
 
 
     public Tab2() {
@@ -79,8 +83,6 @@ public class Tab2 extends Fragment {
 
         // Filter UI management
         setFilters();
-
-        //printAllFoodTypes(); // Debugging, remove later
 
         return view;
     }
@@ -118,28 +120,23 @@ public class Tab2 extends Fragment {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.add_food_dialog, null);
 
         // Find and set up the views inside the dialog layout
-        // ...
+        // Buttons
         Button cancelButton = dialogView.findViewById(R.id.pantryAddFoodCancelButton);
-        DatePicker expirationDatePicker = dialogView.findViewById(R.id.pantryAddFoodExpirationDatePicker);
-        TextView foodTypeSelector = dialogView.findViewById(R.id.pantryAddFoodFoodTypeSelector);
+        Button createButton = dialogView.findViewById(R.id.pantryAddFoodCreateButton);
 
-        // Set the default date.
-        // TODO: Update this to use the FoodType selected's expiration period
-        LocalDate defaultDate = LocalDate.now().plusDays(7);
-        expirationDatePicker.updateDate(
-                defaultDate.getYear(),
-                defaultDate.getMonthValue() - 1, // DatePicker months are 0 indexed for some reason
-                defaultDate.getDayOfMonth()
-        );
+        // Info
+        final DatePicker expirationDatePicker = dialogView.findViewById(R.id.pantryAddFoodExpirationDatePicker);
+        final TextView foodTypeSelector = dialogView.findViewById(R.id.pantryAddFoodFoodTypeSelector);
+        final EditText countEditText = dialogView.findViewById(R.id.pantryAddFoodCountInput);
+        final CheckBox privateStorage = dialogView.findViewById(R.id.pantryAddFoodPrivateCheckBox);
 
-        // textView = foodTypeSelector
-        // arrayList = foodSelectorList
-        // dialog = foodSelector
-        // xml element text_view = pantryAddFoodFoodTypeSelector
-        // dialog_searchable_spinner = food_type_selector
+        /*
+            ########################################################
+            ######## FOODTYPE SELECTOR CODE, DO NOT CHANGE! ########
+            ########################################################
+         */
         // Code adapted from: https://www.youtube.com/watch?v=5iIXg4-Iw3U
-
-        // This must stay here to ensure it remains up to date with foodDictionary
+        // This initialization must stay here to ensure it remains up to date with foodDictionary
         foodSelectorList = new ArrayList<FoodType>(foodDictionary.values());
         foodTypeSelector.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,8 +150,8 @@ public class Tab2 extends Fragment {
                 EditText foodSelectorSearchBar = Tab2.this.foodTypeSelector.findViewById(R.id.foodSelectorSearchBar);
                 ListView foodSelectorListView = Tab2.this.foodTypeSelector.findViewById(R.id.foodSelectorListView);
 
-                FoodTypeSelectorAdapter adapter = new FoodTypeSelectorAdapter(getContext(), foodSelectorList);
-                foodSelectorListView.setAdapter(adapter);
+                foodSelectorListAdapter = new FoodTypeSelectorAdapter(getContext(), foodSelectorList);
+                foodSelectorListView.setAdapter(foodSelectorListAdapter);
 
                 foodSelectorSearchBar.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -164,7 +161,7 @@ public class Tab2 extends Fragment {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        adapter.getFilter().filter(s);
+                        foodSelectorListAdapter.getFilter().filter(s);
                     }
 
                     @Override
@@ -176,12 +173,107 @@ public class Tab2 extends Fragment {
                 foodSelectorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        foodTypeSelector.setText(adapter.getItem(position).getItemName());
+                        // TODO: FILTER BUG: it selects by i. If you filter down to 1 item, it just takes apple every time. Ask Claude.
+                        // Pass the selected food
+                        selectedFood = foodSelectorListAdapter.getItem(position);
+                        // Update visuals
+                        foodTypeSelector.setText(selectedFood.getItemName());
+                        // Update expiration
+                        LocalDate defaultDate = LocalDate.now().plusDays(selectedFood.getExpirationPeriod());
+                        expirationDatePicker.updateDate(
+                                defaultDate.getYear(),
+                                defaultDate.getMonthValue() - 1, // DatePicker months are 0 indexed for some reason
+                                defaultDate.getDayOfMonth()
+                        );
+                        // Dismiss dialog
                         Tab2.this.foodTypeSelector.dismiss();
+                    }
+                });
+
+                // FOODTYPE SELECTOR ADD BUTTON
+                Button foodSelectorAddButton = Tab2.this.foodTypeSelector.findViewById(R.id.foodSelectorAddButton);
+                foodSelectorAddButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Dialog dialog = new Dialog(requireContext());
+                        dialog.setContentView(R.layout.add_foodtype_dialog);
+
+                        Button addFoodTypeCancelButton = dialog.findViewById(R.id.addFoodTypeCancelButton);
+                        addFoodTypeCancelButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        Button addFoodTypeCreateButton = dialog.findViewById(R.id.addFoodTypeCreateButton);
+                        addFoodTypeCreateButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Elements
+                                EditText addFoodNameEditText = dialog.findViewById(R.id.addFoodNameEditText);
+                                EditText addFoodExpirationEditText = dialog.findViewById(R.id.addFoodExpirationEditText);
+                                Spinner addFoodGroupSpinner = dialog.findViewById(R.id.addFoodGroupSpinner);
+
+                                // Data
+                                String name = addFoodNameEditText.getText().toString();
+                                String expirationPeriodString = addFoodExpirationEditText.getText().toString().trim();
+                                Enums.FoodGroup foodGroup = Enums.FoodGroup.values()[addFoodGroupSpinner.getSelectedItemPosition()];
+
+                                boolean isValid = true;
+
+                                // Ensure name field is filled in
+                                if (name.isEmpty()) {
+                                    addFoodNameEditText.setError("Please enter a name");
+                                    isValid = false;
+                                } else {
+                                    addFoodNameEditText.setError(null);
+                                }
+
+                                // Ensure expiration date field is filled in
+                                if (expirationPeriodString.isEmpty()) {
+                                    addFoodExpirationEditText.setError("Please enter an expiration period");
+                                    isValid = false;
+                                } else {
+                                    addFoodExpirationEditText.setError(null);
+                                }
+
+                                if (isValid) {
+                                    int expirationPeriod = Integer.parseInt(expirationPeriodString);
+                                    FoodType newFoodType = new FoodType(name, foodGroup, expirationPeriod);
+
+                                    boolean exists = false;
+                                    for (Map.Entry<Integer, FoodType> entry : foodDictionary.entrySet()) {
+                                        FoodType existingFoodType = entry.getValue();
+                                        if (existingFoodType.compareTo(newFoodType) == 0) {
+                                            exists = true;
+                                            addFoodNameEditText.setError("This item already exists");
+                                            break;
+                                        }
+                                    }
+
+                                    if (!exists) {
+                                        Tab2.this.foodDictionary.put(newFoodType.getID(), newFoodType);
+                                        Tab2.this.foodSelectorList.add(newFoodType);
+
+                                        Tab2.this.foodSelectorListAdapter.notifyDataSetChanged();
+
+                                        dialog.dismiss();
+                                    }
+                                }
+                            }
+                        });
+
+                        dialog.show();
                     }
                 });
             }
         });
+        /*
+            ############################################
+            ######## FOODTYPE SELECTOR CODE END ########
+            ############################################
+         */
 
         builder.setView(dialogView);
 
@@ -201,7 +293,48 @@ public class Tab2 extends Fragment {
         // Cancel button functionality
         cancelButton.setOnClickListener(v -> dialog.dismiss());
 
+        // Create button functionality
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create new item
+                /*
+                DatePicker expirationDatePicker = dialogView.findViewById(R.id.pantryAddFoodExpirationDatePicker);
+                FoodType selectedFood;
+                EditText countEditText = dialogView.findViewById(R.id.pantryAddFoodCountInput);
+                CheckBox privateStorage = dialogView.findViewById(R.id.pantryAddFoodPrivateCheckBox);
+                 */
+                // TODO: implement create button
+                // TODO: verify they have entered all fields first
+                int count = Integer.parseInt(countEditText.getText().toString());
+                boolean privateStorageBool = privateStorage.isChecked();
+                LocalDate expirationDate = LocalDate.of(
+                        expirationDatePicker.getYear(),
+                        expirationDatePicker.getMonth(),
+                        expirationDatePicker.getDayOfMonth());
+                addItemInternal(Tab2.this.selectedFood, count, privateStorageBool, expirationDate);
+
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
+    }
+
+    // FOR INTERNAL USE ONLY
+    // Allows support for custom expiration dates and private storage
+    public void addItemInternal(FoodType foodType, int count, boolean privateStorage, LocalDate expirationDate) {
+
+    }
+
+    // Shopping list uses this
+    public void addItems(FoodType foodType, int count) {
+
+    }
+
+    // Recipes uses this
+    public void removeItems(FoodType foodType, int count) {
+
     }
 
     // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java
@@ -287,7 +420,7 @@ public class Tab2 extends Fragment {
         tempFoodDictionary.put(currItem.getID(), currItem);
 
         // New Items for Chicken Noodle Soup
-        currItem = new FoodType("Chicken", Enums.FoodGroup.MEAT, 7);
+        currItem = new FoodType("Chicken", Enums.FoodGroup.PROTEIN, 7);
         tempFoodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Noodles", Enums.FoodGroup.GRAIN, 30);
         tempFoodDictionary.put(currItem.getID(), currItem);

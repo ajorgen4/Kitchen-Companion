@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="food_groups">
+        <item>FRUIT</item>
+        <item>VEGETABLE</item>
+        <item>GRAIN</item>
+        <item>PROTEIN</item>
+        <item>DAIRY</item>
+        <item>CONDIMENT</item>
+        <item>BEVERAGE</item>
+        <item>HERB</item>
+        <item>SPICE</item>
+        <item>MISC</item>
+        <item>TEST</item>
+    </string-array>
+</resources>

@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select a Food"
+        android:text="Select a Food Type"
         android:textSize="30sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
@@ -46,15 +46,16 @@
             android:id="@+id/foodSelectorListView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textSize="18sp"/>
 
         <Button
             android:id="@+id/foodSelectorAddButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add New Food"
-            android:textSize="25sp"
+            android:text="Create a New Food Type"
+            android:textSize="20sp"
             android:textColor="@android:color/black"
             android:layout_gravity="center_horizontal"
             app:strokeWidth="3dp"/>
