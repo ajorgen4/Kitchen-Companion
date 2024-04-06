@@ -18,6 +18,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Map;
 
 // Some links(cite code more):
 // https://www.codevscolor.com/android-kotlin-delete-item-recyclerview
@@ -33,11 +34,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private Context context;
 
     private RecipeDatabase recipeDatabase;
+    private List<PantryItem> pantryList;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase) {
+    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase, List<PantryItem> pantryList) {
         this.context = context;
         this.recipes = recipes;
         this.recipeDatabase = recipeDatabase;
+        this.pantryList = pantryList;
     }
 
     @Override
@@ -51,11 +54,21 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
+
+        // Col 1 text
         holder.recipeName.setText(recipe.getName());
         holder.recipeCookTime.setText("Cook Time: " + recipe.getCookTime());
         holder.recipeCalories.setText("Calories: " + String.valueOf(recipe.getCalories()));
         holder.recipeDifficulty.setText("Difficulty: " + recipe.getDifficulty());
+
+        // Required Ingredients
+        int availableIngredientsCount = calculateAvailableIngredients(recipe);
+        String requiredIngredientsText = "Required Ingredients: " + availableIngredientsCount + "/" + recipe.getTotalIngredientCount();
+        holder.recipeRequiredIngredients.setText(requiredIngredientsText);
+
+        // Favorite Heart
         holder.favoriteIcon.setImageResource(recipe.isFavorited() ? R.drawable.heart_solid : R.drawable.heart_outline);
+
 
         holder.favoriteIcon.setOnClickListener(v -> {
             recipe.toggleFavorite();
@@ -90,7 +103,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView recipeName, recipeCalories, recipeCookTime, recipeDifficulty;
+        TextView recipeName, recipeCalories, recipeCookTime, recipeDifficulty, recipeRequiredIngredients; // Added recipeRequiredIngredients
         ImageView closeButton, favoriteIcon, recipeImage, warningIcon;
         View viewForeground;
 
@@ -105,11 +118,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             recipeImage = itemView.findViewById(R.id.recipeImage);
             warningIcon = itemView.findViewById(R.id.warningIcon);
             viewForeground = itemView.findViewById(R.id.recipeItemLayout);
+            recipeRequiredIngredients = itemView.findViewById(R.id.recipeRequiredIngredients);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                Recipe recipe = recipes.get(position);
-                showDescPopup(context, recipe);
+                if (position != RecyclerView.NO_POSITION) {
+                    Recipe recipe = recipes.get(position);
+                    showDescPopup(context, recipe);
+                }
             });
         }
     }
@@ -197,5 +213,26 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         this.recipes = updatedRecipes;
         notifyDataSetChanged();
     }
+
+    private int calculateAvailableIngredients(Recipe recipe) {
+        int availableIngredients = 0;
+        Map<Integer, Integer> recipeRequirements = recipe.getRecipe_Requirements();
+
+        for (Map.Entry<Integer, Integer> requirement : recipeRequirements.entrySet()) {
+            int ingredientId = requirement.getKey();
+            int requiredAmount = requirement.getValue();
+
+            // Find this ingredient in pantry
+            for (PantryItem item : pantryList) {
+                if (item.getType().getID() == ingredientId) {
+                    //  ensure count <= required amount
+                    availableIngredients += Math.min(item.totalCount(), requiredAmount);
+                    break; // skip to next ingredient
+                }
+            }
+        }
+        return availableIngredients;
+    }
+
 
 }

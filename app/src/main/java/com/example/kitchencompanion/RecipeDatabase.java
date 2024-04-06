@@ -33,6 +33,7 @@ public class RecipeDatabase {
         rec1_Ingred.put(8, 1); // Parsley
         rec1_Ingred.put(9, 1); // Salt
         rec1_Ingred.put(10, 1); // Pepper
+        rec1_Ingred.put(19, 3); // TEST ITEM (3 needed)
 
         Map<Integer, Integer> recipe2_Ingredients = new HashMap<>();
         recipe2_Ingredients.put(11, 3); // Chicken

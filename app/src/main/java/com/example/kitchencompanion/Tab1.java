@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -33,11 +34,14 @@ public class Tab1 extends Fragment {
     // Maps FoodType.getID() to FoodType
     HashMap<Integer, FoodType> foodDictionary;
 
-    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase) {
+    private List<PantryItem> pantryList;
+
+    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList) {
         this.foodDictionary = foodDictionary;
         this.recipeDatabase = recipeDatabase;
-
+        this.pantryList = pantryList;
     }
+
 
     private RecipeDatabase recipeDatabase;
 
@@ -50,8 +54,8 @@ public class Tab1 extends Fragment {
         addRecipeButton = view.findViewById(R.id.addRecipeButton);
         addRecipeButton.setOnClickListener(v -> showAddRecipeDialog());
 
-        // Use shared RecipeDatabase instance
-        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase);
+        // Use shared RecipeDatabase instance across tabs
+        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
         setFilters(view);

@@ -469,6 +469,7 @@ public class Tab2 extends Fragment {
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(0), 5, LocalDate.now().plusDays(7))));
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(1), 3, LocalDate.now().plusDays(7))));
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(7))));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(19), 20, LocalDate.now().plusDays(7)))); // TEST Item
     }
 
     public ArrayList<PantryItem> getPantryList() {

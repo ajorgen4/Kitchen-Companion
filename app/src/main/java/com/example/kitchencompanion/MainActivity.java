@@ -39,11 +39,12 @@ public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpd
         recipeDatabase = new RecipeDatabase(foodDictionary);
 
         Tab2 tab2 = new Tab2();
+        Tab1 tab1 = new Tab1(foodDictionary, recipeDatabase, tab2.getPantryList());
+
         fragmentMap.put(R.id.pantry, tab2);
-        // Updated to pass both foodDictionary and recipeDatabase
-        fragmentMap.put(R.id.recipes, new Tab1(foodDictionary, recipeDatabase));
-        fragmentMap.put(R.id.shopping, new Tab3(tab2.getFoodDictionary()));
-        fragmentMap.put(R.id.settings, new Tab4(tab2.getFoodDictionary()));
+        fragmentMap.put(R.id.recipes, tab1);
+        fragmentMap.put(R.id.shopping, new Tab3(foodDictionary));
+        fragmentMap.put(R.id.settings, new Tab4(foodDictionary));
 
         settings = new Settings();
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

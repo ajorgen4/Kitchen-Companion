@@ -96,13 +96,23 @@ public class Recipe {
     public String getIngredientString(HashMap<Integer, FoodType> foodDictionary) {
         StringBuilder ingredientString = new StringBuilder();
         for (Map.Entry<Integer, Integer> entry : ingredients.entrySet()) {
-            String foodName = foodDictionary.get(entry.getKey()).getItemName();
-            ingredientString.append(entry.getValue()).append(" ").append(foodName).append(", ");
+            FoodType foodType = foodDictionary.get(entry.getKey());
+            if (foodType != null) {
+                String foodName = foodType.getItemName();
+                ingredientString.append(entry.getValue()).append(" ").append(foodName).append(", ");
+            } else {
+                ingredientString.append(entry.getValue()).append(" Unknown Ingredient, ");
+            }
         }
         if (ingredientString.length() > 0) {
             ingredientString.setLength(ingredientString.length() - 2);
         }
         return ingredientString.toString();
+    }
+
+
+    public int getTotalIngredientCount() {
+        return ingredients.values().stream().mapToInt(Integer::intValue).sum();
     }
 
     ////////////
