@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,9 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpdateListener {
 
     NavigationBarView bottomNavigationView;
+    Settings settings;
 
     private final Map<Integer, Fragment> fragmentMap = new HashMap<>();
 
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentMap.put(R.id.shopping, new Tab3(tab2.getFoodDictionary()));
         fragmentMap.put(R.id.settings, new Tab4(tab2.getFoodDictionary()));
 
+        // Instantiate Settings class
+        settings = new Settings();
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -53,5 +57,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         bottomNavigationView.setSelectedItemId(R.id.recipes);
+    }
+
+    @Override
+    public void onUpdateHouseName(String newName) {
+        TextView houseNameTextView = findViewById(R.id.pantryAddFoodTitle);
+        houseNameTextView.setText(newName);
     }
 }
