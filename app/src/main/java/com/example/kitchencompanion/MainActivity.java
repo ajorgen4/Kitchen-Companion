@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpd
 
     NavigationBarView bottomNavigationView;
     Settings settings;
+    private RecipeDatabase recipeDatabase;
 
     private final Map<Integer, Fragment> fragmentMap = new HashMap<>();
 
@@ -34,13 +35,16 @@ public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpd
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
+        HashMap<Integer, FoodType> foodDictionary = new HashMap<>(); // Initialize this as needed
+        recipeDatabase = new RecipeDatabase(foodDictionary); // Assuming RecipeDatabase needs a foodDictionary
+
         Tab2 tab2 = new Tab2();
         fragmentMap.put(R.id.pantry, tab2);
-        fragmentMap.put(R.id.recipes, new Tab1(tab2.getFoodDictionary()));
+        // Updated to pass both foodDictionary and recipeDatabase
+        fragmentMap.put(R.id.recipes, new Tab1(foodDictionary, recipeDatabase));
         fragmentMap.put(R.id.shopping, new Tab3(tab2.getFoodDictionary()));
         fragmentMap.put(R.id.settings, new Tab4(tab2.getFoodDictionary()));
 
-        // Instantiate Settings class
         settings = new Settings();
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpd
         });
         bottomNavigationView.setSelectedItemId(R.id.recipes);
     }
+
 
     @Override
     public void onUpdateHouseName(String newName) {

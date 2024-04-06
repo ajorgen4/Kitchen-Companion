@@ -33,8 +33,10 @@ public class Tab1 extends Fragment {
     // Maps FoodType.getID() to FoodType
     HashMap<Integer, FoodType> foodDictionary;
 
-    public Tab1(HashMap<Integer, FoodType> foodDictionary) {
+    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase) {
         this.foodDictionary = foodDictionary;
+        this.recipeDatabase = recipeDatabase;
+
     }
 
     private RecipeDatabase recipeDatabase;
@@ -48,7 +50,7 @@ public class Tab1 extends Fragment {
         addRecipeButton = view.findViewById(R.id.addRecipeButton);
         addRecipeButton.setOnClickListener(v -> showAddRecipeDialog());
 
-        recipeDatabase = new RecipeDatabase(foodDictionary);
+        // Use shared RecipeDatabase instance
         recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
@@ -146,10 +148,18 @@ public class Tab1 extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (recipeAdapter != null) {
+            recipeAdapter.updateRecipes(recipeDatabase.getRecipes());
+        }
+    }
+
     private void showAddRecipeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.add_recipe_dialog, null);
-        Button cancelButton = dialogView.findViewById(R.id.addRecipeCancelButton);
+        Button cancelButton = dialogView.findViewById(R.id.recipeAddCloseButton);
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);

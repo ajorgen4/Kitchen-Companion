@@ -63,10 +63,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         });
 
         holder.closeButton.setOnClickListener(v -> {
-            int currentPosition = holder.getAdapterPosition();
-            recipes.remove(currentPosition);
-            notifyItemRemoved(currentPosition);
-            notifyItemRangeChanged(currentPosition, recipes.size());
+            showConfirmationDialog(position);
         });
 
         int imageResourceId = context.getResources().getIdentifier(recipe.getImageFile(), "drawable", context.getPackageName());
@@ -89,6 +86,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     public int getItemCount() {
         return recipes.size();
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView recipeName, recipeCalories, recipeCookTime, recipeDifficulty;
@@ -135,13 +134,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         // Tutorial Used for 3 textviews: https://stackoverflow.com/questions/37661755/how-to-have-bold-and-normal-text-in-same-textview-in-android
         // Set the Attributes
-        String label = "Recipe Dietary Attributes/Allergens: ";
+        String label = "Recipe Dietary Attributes/Allergens: \n";
         String attributes = attributesBuilder.toString();
         SpannableString spannable = new SpannableString(label + attributes);
         spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         spannable.setSpan(new UnderlineSpan(), 0, label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         attributesTextView.setText(spannable);
-        String ingredientsLabel = "Ingredients: ";
+        String ingredientsLabel = "Ingredients: \n";
         String ingredientsText = recipeDatabase.printIngredientsForRecipe(recipe.getRecipeId());
         SpannableString ingredientsSpannable = new SpannableString(ingredientsLabel + ingredientsText);
         ingredientsSpannable.setSpan(new StyleSpan(Typeface.BOLD), 0, ingredientsLabel.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -169,6 +168,34 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         });
 
         dialog.show();
+    }
+
+    private void showConfirmationDialog(int position) {
+        Recipe recipe = recipes.get(position);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.confirmation_dialog, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        dialogView.findViewById(R.id.confirmDeleteButton).setOnClickListener(v -> {
+            int recipeId = recipe.getRecipeId();
+            recipeDatabase.removeRecipe(recipeId);
+            // Remove using recipeId, not position, to avoid index issues
+            recipes.removeIf(r -> r.getRecipeId() == recipeId);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, recipes.size() - position);
+            dialog.dismiss();
+        });
+
+        dialogView.findViewById(R.id.cancelDeleteButton).setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+
+    public void updateRecipes(List<Recipe> updatedRecipes) {
+        this.recipes = updatedRecipes;
+        notifyDataSetChanged();
     }
 
 }

@@ -107,13 +107,28 @@ public class RecipeDatabase {
         nextRecipeId++;
     }
 
+    // RecipeDatabase.java changes
     public void removeRecipe(int recipeId) {
-        recipes.removeIf(recipe -> recipe.getRecipeId() == recipeId);
-        idToRecipeMap.remove(recipeId);
+        Recipe recipeToRemove = idToRecipeMap.get(recipeId);
+        if (recipeToRemove != null) {
+            System.out.println("DEBUG: Removing recipe: " + recipeToRemove.getName() + " Recipe ID: " + recipeId);
+            recipes.removeIf(recipe -> recipe.getRecipeId() == recipeId);
+            idToRecipeMap.remove(recipeId);
+
+            // After removal, print current recipes
+            printRecipeDatabase();
+        }
     }
 
     public List<Recipe> getRecipes() {
         return recipes;
+    }
+
+    public void printRecipeDatabase() {
+        System.out.println("DEBUG: Current recipes in the database:");
+        for (Recipe recipe : recipes) {
+            System.out.println("Recipe ID: " + recipe.getRecipeId() + ", Name: " + recipe.getName());
+        }
     }
 
     public String printIngredientsForRecipe(int recipeId) {

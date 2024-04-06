@@ -102,7 +102,9 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:gravity="top"
-                    android:src="@drawable/x_icon" />
+                    android:src="@drawable/x_icon"
+                    android:onClick="showConfirmationDialog" />
+
 
                 <Space
                     android:layout_width="0dp"
@@ -115,20 +117,15 @@
                     android:layout_height="30dp"
                     android:src="@drawable/heart_outline"
                     android:gravity="bottom"/>
+                <ImageView
+                    android:id="@+id/warningIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/warning"
+                    android:layout_gravity="end"
+                    android:visibility="gone"
+                    app:tint="#FF0000" />
             </LinearLayout>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/warningIcon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="610dp"
-            android:layout_marginTop="6dp"
-            android:visibility="gone"
-            app:srcCompat="@drawable/warning"
-            app:tint="#FF0000" />
-
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
