@@ -60,6 +60,7 @@ public class Tab1 extends Fragment {
         return view;
     }
 
+    //https://developer.android.com/reference/androidx/recyclerview/widget/ItemTouchHelper
     private void setUpItemTouchHelper() {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 

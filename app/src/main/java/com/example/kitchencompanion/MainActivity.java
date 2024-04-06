@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpd
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        HashMap<Integer, FoodType> foodDictionary = new HashMap<>(); // Initialize this as needed
-        recipeDatabase = new RecipeDatabase(foodDictionary); // Assuming RecipeDatabase needs a foodDictionary
+        HashMap<Integer, FoodType> foodDictionary = new HashMap<>();
+        recipeDatabase = new RecipeDatabase(foodDictionary);
 
         Tab2 tab2 = new Tab2();
         fragmentMap.put(R.id.pantry, tab2);
