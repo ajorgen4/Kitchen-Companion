@@ -1,6 +1,6 @@
 package com.example.kitchencompanion;
 
-import java.util.Comparator;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,11 +27,11 @@ public class PantryItem {
     // Removes items from batches in order of expiration date
     public void removeItemCount(int count) {
         do {
-            FoodBatch nextExpiringBatch = findnextExpiringBatch();
+            FoodBatch nextExpiringBatch = findNextExpiringBatch();
 
             if (nextExpiringBatch != null) {
                 count -= nextExpiringBatch.removeItemCount(count);
-                if (count != 0) {
+                if (count != 0 || nextExpiringBatch.getItemCount() == 0) {
                     batches.remove(nextExpiringBatch);
                 }
             } else {
@@ -42,7 +42,7 @@ public class PantryItem {
     }
 
     // Finds the batch in this Pantry Item with the closest expiration date
-    private FoodBatch findnextExpiringBatch() {
+    private FoodBatch findNextExpiringBatch() {
         FoodBatch nextExpiringBatch = null;
 
         for (FoodBatch batch : batches) {
@@ -53,6 +53,10 @@ public class PantryItem {
         }
 
         return nextExpiringBatch;
+    }
+
+    public LocalDate nextExpiration() {
+        return findNextExpiringBatch().getExpirationDate();
     }
 
     public int totalCount() {
@@ -90,10 +94,14 @@ public class PantryItem {
     }
 
     public boolean equalTo(PantryItem other) {
-        return (this.type == other.type) && (this.isPrivate == other.isPrivate);
+        return (this.type == other.type) && (this.isPrivate == other.isPrivate) && (this.low == other.low);
     }
 
     public void setLow(boolean low) {
         this.low = low;
+    }
+
+    public boolean getLow() {
+        return low;
     }
 }

@@ -30,7 +30,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -51,6 +50,7 @@ public class Tab2 extends Fragment {
     private Dialog foodTypeSelector;
     // THIS IS WHERE YOU ACCESS THE FOOD SELECTED BY THE FOODTYPE SELECTOR
     private FoodType selectedFood;
+
 
     public interface PantryUpdateListener {
         void onPantryUpdated();
@@ -81,7 +81,7 @@ public class Tab2 extends Fragment {
         // The view
         foodListView = view.findViewById(R.id.foodListView);
         // The adapter model. foodList is initial items, empty in final product
-        adapter = new FoodAdapter(getContext(), pantryList);
+        adapter = new FoodAdapter(getContext(), pantryList, this);
         // Tie the adapter to the view
         foodListView.setAdapter(adapter);
 
@@ -91,9 +91,8 @@ public class Tab2 extends Fragment {
         filterButton = view.findViewById(R.id.pantryFiltersButton);
         filterButton.setOnClickListener(v -> showFilterDialog());
 
-        // TODO: plus button functionality
-        // TODO: minus button functionality
-        // TODO: Low thing
+
+
         // TODO: icon functionality
         // TODO: Expiration date functionality (proper data and colors)
 
@@ -339,7 +338,7 @@ public class Tab2 extends Fragment {
                 }
 
                 if (isValid) {
-                    addItemInternal(Tab2.this.selectedFood, Integer.parseInt(countString), privateStorageBool, expirationDate);
+                    addItemsInternal(Tab2.this.selectedFood, Integer.parseInt(countString), privateStorageBool, expirationDate);
                     selectedFood = null;
 
                     dialog.dismiss();
@@ -352,7 +351,11 @@ public class Tab2 extends Fragment {
 
     // FOR INTERNAL USE ONLY
     // Allows support for custom expiration dates and private storage
-    private void addItemInternal(FoodType foodType, int count, boolean isPrivate, LocalDate expirationDate) {
+    private void addItemsInternal(FoodType foodType, int count, boolean isPrivate, LocalDate expirationDate) {
+        if (count <= 0) {
+            return;
+        }
+
         boolean exists = false;
         FoodBatch batch = new FoodBatch(foodType, count, expirationDate);
         PantryItem potentialItem = new PantryItem(batch, isPrivate);
@@ -371,21 +374,39 @@ public class Tab2 extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    public void addItemsPrivate(FoodType foodType, int count, boolean isPrivate) {
+        addItemsInternal(foodType, count, isPrivate, LocalDate.now().plusDays(foodType.getExpirationPeriod()));
+    }
+
     // Shopping list, plus button use this
     public void addItems(FoodType foodType, int count) {
         // Assumed not private, default expiration period
-        addItemInternal(foodType, count, false, LocalDate.now().plusDays(foodType.getExpirationPeriod()));
+        addItemsInternal(foodType, count, false, LocalDate.now().plusDays(foodType.getExpirationPeriod()));
+    }
+
+    public boolean removeItemsInternal(FoodType foodType, int count, boolean isPrivate) {
+        FoodBatch batch = new FoodBatch(foodType, count, LocalDate.now());
+        PantryItem potentialItem = new PantryItem(batch, isPrivate);
+
+        for (PantryItem item : pantryList) {
+            if (item.equalTo(potentialItem)) {
+                item.removeItemCount(count);
+
+                adapter.notifyDataSetChanged();
+                notifyPantryUpdated(); // Added to make changes take place instantly
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // Recipes, minus button use this
     public void removeItems(FoodType foodType, int count) {
-        for (PantryItem item : pantryList) {
-            if (item.getType() == foodType) { // Can compare references because there is only 1 reference to each FoodType
-                System.out.println("Removing: " + foodType.getItemName() + " (ID: " + foodType.getID() + "), Count: " + count);
-                item.removeItemCount(count);
-            }
+        if (!removeItemsInternal(foodType, count, false)) { // try to remove from public first
+            removeItemsInternal(foodType, count, true);
         }
-        notifyPantryUpdated(); // Added to make changes take place instantly
     }
 
     // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java
@@ -491,8 +512,6 @@ public class Tab2 extends Fragment {
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Mozzarella", Enums.FoodGroup.DAIRY, 21);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("TEST ITEM", Enums.FoodGroup.DAIRY, 21);
-        foodDictionary.put(currItem.getID(), currItem);
     }
 
     public HashMap<Integer, FoodType> getFoodDictionary() {
@@ -500,10 +519,18 @@ public class Tab2 extends Fragment {
     }
 
     public void prePopulatePantry() {
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(0), 5, LocalDate.now().plusDays(7)), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(1), 3, LocalDate.now().plusDays(7)), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(7)), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(19), 20, LocalDate.now().plusDays(7)), true)); // TEST Item
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(0), 5, LocalDate.now().plusDays(5)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(1), 3, LocalDate.now().plusDays(8)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(2)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(3), 1, LocalDate.now().plusDays(24)), true));
+
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(7), 5, LocalDate.now().plusDays(foodDictionary.get(7).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(6), 3, LocalDate.now().plusDays(8)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(18), 3, LocalDate.now().plusDays(2)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(15), 1, LocalDate.now().plusDays(24)), true));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(17), 5, LocalDate.now().plusDays(5)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(10), 3, LocalDate.now().plusDays(8)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(11), 3, LocalDate.now().plusDays(2)), false));
     }
 
     public ArrayList<PantryItem> getPantryList() {
