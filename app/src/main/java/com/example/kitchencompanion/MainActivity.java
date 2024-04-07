@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpdateListener {
+public class MainActivity extends AppCompatActivity implements Tab2.PantryUpdateListener, Tab4.HouseNameUpdateListener {
 
     NavigationBarView bottomNavigationView;
     Settings settings;
@@ -39,10 +39,11 @@ public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpd
         recipeDatabase = new RecipeDatabase(foodDictionary);
 
         Tab2 tab2 = new Tab2();
-        Tab1 tab1 = new Tab1(foodDictionary, recipeDatabase, tab2.getPantryList());
-
+        tab2.setPantryUpdateListener(this);
         fragmentMap.put(R.id.pantry, tab2);
+        Tab1 tab1 = new Tab1(tab2.getFoodDictionary(), recipeDatabase, tab2.getPantryList());
         fragmentMap.put(R.id.recipes, tab1);
+
         fragmentMap.put(R.id.shopping, new Tab3(foodDictionary));
         fragmentMap.put(R.id.settings, new Tab4(foodDictionary));
 
@@ -64,10 +65,30 @@ public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpd
         bottomNavigationView.setSelectedItemId(R.id.recipes);
     }
 
+    public Tab2 getTab2() {
+        return (Tab2) fragmentMap.get(R.id.pantry);
+    }
+
 
     @Override
     public void onUpdateHouseName(String newName) {
         TextView houseNameTextView = findViewById(R.id.pantryAddFoodTitle);
         houseNameTextView.setText(newName);
+    }
+
+
+    public void addItemsToPantry(int foodTypeId, int count) {
+        FoodType foodType = ((Tab2) fragmentMap.get(R.id.pantry)).getFoodDictionary().get(foodTypeId);
+        if (foodType != null) {
+            ((Tab2) fragmentMap.get(R.id.pantry)).addItems(foodType, count);
+        }
+    }
+
+    @Override
+    public void onPantryUpdated() {
+        Tab1 tab1 = (Tab1) fragmentMap.get(R.id.recipes);
+        if (tab1 != null) {
+            tab1.refreshRecipeAdapter();
+        }
     }
 }

@@ -55,7 +55,7 @@ public class Tab1 extends Fragment {
         addRecipeButton.setOnClickListener(v -> showAddRecipeDialog());
 
         // Use shared RecipeDatabase instance across tabs
-        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList);
+        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
         setFilters(view);
@@ -91,8 +91,14 @@ public class Tab1 extends Fragment {
                     addMissingLayout.setVisibility(View.GONE);
                 }
 
-                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, restrictedDX, dY, actionState, isCurrentlyActive);
+                if (Math.abs(dX) > addMissingLayout.getWidth()) {
+                    // Swipe enough to show "Add Missing" but prevent close
+                    dX = maxSwipeDistance;
+                }
+
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
             }
+
 
             @Override
             public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -175,5 +181,11 @@ public class Tab1 extends Fragment {
         dialog.getWindow().setLayout(width, height);
         cancelButton.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+    }
+
+    public void refreshRecipeAdapter() {
+        if (recipeAdapter != null) {
+            recipeAdapter.notifyDataSetChanged();
+        }
     }
 }

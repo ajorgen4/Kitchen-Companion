@@ -12,11 +12,13 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,12 +37,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     private RecipeDatabase recipeDatabase;
     private List<PantryItem> pantryList;
+    private HashMap<Integer, FoodType> foodDictionary;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase, List<PantryItem> pantryList) {
+    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, HashMap<Integer, FoodType> foodDictionary) {
         this.context = context;
         this.recipes = recipes;
         this.recipeDatabase = recipeDatabase;
         this.pantryList = pantryList;
+        this.foodDictionary = foodDictionary;
     }
 
     @Override
@@ -63,7 +67,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         // Required Ingredients
         int availableIngredientsCount = calculateAvailableIngredients(recipe);
-        String requiredIngredientsText = "Required Ingredients: " + availableIngredientsCount + "/" + recipe.getTotalIngredientCount();
+        int totalIngredientsCount = recipe.getTotalIngredientCount();
+        String requiredIngredientsText = "Required Ingredients: " + availableIngredientsCount + "/" + totalIngredientsCount;
         holder.recipeRequiredIngredients.setText(requiredIngredientsText);
 
         // Favorite Heart
@@ -101,10 +106,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     }
 
 
-
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView recipeName, recipeCalories, recipeCookTime, recipeDifficulty, recipeRequiredIngredients; // Added recipeRequiredIngredients
+        TextView recipeName, recipeCalories, recipeCookTime, recipeDifficulty, recipeRequiredIngredients;
         ImageView closeButton, favoriteIcon, recipeImage, warningIcon;
+        FrameLayout addMissingLayout;
         View viewForeground;
 
         public ViewHolder(View itemView) {
@@ -119,22 +124,32 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             warningIcon = itemView.findViewById(R.id.warningIcon);
             viewForeground = itemView.findViewById(R.id.recipeItemLayout);
             recipeRequiredIngredients = itemView.findViewById(R.id.recipeRequiredIngredients);
+            addMissingLayout = itemView.findViewById(R.id.addMissingLayout);
+
+            addMissingLayout.setClickable(true);
+            addMissingLayout.setFocusable(true);
+
+            addMissingLayout.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    Recipe recipe = recipes.get(position);
+                    addMissingIngredients(recipe);
+                }
+            });
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     Recipe recipe = recipes.get(position);
-                    showDescPopup(context, recipe);
+                    showDescPopup(context, recipe, position);
                 }
             });
         }
     }
 
-    private void showDescPopup(Context context, Recipe recipe) {
+    private void showDescPopup(Context context, Recipe recipe, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.popup_recipe_desc, null);
-
-
 
         // Find TextViews
         TextView attributesTextView = dialogView.findViewById(R.id.attributesTextView);
@@ -147,29 +162,38 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append(attribute.toString());
         }
-
-        // Tutorial Used for 3 textviews: https://stackoverflow.com/questions/37661755/how-to-have-bold-and-normal-text-in-same-textview-in-android
-        // Set the Attributes
-        String label = "Recipe Dietary Attributes/Allergens: \n";
+        // Set the Attributes text with bold and underline for the label
+        String labelAttributes = "Recipe Dietary Attributes/Allergens: \n";
         String attributes = attributesBuilder.toString();
-        SpannableString spannable = new SpannableString(label + attributes);
-        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        spannable.setSpan(new UnderlineSpan(), 0, label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        attributesTextView.setText(spannable);
-        String ingredientsLabel = "Ingredients: \n";
-        String ingredientsText = recipeDatabase.printIngredientsForRecipe(recipe.getRecipeId());
-        SpannableString ingredientsSpannable = new SpannableString(ingredientsLabel + ingredientsText);
-        ingredientsSpannable.setSpan(new StyleSpan(Typeface.BOLD), 0, ingredientsLabel.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        ingredientsSpannable.setSpan(new UnderlineSpan(), 0, ingredientsLabel.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        ingredientsTextView.setText(ingredientsSpannable);
-        String instructionsLabel = "Recipe Instructions: ";
+        SpannableString spannableAttributes = new SpannableString(labelAttributes + attributes);
+        spannableAttributes.setSpan(new StyleSpan(Typeface.BOLD), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        spannableAttributes.setSpan(new UnderlineSpan(), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        attributesTextView.setText(spannableAttributes);
+
+        // Convert ingredient IDs to names and display them
+        StringBuilder ingredientsBuilder = new StringBuilder();
+        for (Map.Entry<Integer, Integer> ingredient : recipe.getRecipe_Requirements().entrySet()) {
+            FoodType foodType = this.foodDictionary.get(ingredient.getKey());
+            String ingredientName = (foodType != null) ? foodType.getItemName() : "Unknown Ingredient";
+            ingredientsBuilder.append(ingredient.getValue()).append(" ").append(ingredientName).append(", ");
+        }
+        // Remove the trailing comma and space from the ingredients list
+        String ingredientsText = ingredientsBuilder.length() > 0 ? ingredientsBuilder.substring(0, ingredientsBuilder.length() - 2) : "";
+
+        // Set the Ingredients text with bold and underline for the label
+        String labelIngredients = "Ingredients: \n";
+        SpannableString spannableIngredients = new SpannableString(labelIngredients + ingredientsText);
+        spannableIngredients.setSpan(new StyleSpan(Typeface.BOLD), 0, labelIngredients.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        spannableIngredients.setSpan(new UnderlineSpan(), 0, labelIngredients.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        ingredientsTextView.setText(spannableIngredients);
+
+        // Set the Recipe Instructions text with bold and underline for the label
+        String labelInstructions = "Recipe Instructions: \n";
         String instructionsText = recipe.getDescription();
-        SpannableString instructionsSpannable = new SpannableString(instructionsLabel + instructionsText);
-
-        instructionsSpannable.setSpan(new StyleSpan(Typeface.BOLD), 0, instructionsLabel.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        instructionsSpannable.setSpan(new UnderlineSpan(), 0, instructionsLabel.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        descriptionTextView.setText(instructionsSpannable);
-
+        SpannableString spannableInstructions = new SpannableString(labelInstructions + instructionsText);
+        spannableInstructions.setSpan(new StyleSpan(Typeface.BOLD), 0, labelInstructions.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        spannableInstructions.setSpan(new UnderlineSpan(), 0, labelInstructions.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        descriptionTextView.setText(spannableInstructions);
 
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
@@ -178,13 +202,24 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         // Close popup button
         dialogView.findViewById(R.id.rightCloseButton).setOnClickListener(v -> dialog.dismiss());
 
-        // Mark cooked button
+        // Mark cooked button logic
         dialogView.findViewById(R.id.markCookedButton).setOnClickListener(v -> {
-            // Implement later
+            Map<Integer, Integer> ingredients = recipe.getRecipe_Requirements();
+            Tab2 tab2 = ((MainActivity) context).getTab2(); // Assumes getTab2() is implemented in MainActivity
+            for (Map.Entry<Integer, Integer> ingredient : ingredients.entrySet()) {
+                int foodTypeId = ingredient.getKey();
+                int requiredAmount = ingredient.getValue();
+                FoodType foodType = tab2.getFoodDictionary().get(foodTypeId);
+                if (foodType != null) {
+                    tab2.removeItems(foodType, requiredAmount);
+                }
+            }
+            dialog.dismiss(); // Close the dialog after marking as cooked
         });
 
         dialog.show();
     }
+
 
     private void showConfirmationDialog(int position) {
         Recipe recipe = recipes.get(position);
@@ -216,23 +251,57 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     private int calculateAvailableIngredients(Recipe recipe) {
         int availableIngredients = 0;
+        int totalRequiredIngredients = 0;
         Map<Integer, Integer> recipeRequirements = recipe.getRecipe_Requirements();
 
         for (Map.Entry<Integer, Integer> requirement : recipeRequirements.entrySet()) {
             int ingredientId = requirement.getKey();
             int requiredAmount = requirement.getValue();
+            totalRequiredIngredients += requiredAmount; // Sum up all required ingredient amounts
 
             // Find this ingredient in pantry
             for (PantryItem item : pantryList) {
                 if (item.getType().getID() == ingredientId) {
-                    //  ensure count <= required amount
+                    // Count the available amount, not exceeding the required amount
                     availableIngredients += Math.min(item.totalCount(), requiredAmount);
-                    break; // skip to next ingredient
+                    break; // Skip to the next ingredient since we've found the current one
                 }
             }
         }
-        return availableIngredients;
+
+        // The caller should use the return value to update the UI
+        return availableIngredients; // Return the count of available ingredients
     }
 
 
+
+    private void addMissingIngredients(Recipe recipe) {
+        Map<Integer, Integer> recipeRequirements = recipe.getRecipe_Requirements();
+        System.out.println("DEBUG: Adding Missing Items for Recipe ID " + recipe.getRecipeId() + " '" + recipe.getName() + "'");
+        for (Map.Entry<Integer, Integer> requirement : recipeRequirements.entrySet()) {
+            int foodTypeId = requirement.getKey();
+            int requiredAmount = requirement.getValue();
+            int availableAmount = 0;
+            for (PantryItem item : pantryList) {
+                if (item.getType().getID() == foodTypeId) {
+                    availableAmount += item.totalCount();
+                }
+            }
+            int missingAmount = requiredAmount - availableAmount;
+            if (missingAmount > 0) {
+                System.out.println("DEBUG: Adding item ID " + foodTypeId + " '" + pantryList.stream()
+                        .filter(item -> item.getType().getID() == foodTypeId)
+                        .findFirst()
+                        .map(item -> item.getType().getItemName())
+                        .orElse("Unknown") + "', " + missingAmount + " (Current pantry count: " + availableAmount + ")");
+                ((MainActivity) context).addItemsToPantry(foodTypeId, missingAmount);
+            }
+        }
+    }
+
+    public void updateRequiredIngredients() {
+        for (int i = 0; i < recipes.size(); i++) {
+            notifyItemChanged(i, "ingredientsUpdate");
+        }
+    }
 }

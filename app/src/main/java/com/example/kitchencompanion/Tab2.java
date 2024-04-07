@@ -52,7 +52,20 @@ public class Tab2 extends Fragment {
     // THIS IS WHERE YOU ACCESS THE FOOD SELECTED BY THE FOODTYPE SELECTOR
     private FoodType selectedFood;
 
+    public interface PantryUpdateListener {
+        void onPantryUpdated();
+    }
+    private PantryUpdateListener updateListener;
+    // Call this method whenever the pantry is updated
+    private void notifyPantryUpdated() {
+        if (updateListener != null) {
+            updateListener.onPantryUpdated();
+        }
+    }
 
+    public void setPantryUpdateListener(PantryUpdateListener listener) {
+        this.updateListener = listener;
+    }
 
     public Tab2() {
         this.pantryList = new ArrayList<PantryItem>();;
@@ -347,9 +360,11 @@ public class Tab2 extends Fragment {
     public void removeItems(FoodType foodType, int count) {
         for (PantryItem item : pantryList) {
             if (item.getType() == foodType) { // Can compare references because there is only 1 reference to each FoodType
+                System.out.println("Removing: " + foodType.getItemName() + " (ID: " + foodType.getID() + "), Count: " + count);
                 item.removeItemCount(count);
             }
         }
+        notifyPantryUpdated(); // Added to make changes take place instantly
     }
 
     // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java

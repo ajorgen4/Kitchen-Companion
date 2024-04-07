@@ -95,6 +95,7 @@ public class RecipeDatabase {
         addRecipe("Chicken Noodle Soup", "Lorem ipsum...", recipe2_Ingredients, 2, false, "25 mins", 90, "Easy", new ArrayList<>() ,"invalid_image");
         addRecipe("Chicken Parmesan", "Lorem ipsum...", recipe3_Ingredients, 2, false, "45 mins", 650, "Medium", new ArrayList<>(),"recipe_image_parm");
         addRecipe("Test Recipe", "Lorem ipsum...", recipe4_Ingredients, 2, false, "1 hour", 100, "Medium", new ArrayList<>(), "");
+        addRecipe("Test Recipe 2", "Lorem ipsum...", recipe4_Ingredients, 2, false, "1 hour", 100, "Medium", new ArrayList<>(), "");
 
 
         //printIngredientsForRecipe(1); //testing
