@@ -466,7 +466,7 @@ public class Tab2 extends Fragment {
     private void createFoodDictionary(HashMap<Integer, FoodType> foodDictionary) {
         FoodType currItem;
 
-        // Existing items
+        // First items
         currItem = new FoodType("Apple", Enums.FoodGroup.FRUIT, 7);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Banana", Enums.FoodGroup.FRUIT, 7);
@@ -475,42 +475,256 @@ public class Tab2 extends Fragment {
         foodDictionary.put(currItem.getID(), currItem);
 
         // New Items for Oven Baked Risotto
-        currItem = new FoodType("Onion", Enums.FoodGroup.VEGETABLE, 14);
+        currItem = new FoodType("Onion", Enums.FoodGroup.VEGETABLE, 80);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Olive Oil", Enums.FoodGroup.CONDIMENT, 90);
+        currItem = new FoodType("Olive Oil", Enums.FoodGroup.CONDIMENT, 600);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Rice", Enums.FoodGroup.GRAIN, 180);
+        currItem = new FoodType("Rice", Enums.FoodGroup.GRAIN, 600);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Vegetable Broth", Enums.FoodGroup.BEVERAGE, 30);
+        currItem = new FoodType("Vegetable Broth", Enums.FoodGroup.BEVERAGE, 5);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Parmesan", Enums.FoodGroup.DAIRY, 60);
+        currItem = new FoodType("Parmesan", Enums.FoodGroup.DAIRY, 270);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Parsley", Enums.FoodGroup.HERB, 10);
+        currItem = new FoodType("Parsley", Enums.FoodGroup.HERB, 8000);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Salt", Enums.FoodGroup.CONDIMENT, 180);
+        currItem = new FoodType("Salt", Enums.FoodGroup.CONDIMENT, 10000);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Pepper", Enums.FoodGroup.SPICE, 180);
+        currItem = new FoodType("Black Pepper", Enums.FoodGroup.SPICE, 1100);
         foodDictionary.put(currItem.getID(), currItem);
 
         // New Items for Chicken Noodle Soup
-        currItem = new FoodType("Chicken", Enums.FoodGroup.PROTEIN, 7);
+        currItem = new FoodType("Chicken", Enums.FoodGroup.PROTEIN, 6);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Noodles", Enums.FoodGroup.GRAIN, 30);
+        currItem = new FoodType("Pasta", Enums.FoodGroup.GRAIN, 700);
         foodDictionary.put(currItem.getID(), currItem);
         // Assuming carrots and celery are additional ingredients
-        currItem = new FoodType("Carrots", Enums.FoodGroup.VEGETABLE, 30);
+        currItem = new FoodType("Carrots", Enums.FoodGroup.VEGETABLE, 24);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Celery", Enums.FoodGroup.VEGETABLE, 30);
         foodDictionary.put(currItem.getID(), currItem);
 
         // New Items for Chicken Parmesan
-        currItem = new FoodType("Bread Crumbs", Enums.FoodGroup.GRAIN, 90);
+        currItem = new FoodType("Bread Crumbs", Enums.FoodGroup.GRAIN, 365);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Eggs", Enums.FoodGroup.PROTEIN, 21);
+        currItem = new FoodType("Eggs", Enums.FoodGroup.PROTEIN, 30);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Marinara Sauce", Enums.FoodGroup.CONDIMENT, 60);
+        currItem = new FoodType("Marinara Sauce", Enums.FoodGroup.CONDIMENT, 500);
         foodDictionary.put(currItem.getID(), currItem);
-        currItem = new FoodType("Mozzarella", Enums.FoodGroup.DAIRY, 21);
+        currItem = new FoodType("Mozzarella", Enums.FoodGroup.DAIRY, 35);
+        foodDictionary.put(currItem.getID(), currItem);
+
+        // Fruits
+        currItem = new FoodType("Grapes", Enums.FoodGroup.FRUIT, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Peach", Enums.FoodGroup.FRUIT, 5);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Plum", Enums.FoodGroup.FRUIT, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Pear", Enums.FoodGroup.FRUIT, 9);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Strawberry", Enums.FoodGroup.FRUIT, 6);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Raspberry", Enums.FoodGroup.FRUIT, 3);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Blueberry", Enums.FoodGroup.FRUIT, 7);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Blackberry", Enums.FoodGroup.FRUIT, 3);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Mango", Enums.FoodGroup.FRUIT, 11);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Pineapple", Enums.FoodGroup.FRUIT, 5);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Watermelon", Enums.FoodGroup.FRUIT, 21);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cantaloupe", Enums.FoodGroup.FRUIT, 21);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Honeydew", Enums.FoodGroup.FRUIT, 28);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Kiwi", Enums.FoodGroup.FRUIT, 8);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Papaya", Enums.FoodGroup.FRUIT, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Guava", Enums.FoodGroup.FRUIT, 19);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cherry", Enums.FoodGroup.FRUIT, 6);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Lemon", Enums.FoodGroup.FRUIT, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Lime", Enums.FoodGroup.FRUIT, 19);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cranberry", Enums.FoodGroup.FRUIT, 30);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Coconut", Enums.FoodGroup.FRUIT, 180);
+        foodDictionary.put(currItem.getID(), currItem);
+
+        // Vegetables
+        currItem = new FoodType("Tomato", Enums.FoodGroup.VEGETABLE, 10);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Broccoli", Enums.FoodGroup.VEGETABLE, 5);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Spinach", Enums.FoodGroup.VEGETABLE, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Bell Pepper", Enums.FoodGroup.VEGETABLE, 12);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cucumber", Enums.FoodGroup.VEGETABLE, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Zucchini", Enums.FoodGroup.VEGETABLE, 7);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Lettuce", Enums.FoodGroup.VEGETABLE, 16);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cabbage", Enums.FoodGroup.VEGETABLE, 45);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Garlic", Enums.FoodGroup.VEGETABLE, 180);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Potato", Enums.FoodGroup.VEGETABLE, 50);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Sweet Potato", Enums.FoodGroup.VEGETABLE, 35);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Eggplant", Enums.FoodGroup.VEGETABLE, 7);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Green Beans", Enums.FoodGroup.VEGETABLE, 6);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Asparagus", Enums.FoodGroup.VEGETABLE, 4);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Peas", Enums.FoodGroup.VEGETABLE, 7);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Corn", Enums.FoodGroup.VEGETABLE, 6);
+        foodDictionary.put(currItem.getID(), currItem);
+
+        // Grains
+        currItem = new FoodType("Quinoa", Enums.FoodGroup.GRAIN, 1100);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Oats", Enums.FoodGroup.GRAIN, 700);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Barley", Enums.FoodGroup.GRAIN, 365);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Bread", Enums.FoodGroup.GRAIN, 7);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Couscous", Enums.FoodGroup.GRAIN, 700);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Tortilla", Enums.FoodGroup.GRAIN, 35);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Hard Taco Shell", Enums.FoodGroup.GRAIN, 150);
+        foodDictionary.put(currItem.getID(), currItem);
+
+        // Proteins
+        currItem = new FoodType("Beef", Enums.FoodGroup.PROTEIN, 10);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Pork", Enums.FoodGroup.PROTEIN, 5);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Fish", Enums.FoodGroup.PROTEIN, 4);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Tofu", Enums.FoodGroup.PROTEIN, 90);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Beans", Enums.FoodGroup.PROTEIN, 2000);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Lentils", Enums.FoodGroup.PROTEIN, 900);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Chickpeas", Enums.FoodGroup.PROTEIN, 1500);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Nuts", Enums.FoodGroup.PROTEIN, 270);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Seeds", Enums.FoodGroup.PROTEIN, 365);
+        foodDictionary.put(currItem.getID(), currItem);
+
+        // Dairies
+        currItem = new FoodType("Milk", Enums.FoodGroup.DAIRY, 10);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cheese", Enums.FoodGroup.DAIRY, 7);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Yogurt", Enums.FoodGroup.DAIRY, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Butter", Enums.FoodGroup.DAIRY, 120);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cream", Enums.FoodGroup.DAIRY, 180);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cream Cheese", Enums.FoodGroup.DAIRY, 21);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Sour Cream", Enums.FoodGroup.DAIRY, 21);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Greek Yogurt", Enums.FoodGroup.DAIRY, 11);
+        foodDictionary.put(currItem.getID(), currItem);
+
+        // Condiments
+        currItem = new FoodType("Ketchup", Enums.FoodGroup.CONDIMENT, 300);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Mustard", Enums.FoodGroup.CONDIMENT, 210);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Mayonnaise", Enums.FoodGroup.CONDIMENT, 120);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Soy Sauce", Enums.FoodGroup.CONDIMENT, 1000);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Worcestershire Sauce", Enums.FoodGroup.CONDIMENT, 1000);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Hot Sauce", Enums.FoodGroup.CONDIMENT, 700);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("BBQ Sauce", Enums.FoodGroup.CONDIMENT, 300);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Buffalo Sauce", Enums.FoodGroup.CONDIMENT, 600);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Remoulade", Enums.FoodGroup.CONDIMENT, 180);
+        foodDictionary.put(currItem.getID(), currItem);
+
+        // Beverages
+        currItem = new FoodType("Water", Enums.FoodGroup.BEVERAGE, 10000);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Coffee", Enums.FoodGroup.BEVERAGE, 1);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Tea", Enums.FoodGroup.BEVERAGE, 2);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Orange Juice", Enums.FoodGroup.BEVERAGE, 10);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Apple Juice", Enums.FoodGroup.BEVERAGE, 700);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Soda", Enums.FoodGroup.BEVERAGE, 400);
+        foodDictionary.put(currItem.getID(), currItem);
+
+        // Herbs
+        currItem = new FoodType("Basil", Enums.FoodGroup.HERB, 700);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cilantro", Enums.FoodGroup.HERB, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Rosemary", Enums.FoodGroup.HERB, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Thyme", Enums.FoodGroup.HERB, 300);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Mint", Enums.FoodGroup.HERB, 365);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Oregano", Enums.FoodGroup.HERB, 800);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Dill", Enums.FoodGroup.HERB, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Chives", Enums.FoodGroup.HERB, 10);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Coriander", Enums.FoodGroup.HERB, 1300);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Sage", Enums.FoodGroup.HERB, 750);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Bay Leaf", Enums.FoodGroup.HERB, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Tarragon", Enums.FoodGroup.HERB, 14);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Marjoram", Enums.FoodGroup.HERB, 800);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Lemongrass", Enums.FoodGroup.HERB, 7);
+        foodDictionary.put(currItem.getID(), currItem);
+
+        // Spices
+        currItem = new FoodType("Cumin", Enums.FoodGroup.SPICE, 500);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Paprika", Enums.FoodGroup.SPICE, 500);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cinnamon", Enums.FoodGroup.SPICE, 1000);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Nutmeg", Enums.FoodGroup.SPICE, 800);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Ginger", Enums.FoodGroup.SPICE, 30);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cloves", Enums.FoodGroup.SPICE, 1000);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Cardamom", Enums.FoodGroup.SPICE, 1200);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Turmeric", Enums.FoodGroup.SPICE, 800);
         foodDictionary.put(currItem.getID(), currItem);
     }
 
@@ -524,13 +738,23 @@ public class Tab2 extends Fragment {
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(2)), false));
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(3), 1, LocalDate.now().plusDays(24)), true));
 
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(7), 5, LocalDate.now().plusDays(foodDictionary.get(7).getExpirationPeriod())), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(6), 3, LocalDate.now().plusDays(8)), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(18), 3, LocalDate.now().plusDays(2)), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(15), 1, LocalDate.now().plusDays(24)), true));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(17), 5, LocalDate.now().plusDays(5)), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(10), 3, LocalDate.now().plusDays(8)), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(11), 3, LocalDate.now().plusDays(2)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(7), 2, LocalDate.now().plusDays(foodDictionary.get(7).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(50), 6, LocalDate.now().plusDays(foodDictionary.get(50).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(21), 3, LocalDate.now().plusDays(foodDictionary.get(21).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(70), 2, LocalDate.now().plusDays(foodDictionary.get(70).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(55), 1, LocalDate.now().plusDays(foodDictionary.get(55).getExpirationPeriod())), true));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(25), 4, LocalDate.now().plusDays(foodDictionary.get(25).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(10), 3, LocalDate.now().plusDays(foodDictionary.get(10).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(28), 7, LocalDate.now().plusDays(foodDictionary.get(28).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(36), 9, LocalDate.now().plusDays(foodDictionary.get(36).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(63), 2, LocalDate.now().plusDays(foodDictionary.get(63).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(47), 3, LocalDate.now().plusDays(foodDictionary.get(47).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(42), 5, LocalDate.now().plusDays(foodDictionary.get(42).getExpirationPeriod())), true));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(58), 4, LocalDate.now().plusDays(foodDictionary.get(58).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(34), 2, LocalDate.now().plusDays(foodDictionary.get(34).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(24), 1, LocalDate.now().plusDays(foodDictionary.get(24).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(75), 1, LocalDate.now().plusDays(foodDictionary.get(75).getExpirationPeriod())), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(11), 3, LocalDate.now().plusDays(foodDictionary.get(11).getExpirationPeriod())), false));
     }
 
     public ArrayList<PantryItem> getPantryList() {

@@ -104,7 +104,7 @@ public class FoodAdapter extends BaseAdapter {
 
         TextView expirationDisplay = foodItemView.findViewById(R.id.expirationDisplay);
         LocalDate expirationDate = foodList.get(itemPosition).nextExpiration();
-        expirationDisplay.setText("Expiration Date: " + expirationDate.format(DateTimeFormatter.ofPattern("MM/dd")));
+        expirationDisplay.setText("Expiration Date: " + expirationDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
         expirationDisplay.setTextColor(ContextCompat.getColor(context, (ChronoUnit.DAYS.between(LocalDate.now(), expirationDate) > 7) ? R.color.green : (((ChronoUnit.DAYS.between(LocalDate.now(), expirationDate) > 3) ? R.color.light_orange : R.color.red))));
 
         ImageView expireIcon = foodItemView.findViewById(R.id.expireIcon);
