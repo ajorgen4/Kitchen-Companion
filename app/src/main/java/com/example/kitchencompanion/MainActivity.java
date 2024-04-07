@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements Tab2.PantryUpdate
         Tab1 tab1 = new Tab1(tab2.getFoodDictionary(), recipeDatabase, tab2.getPantryList());
         fragmentMap.put(R.id.recipes, tab1);
 
-        fragmentMap.put(R.id.shopping, new Tab3(foodDictionary));
+        fragmentMap.put(R.id.shopping, new Tab3(foodDictionary, tab2));
         fragmentMap.put(R.id.settings, new Tab4(foodDictionary));
 
         settings = new Settings();

@@ -15,11 +15,12 @@ import java.util.List;
 public class ShopListAdapter extends BaseAdapter {
     private List<ShopListItem> shopList;
     private Context context;
-    private boolean shopMode = false;
+    private boolean shopMode;
 
-    public ShopListAdapter(Context context, List<ShopListItem> shopList){
+    public ShopListAdapter(Context context, List<ShopListItem> shopList, boolean shopMode){
         this.context = context;
         this.shopList = shopList;
+        this.shopMode = shopMode;
     }
     @Override
     public int getCount() {
@@ -124,16 +125,12 @@ public class ShopListAdapter extends BaseAdapter {
     }
     public List<ShopListItem> getAndRemoveSelectedItems(){
         List<ShopListItem> selectedItems = new ArrayList<ShopListItem>();
-        List<ShopListItem> tempList = new ArrayList<ShopListItem>();
         for(int i = 0; i < shopList.size(); i++){
             if(shopList.get(i).getSelected()){
                 selectedItems.add(shopList.get(i));
             }
-            else{
-                tempList.add(shopList.get(i));
-            }
         }
-        shopList = tempList;
+        shopList.removeAll(selectedItems);
         notifyDataSetChanged();
         return selectedItems;
     }
