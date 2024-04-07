@@ -11,15 +11,17 @@ public class PantryItem {
     private Set<FoodBatch> batches;
     private String itemName;
     private boolean low;
+    private boolean isPrivate;
     private FoodType type;
 
-    public PantryItem(FoodBatch batch) {
+    public PantryItem(FoodBatch batch, boolean isPrivate) {
         this.batches = new HashSet<>();
         // Add the "founding" batch, the first batch of this item type added to the pantry
         this.batches.add(batch);
         this.itemName = batch.getFoodType().getItemName();
         this.low = false; // by default, assumed to not be low
         this.type = batch.getFoodType();
+        this.isPrivate = isPrivate;
     }
 
     // Removes items from batches in order of expiration date
@@ -81,6 +83,14 @@ public class PantryItem {
         for (FoodBatch batch : batches) {
             System.out.println("Batch ID: " + batch.getBatchId() + " - Count: " + batch.getItemCount() + ", Expiration Date: " + batch.getExpirationDate());
         }
+    }
+
+    public boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public boolean equalTo(PantryItem other) {
+        return (this.type == other.type) && (this.isPrivate == other.isPrivate);
     }
 
     public void setLow(boolean low) {

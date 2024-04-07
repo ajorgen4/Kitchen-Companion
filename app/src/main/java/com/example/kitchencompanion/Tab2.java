@@ -67,9 +67,10 @@ public class Tab2 extends Fragment {
         this.updateListener = listener;
     }
 
-    public Tab2() {
-        this.pantryList = new ArrayList<PantryItem>();;
-        foodDictionary = createFoodDictionary();
+    public Tab2(HashMap<Integer, FoodType> foodDictionary) {
+        this.pantryList = new ArrayList<PantryItem>();
+        this.foodDictionary = foodDictionary;
+        createFoodDictionary(foodDictionary);
         prePopulatePantry();
     }
 
@@ -108,7 +109,6 @@ public class Tab2 extends Fragment {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.pantry_filter_dialog, null);
 
         // Find and set up the views inside the dialog layout
-        // ...
         Button cancelButton = dialogView.findViewById(R.id.pantryFilterCancelButton);
 
         builder.setView(dialogView);
@@ -312,15 +312,38 @@ public class Tab2 extends Fragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int count = Integer.parseInt(countEditText.getText().toString());
+                String countString = countEditText.getText().toString();
                 boolean privateStorageBool = privateStorage.isChecked();
                 LocalDate expirationDate = LocalDate.of(
                         expirationDatePicker.getYear(),
                         expirationDatePicker.getMonth(),
                         expirationDatePicker.getDayOfMonth());
-                addItemInternal(Tab2.this.selectedFood, count, privateStorageBool, expirationDate);
 
-                dialog.dismiss();
+                // Data cleaning
+                boolean isValid = true;
+
+                // ensure FoodType is selected
+                if (selectedFood == null) {
+                    foodTypeSelector.setError("Please select a food");
+                    isValid = false;
+                } else {
+                    foodTypeSelector.setError(null);
+                }
+
+                // Ensure count is filled in
+                if (countString.isEmpty()) {
+                    countEditText.setError("Please enter a number of items");
+                    isValid = false;
+                } else {
+                    countEditText.setError(null);
+                }
+
+                if (isValid) {
+                    addItemInternal(Tab2.this.selectedFood, Integer.parseInt(countString), privateStorageBool, expirationDate);
+                    selectedFood = null;
+
+                    dialog.dismiss();
+                }
             }
         });
 
@@ -329,22 +352,20 @@ public class Tab2 extends Fragment {
 
     // FOR INTERNAL USE ONLY
     // Allows support for custom expiration dates and private storage
-    public void addItemInternal(FoodType foodType, int count, boolean privateStorage, LocalDate expirationDate) {
-        /*
-        foodList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(7))));
-        adapter is the adapter here, don't forget to notify it
-         */
+    private void addItemInternal(FoodType foodType, int count, boolean isPrivate, LocalDate expirationDate) {
         boolean exists = false;
+        FoodBatch batch = new FoodBatch(foodType, count, expirationDate);
+        PantryItem potentialItem = new PantryItem(batch, isPrivate);
 
         for (PantryItem item : pantryList) {
-            if (item.getType() == foodType) { // Can compare references because there is only 1 reference to each FoodType
+            if (item.equalTo(potentialItem)) {
                 exists = true;
-                item.addBatch(new FoodBatch(foodType, count, expirationDate));
+                item.addBatch(batch);
             }
         }
 
         if (!exists) { // If the proper item wasn't found (it isn't in their pantry)
-            pantryList.add(new PantryItem(new FoodBatch(foodType, count, expirationDate)));
+            pantryList.add(potentialItem);
         }
 
         adapter.notifyDataSetChanged();
@@ -421,59 +442,57 @@ public class Tab2 extends Fragment {
         });
     }
 
-    private HashMap<Integer, FoodType> createFoodDictionary() {
-        HashMap<Integer, FoodType> tempFoodDictionary = new HashMap<>();
+    private void createFoodDictionary(HashMap<Integer, FoodType> foodDictionary) {
         FoodType currItem;
 
         // Existing items
         currItem = new FoodType("Apple", Enums.FoodGroup.FRUIT, 7);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Banana", Enums.FoodGroup.FRUIT, 7);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Orange", Enums.FoodGroup.FRUIT, 7);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
 
         // New Items for Oven Baked Risotto
         currItem = new FoodType("Onion", Enums.FoodGroup.VEGETABLE, 14);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Olive Oil", Enums.FoodGroup.CONDIMENT, 90);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Rice", Enums.FoodGroup.GRAIN, 180);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Vegetable Broth", Enums.FoodGroup.BEVERAGE, 30);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Parmesan", Enums.FoodGroup.DAIRY, 60);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Parsley", Enums.FoodGroup.HERB, 10);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Salt", Enums.FoodGroup.CONDIMENT, 180);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Pepper", Enums.FoodGroup.SPICE, 180);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
 
         // New Items for Chicken Noodle Soup
         currItem = new FoodType("Chicken", Enums.FoodGroup.PROTEIN, 7);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Noodles", Enums.FoodGroup.GRAIN, 30);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         // Assuming carrots and celery are additional ingredients
         currItem = new FoodType("Carrots", Enums.FoodGroup.VEGETABLE, 30);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Celery", Enums.FoodGroup.VEGETABLE, 30);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
 
         // New Items for Chicken Parmesan
         currItem = new FoodType("Bread Crumbs", Enums.FoodGroup.GRAIN, 90);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Eggs", Enums.FoodGroup.PROTEIN, 21);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Marinara Sauce", Enums.FoodGroup.CONDIMENT, 60);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Mozzarella", Enums.FoodGroup.DAIRY, 21);
-        tempFoodDictionary.put(currItem.getID(), currItem);
+        foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("TEST ITEM", Enums.FoodGroup.DAIRY, 21);
-        tempFoodDictionary.put(currItem.getID(), currItem);
-        return tempFoodDictionary;
+        foodDictionary.put(currItem.getID(), currItem);
     }
 
     public HashMap<Integer, FoodType> getFoodDictionary() {
@@ -481,10 +500,10 @@ public class Tab2 extends Fragment {
     }
 
     public void prePopulatePantry() {
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(0), 5, LocalDate.now().plusDays(7))));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(1), 3, LocalDate.now().plusDays(7))));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(7))));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(19), 20, LocalDate.now().plusDays(7)))); // TEST Item
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(0), 5, LocalDate.now().plusDays(7)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(1), 3, LocalDate.now().plusDays(7)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(2), 3, LocalDate.now().plusDays(7)), false));
+        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(19), 20, LocalDate.now().plusDays(7)), true)); // TEST Item
     }
 
     public ArrayList<PantryItem> getPantryList() {

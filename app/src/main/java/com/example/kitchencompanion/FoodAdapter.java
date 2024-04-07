@@ -47,6 +47,8 @@ public class FoodAdapter extends BaseAdapter {
         }
 
         foodItemView.setFoodName(foodList.get(position).getItemName());
+        foodItemView.setFoodCount(foodList.get(position).totalCount());
+
 
         ImageView deleteButton = foodItemView.findViewById(R.id.closePantryItemButton);
         // If they click the delete button, remove the item from the list
@@ -54,6 +56,10 @@ public class FoodAdapter extends BaseAdapter {
             foodList.remove(itemPosition);
             notifyDataSetChanged();
         });
+
+        ImageView plusButton = foodItemView.findViewById(R.id.pantryQuantityPlusButton);
+
+        ImageView minusButton = foodItemView.findViewById(R.id.pantryQuantityMinusButton);
 
         return foodItemView;
     }

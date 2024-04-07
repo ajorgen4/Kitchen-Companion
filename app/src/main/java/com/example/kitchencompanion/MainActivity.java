@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements Tab2.PantryUpdate
         HashMap<Integer, FoodType> foodDictionary = new HashMap<>();
         recipeDatabase = new RecipeDatabase(foodDictionary);
 
-        Tab2 tab2 = new Tab2();
+        Tab2 tab2 = new Tab2(foodDictionary);
         tab2.setPantryUpdateListener(this);
         fragmentMap.put(R.id.pantry, tab2);
         Tab1 tab1 = new Tab1(tab2.getFoodDictionary(), recipeDatabase, tab2.getPantryList());
