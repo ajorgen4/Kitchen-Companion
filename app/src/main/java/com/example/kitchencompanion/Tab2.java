@@ -13,11 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Button;
@@ -29,7 +31,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -91,11 +95,6 @@ public class Tab2 extends Fragment {
         filterButton = view.findViewById(R.id.pantryFiltersButton);
         filterButton.setOnClickListener(v -> showFilterDialog());
 
-
-
-        // TODO: icon functionality
-        // TODO: Expiration date functionality (proper data and colors)
-
         // Filter UI management
         setFilters();
 
@@ -109,6 +108,23 @@ public class Tab2 extends Fragment {
 
         // Find and set up the views inside the dialog layout
         Button cancelButton = dialogView.findViewById(R.id.pantryFilterCancelButton);
+        CheckBox pantryFilterLowBox = dialogView.findViewById(R.id.pantryFilterLowBox);
+        CheckBox pantryFilterPrivateBox = dialogView.findViewById(R.id.pantryFilterPrivateBox);
+        EditText pantryFilterExpirationText = dialogView.findViewById(R.id.pantryFilterExpirationText);
+
+
+        ListView foodGroupListView = dialogView.findViewById(R.id.pantryFilterFoodGroups);
+        List<Enums.FoodGroup> foodGroups = Arrays.asList(Enums.FoodGroup.values());
+        FoodGroupAdapter adapter = new FoodGroupAdapter(requireContext(), foodGroups);
+        foodGroupListView.setAdapter(adapter);
+
+        Button applyButton = dialogView.findViewById(R.id.pantryFilterApplyButton);
+        applyButton.setOnClickListener(v -> {
+            List<Enums.FoodGroup> selectedFoodGroups = adapter.getSelectedFoodGroups();
+            // TODO: input cleaning, functionality
+            // Im thinking put all this in a class with setters and getters for each parameter and the search string.
+            // Do something with the selectedFoodGroups list
+        });
 
         builder.setView(dialogView);
 
