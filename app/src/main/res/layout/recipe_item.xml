@@ -84,7 +84,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Calories: 500"
-                            android:textSize="18sp"
+                            android:textSize="20sp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                         <!-- Cook Time -->
@@ -93,7 +93,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Cook Time: 45 mins"
-                            android:textSize="18sp"
+                            android:textSize="20sp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
                     </LinearLayout>
 
@@ -111,7 +111,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Required Ingredients: 3/19"
-                            android:textSize="18sp"
+                            android:textSize="20sp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                         <!-- Difficulty -->
@@ -120,7 +120,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Difficulty: Easy"
-                            android:textSize="18sp"
+                            android:textSize="20sp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
                     </LinearLayout>
                 </LinearLayout>
@@ -130,15 +130,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:id="@+id/closeButtonRecipes"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:gravity="top"
                     android:src="@drawable/x_icon"
                     android:onClick="showConfirmationDialog" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/warningIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/warning"
+                    android:visibility="gone"
+                    app:tint="#FF0000" />
 
                 <Space
                     android:layout_width="0dp"
@@ -150,16 +162,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/heart_outline"
-                    android:gravity="bottom"/>
+                    android:layout_marginStart="2dp" />
 
-                <ImageView
-                    android:id="@+id/warningIcon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/warning"
-                    android:layout_gravity="end"
-                    android:visibility="gone"
-                    app:tint="#FF0000" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

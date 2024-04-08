@@ -129,13 +129,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             addMissingLayout.setClickable(true);
             addMissingLayout.setFocusable(true);
 
-            addMissingLayout.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    Recipe recipe = recipes.get(position);
-                    addMissingIngredients(recipe);
-                }
-            });
+            addMissingLayout.setOnClickListener(v -> onAddMissingClicked(v));
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
@@ -145,7 +139,16 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                 }
             });
         }
+
+        public void onAddMissingClicked(View view) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                Recipe recipe = recipes.get(position);
+                System.out.println("CLICKED ADDMISSING BUTTON FOR RECIPE ID " + recipe.getRecipeId());
+            }
+        }
     }
+
 
     private void showDescPopup(Context context, Recipe recipe, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
