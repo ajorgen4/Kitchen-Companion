@@ -1,5 +1,4 @@
 package com.example.kitchencompanion;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -74,10 +74,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         // Favorite Heart
         holder.favoriteIcon.setImageResource(recipe.isFavorited() ? R.drawable.heart_solid : R.drawable.heart_outline);
 
-
         holder.favoriteIcon.setOnClickListener(v -> {
             recipe.toggleFavorite();
             notifyItemChanged(position);
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            showDescPopup(context, recipe, position);
         });
 
         holder.closeButton.setOnClickListener(v -> {
@@ -111,44 +114,39 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         ImageView closeButton, favoriteIcon, recipeImage, warningIcon;
         FrameLayout addMissingLayout;
         View viewForeground;
+        Button addMissingButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            // Initialize UI components
             recipeName = itemView.findViewById(R.id.recipeName);
             recipeCalories = itemView.findViewById(R.id.recipeCalories);
             recipeCookTime = itemView.findViewById(R.id.recipeCookTime);
             recipeDifficulty = itemView.findViewById(R.id.recipeDifficulty);
+            recipeRequiredIngredients = itemView.findViewById(R.id.recipeRequiredIngredients);
             closeButton = itemView.findViewById(R.id.closeButtonRecipes);
             favoriteIcon = itemView.findViewById(R.id.favoriteRecipeItemButton);
             recipeImage = itemView.findViewById(R.id.recipeImage);
             warningIcon = itemView.findViewById(R.id.warningIcon);
             viewForeground = itemView.findViewById(R.id.recipeItemLayout);
-            recipeRequiredIngredients = itemView.findViewById(R.id.recipeRequiredIngredients);
             addMissingLayout = itemView.findViewById(R.id.addMissingLayout);
 
-            addMissingLayout.setClickable(true);
-            addMissingLayout.setFocusable(true);
+            addMissingButton = itemView.findViewById(R.id.addMissingButton); // Initialize the "Add Missing" button
 
-            addMissingLayout.setOnClickListener(v -> onAddMissingClicked(v));
-
-            itemView.setOnClickListener(v -> {
+            addMissingButton.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    Recipe recipe = recipes.get(position);
-                    showDescPopup(context, recipe, position);
+                    onAddMissingClicked(position);
                 }
             });
         }
 
-        public void onAddMissingClicked(View view) {
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                Recipe recipe = recipes.get(position);
-                System.out.println("CLICKED ADDMISSING BUTTON FOR RECIPE ID " + recipe.getRecipeId());
-            }
+        private void onAddMissingClicked(int position) {
+            Recipe recipe = recipes.get(position);
+            System.out.println("DEBUG: onAddMissingClicked called for Recipe: " + recipe.getName());
+            addMissingIngredients(recipe);
         }
     }
-
 
     private void showDescPopup(Context context, Recipe recipe, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

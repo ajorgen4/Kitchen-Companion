@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -80,24 +81,26 @@ public class Tab1 extends Fragment {
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 final View foregroundView = ((RecipeAdapter.ViewHolder) viewHolder).viewForeground;
-                View addMissingLayout = viewHolder.itemView.findViewById(R.id.addMissingLayout);
+                FrameLayout addMissingLayout = viewHolder.itemView.findViewById(R.id.addMissingLayout);
 
                 float maxSwipeDistance = -addMissingLayout.getWidth();
                 float restrictedDX = Math.max(dX, maxSwipeDistance);
 
-                if (restrictedDX <= maxSwipeDistance) {
-                    addMissingLayout.setVisibility(View.VISIBLE);
+                if (restrictedDX == maxSwipeDistance) {
+                    if (addMissingLayout.getVisibility() != View.VISIBLE) {
+                        addMissingLayout.setVisibility(View.VISIBLE);
+                        System.out.println("DEBUG: addMissingLayout shown for item at position " + viewHolder.getAdapterPosition());
+                    }
                 } else {
-                    addMissingLayout.setVisibility(View.GONE);
+                    if (addMissingLayout.getVisibility() == View.VISIBLE) {
+                        addMissingLayout.setVisibility(View.GONE);
+                        System.out.println("DEBUG: addMissingLayout hidden for item at position " + viewHolder.getAdapterPosition());
+                    }
                 }
 
-                if (Math.abs(dX) > addMissingLayout.getWidth()) {
-                    // Swipe enough to show "Add Missing" but prevent close
-                    dX = maxSwipeDistance;
-                }
-
-                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, restrictedDX, dY, actionState, isCurrentlyActive);
             }
+
 
 
             @Override
