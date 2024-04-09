@@ -1,7 +1,5 @@
 package com.example.kitchencompanion;
 
-import java.util.Set;
-
 // Like an interface. Represents a type of food
 
 public class FoodType implements Comparable<FoodType> {
@@ -26,7 +24,7 @@ public class FoodType implements Comparable<FoodType> {
         return itemName;
     }
 
-    public Enums.FoodGroup getCategory() {
+    public Enums.FoodGroup getFoodGroup() {
         return foodGroup;
     }
 

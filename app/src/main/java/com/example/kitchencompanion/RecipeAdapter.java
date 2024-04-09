@@ -3,7 +3,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Handler;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -17,8 +16,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashMap;
@@ -37,18 +34,17 @@ import java.util.Map;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
     private List<Recipe> recipes;
     private Context context;
+
     private RecipeDatabase recipeDatabase;
     private List<PantryItem> pantryList;
     private HashMap<Integer, FoodType> foodDictionary;
-    private Map<Integer, Fragment> fragmentMap;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, HashMap<Integer, FoodType> foodDictionary, Map<Integer, Fragment> fragmentMap) {
+    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, HashMap<Integer, FoodType> foodDictionary) {
         this.context = context;
         this.recipes = recipes;
         this.recipeDatabase = recipeDatabase;
         this.pantryList = pantryList;
         this.foodDictionary = foodDictionary;
-        this.fragmentMap = fragmentMap;
     }
 
     @Override
@@ -102,7 +98,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             holder.warningIcon.setVisibility(View.GONE);
         }
 
-        //System.out.println("Icon Visibility for Recipe ID: " + recipe.getRecipeId() + ": " + holder.warningIcon.getVisibility());
+        // Additional log for icon visibility
+        System.out.println("Icon Visibility for Recipe ID: " + recipe.getRecipeId() + ": " + holder.warningIcon.getVisibility());
     }
 
 
@@ -119,10 +116,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         View viewForeground;
         Button addMissingButton;
 
-        boolean isHandlerRunning = false;
-        boolean isPopupShown = false;
-
-
         public ViewHolder(View itemView) {
             super(itemView);
             // Initialize UI components
@@ -135,11 +128,23 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             favoriteIcon = itemView.findViewById(R.id.favoriteRecipeItemButton);
             recipeImage = itemView.findViewById(R.id.recipeImage);
             warningIcon = itemView.findViewById(R.id.warningIcon);
-            addMissingLayout = itemView.findViewById(R.id.addMissingLayout);
             viewForeground = itemView.findViewById(R.id.recipeItemLayout);
+            addMissingLayout = itemView.findViewById(R.id.addMissingLayout);
 
-            // Button for adding missing ingredients - click listener is now removed
-            addMissingButton = itemView.findViewById(R.id.addMissingButton);
+            addMissingButton = itemView.findViewById(R.id.addMissingButton); // Initialize the "Add Missing" button
+
+            addMissingButton.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    onAddMissingClicked(position);
+                }
+            });
+        }
+
+        private void onAddMissingClicked(int position) {
+            Recipe recipe = recipes.get(position);
+            System.out.println("DEBUG: onAddMissingClicked called for Recipe: " + recipe.getName());
+            addMissingIngredients(recipe);
         }
     }
 
@@ -200,29 +205,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         // Mark cooked button logic
         dialogView.findViewById(R.id.markCookedButton).setOnClickListener(v -> {
-            MainActivity mainActivity = (MainActivity) context;
-            Tab2 tab2 = mainActivity.getTab2();
             Map<Integer, Integer> ingredients = recipe.getRecipe_Requirements();
+            Tab2 tab2 = ((MainActivity) context).getTab2(); // Assumes getTab2() is implemented in MainActivity
             for (Map.Entry<Integer, Integer> ingredient : ingredients.entrySet()) {
                 int foodTypeId = ingredient.getKey();
                 int requiredAmount = ingredient.getValue();
                 FoodType foodType = tab2.getFoodDictionary().get(foodTypeId);
                 if (foodType != null) {
-                    int pantryCount = tab2.getPantryList().stream()
-                            .filter(item -> item.getType().getID() == foodTypeId)
-                            .findFirst()
-                            .map(PantryItem::getCount)
-                            .orElse(0);
-                    int amountToRemove = Math.min(pantryCount, requiredAmount);
-                    System.out.println("DEBUG - RecipeAdapter - Removing: " + foodType.getItemName() + " (ID: " + foodTypeId + ") Count: " + amountToRemove);
-                    tab2.removeItems(foodType, amountToRemove);
+                    tab2.removeItems(foodType, requiredAmount);
                 }
             }
             dialog.dismiss(); // Close the dialog after marking as cooked
         });
-
-
-
 
         dialog.show();
     }
@@ -255,54 +249,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         this.recipes = updatedRecipes;
         notifyDataSetChanged();
     }
-    private RecyclerView recyclerView;
-
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;
-    }
-
-    // Popup appears when swiped out on recipe card for 0.5 seconds
-    // Have to do this way since clicking the Add Missing button wasn't working since only detecting swipes.
-    public void showAddMissingConfirmation(int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View dialogView = LayoutInflater.from(context).inflate(R.layout.confirmation_add_missing, null);
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-
-        dialogView.findViewById(R.id.confirmAddMissingButton).setOnClickListener(v -> {
-            Recipe recipe = recipes.get(position);
-            MainActivity mainActivity = (MainActivity) context;
-            Tab2 tab2 = mainActivity.getTab2();
-
-            for (Map.Entry<Integer, Integer> entry : recipe.getRecipe_Requirements().entrySet()) {
-                int foodTypeId = entry.getKey();
-                int requiredAmount = entry.getValue();
-                int currentAmountInPantry = tab2.getPantryList().stream()
-                        .filter(item -> item.getType().getID() == foodTypeId)
-                        .findFirst()
-                        .map(PantryItem::getCount)
-                        .orElse(0);
-
-                int amountToAdd = requiredAmount - currentAmountInPantry;
-                if (amountToAdd > 0) {
-                    tab2.addItems(tab2.getFoodDictionary().get(foodTypeId), amountToAdd);
-                }
-            }
-
-            mainActivity.refreshTab1Adapter();
-            dialog.dismiss();
-        });
-
-        dialogView.findViewById(R.id.cancelAddMissingButton).setOnClickListener(v -> {
-            dialog.dismiss();
-            notifyItemChanged(position);
-        });
-
-        dialog.show();
-    }
-
 
     private int calculateAvailableIngredients(Recipe recipe) {
         int availableIngredients = 0;
@@ -327,6 +273,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         // The caller should use the return value to update the UI
         return availableIngredients; // Return the count of available ingredients
     }
+
+
 
     private void addMissingIngredients(Recipe recipe) {
         Map<Integer, Integer> recipeRequirements = recipe.getRecipe_Requirements();
@@ -357,12 +305,4 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             notifyItemChanged(i, "ingredientsUpdate");
         }
     }
-
-    public void refreshTab1Adapter() {
-        Tab1 tab1 = (Tab1) fragmentMap.get(R.id.recipes);
-        if (tab1 != null) {
-            tab1.refreshRecipeAdapter();
-        }
-    }
-
 }

@@ -87,7 +87,7 @@ public class Tab2 extends Fragment {
         // The view
         foodListView = view.findViewById(R.id.foodListView);
         // The adapter model. foodList is initial items, empty in final product
-        adapter = new FoodAdapter(getContext(), pantryList, this);
+        adapter = new FoodAdapter(getContext(), pantryList, this, filterFields);
         // Tie the adapter to the view
         foodListView.setAdapter(adapter);
 
@@ -113,8 +113,7 @@ public class Tab2 extends Fragment {
             public void afterTextChanged(Editable s) {
                 String searchText = s.toString();
                 filterFields.setName(searchText);
-                // You can also apply the filter here if needed
-                // adapter.getFilter().filter(searchText);
+                adapter.getFilter().filter(searchText);
             }
         });
 
@@ -193,6 +192,7 @@ public class Tab2 extends Fragment {
             filterFields.setFoodGroups(selectedFoodGroups);
 
             // TODO: call to filter to update
+            adapter.getFilter().filter("Not needed");
 
             dialog.dismiss();
         });
@@ -409,6 +409,7 @@ public class Tab2 extends Fragment {
 
                 if (isValid) {
                     addItemsInternal(Tab2.this.selectedFood, Integer.parseInt(countString), privateStorageBool, expirationDate);
+                    adapter.getFilter().filter("Not needed");
                     selectedFood = null;
 
                     dialog.dismiss();
@@ -441,11 +442,9 @@ public class Tab2 extends Fragment {
             pantryList.add(potentialItem);
         }
 
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
+        adapter.notifyDataSetChanged();
+        adapter.getFilter().filter("Not needed");
     }
-
 
     public void addItemsPrivate(FoodType foodType, int count, boolean isPrivate) {
         addItemsInternal(foodType, count, isPrivate, LocalDate.now().plusDays(foodType.getExpirationPeriod()));
@@ -463,22 +462,18 @@ public class Tab2 extends Fragment {
 
         for (PantryItem item : pantryList) {
             if (item.equalTo(potentialItem)) {
-                int removingCount = Math.min(count, item.getCount());
-                System.out.println("Removing: " + foodType.getItemName() + " (ID: " + foodType.getID() + ") Count: " + removingCount);
-                item.removeItemCount(removingCount);
+                item.removeItemCount(count);
 
-                if (adapter != null) {
-                    adapter.notifyDataSetChanged();
-                }
-                notifyPantryUpdated();
+                adapter.notifyDataSetChanged();
+                adapter.getFilter().filter("Not needed");
+                notifyPantryUpdated(); // Added to make changes take place instantly
+
                 return true;
             }
         }
+
         return false;
     }
-
-
-
 
     // Recipes, minus button use this
     public void removeItems(FoodType foodType, int count) {

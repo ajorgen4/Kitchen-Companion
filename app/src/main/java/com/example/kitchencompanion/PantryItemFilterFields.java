@@ -6,7 +6,7 @@ public class PantryItemFilterFields {
     /*
         Note: booleans are only considered if they are true.
         A false boolean will not filter to things only not private or only not low
-        -1 for ints and null for objects means they aren't considered.
+        Integer.MIN_VALUE for ints and null for objects means they aren't considered.
      */
     private String name;
     private boolean low;
@@ -23,22 +23,39 @@ public class PantryItemFilterFields {
     }
 
     public boolean matchName(String name) {
-        return this.name.equals(name);
+        if (this.name == null) { // Not considered
+            return true;
+        }
+
+        return name.toLowerCase().trim().contains(this.name.toLowerCase().trim());
     }
 
     public boolean matchLow(boolean low) {
+        if (this.low == false) { // Not considered
+            return true;
+        }
         return this.low == low;
     }
 
     public boolean matchPrivate(boolean isPrivate) {
+        if (this.isPrivate == false) { // Not considered
+            return true;
+        }
         return this.isPrivate == isPrivate;
     }
 
     public boolean matchExpirationMax(int expirationMax) {
-        return this.expirationMax == expirationMax;
+        if (this.expirationMax == Integer.MIN_VALUE) { // Not considered
+            return true;
+        }
+        return expirationMax <= this.expirationMax;
     }
 
     public boolean matchFoodGroup(Enums.FoodGroup foodGroup) {
+        if (this.foodGroups == null) { // Not considered
+            return true;
+        }
+
         for (Enums.FoodGroup group : this.foodGroups) {
             if (group == foodGroup) {
                 return true;
@@ -49,7 +66,7 @@ public class PantryItemFilterFields {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = (name.isEmpty()) ? null : name;
     }
 
     public String getName() {

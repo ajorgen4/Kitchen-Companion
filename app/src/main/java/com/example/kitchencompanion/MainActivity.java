@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -20,16 +19,12 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements Tab2.PantryUpdateListener, Tab4.HouseNameUpdateListener {
-    private Map<Integer, Fragment> fragmentMap = new HashMap<>();
 
     NavigationBarView bottomNavigationView;
     Settings settings;
     private RecipeDatabase recipeDatabase;
 
-    public Map<Integer, Fragment> getFragmentMap() {
-        return fragmentMap;
-    }
-
+    private final Map<Integer, Fragment> fragmentMap = new HashMap<>();
 
     // Nav bar code adapted from: https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/
     @Override
@@ -89,12 +84,6 @@ public class MainActivity extends AppCompatActivity implements Tab2.PantryUpdate
         }
     }
 
-    public void refreshTab1Adapter() {
-        Tab1 tab1 = (Tab1) fragmentMap.get(R.id.recipes);
-        if (tab1 != null) {
-            tab1.refreshRecipeAdapter();
-        }
-    }
     @Override
     public void onPantryUpdated() {
         Tab1 tab1 = (Tab1) fragmentMap.get(R.id.recipes);

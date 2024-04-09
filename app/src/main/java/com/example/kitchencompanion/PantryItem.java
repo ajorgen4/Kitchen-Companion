@@ -67,10 +67,6 @@ public class PantryItem {
         return total;
     }
 
-    public int getCount() {
-        return totalCount();
-    }
-
     public String getItemName() {
         return itemName;
     }
