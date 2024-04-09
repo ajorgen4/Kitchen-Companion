@@ -444,6 +444,7 @@ public class Tab2 extends Fragment {
 
         adapter.notifyDataSetChanged();
         adapter.getFilter().filter("Not needed");
+        notifyPantryUpdated();
     }
 
     public void addItemsPrivate(FoodType foodType, int count, boolean isPrivate) {
