@@ -18,7 +18,9 @@
             android:background="#DDDDDD"
             android:layout_alignParentEnd="true"
             android:visibility="gone"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="60dp"
@@ -26,21 +28,25 @@
                 android:layout_gravity="center_horizontal"
                 app:srcCompat="@drawable/shopping_cart_icon" />
 
-            <TextView
+            <Button
+                android:id="@+id/addMissingButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
                 android:text="Add Missing"
-                android:textSize="18sp"
-                android:layout_marginBottom="10dp" />
+                android:textSize="12sp"
+                android:layout_marginBottom="0dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:textColor="@android:color/black" />
         </FrameLayout>
+
 
         <LinearLayout
             android:id="@+id/recipeItemLayout"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            android:background="@android:color/white">
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/recipeImage"
@@ -63,46 +69,93 @@
                     android:text="Recipe Name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
+                <!--two-columns -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/recipeCalories"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Calories"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    <!-- First Col -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="8dp">
 
-                    <TextView
-                        android:id="@+id/recipeCookTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Cook Time"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                        <!-- Calories -->
+                        <TextView
+                            android:id="@+id/recipeCalories"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Calories: 500"
+                            android:textSize="20sp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                        <!-- Cook Time -->
+                        <TextView
+                            android:id="@+id/recipeCookTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cook Time: 45 mins"
+                            android:textSize="20sp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    </LinearLayout>
+
+                    <!-- Second Col -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <!-- Required Ingredients -->
+                        <TextView
+                            android:id="@+id/recipeRequiredIngredients"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Required Ingredients: 3/19"
+                            android:textSize="20sp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                        <!-- Difficulty -->
+                        <TextView
+                            android:id="@+id/recipeDifficulty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Difficulty: Easy"
+                            android:textSize="20sp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    </LinearLayout>
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/recipeDifficulty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Difficulty"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:id="@+id/closeButtonRecipes"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:gravity="top"
-                    android:src="@drawable/x_icon" />
+                    android:src="@drawable/x_icon"
+                    android:onClick="showConfirmationDialog" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/warningIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/warning"
+                    android:visibility="gone"
+                    app:tint="#FF0000" />
 
                 <Space
                     android:layout_width="0dp"
@@ -114,21 +167,9 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/heart_outline"
-                    android:gravity="bottom"/>
+                    android:layout_marginStart="2dp" />
+
             </LinearLayout>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/warningIcon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="610dp"
-            android:layout_marginTop="6dp"
-            android:visibility="gone"
-            app:srcCompat="@drawable/warning"
-            app:tint="#FF0000" />
-
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

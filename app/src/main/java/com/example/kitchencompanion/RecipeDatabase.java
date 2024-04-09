@@ -33,6 +33,7 @@ public class RecipeDatabase {
         rec1_Ingred.put(8, 1); // Parsley
         rec1_Ingred.put(9, 1); // Salt
         rec1_Ingred.put(10, 1); // Pepper
+        rec1_Ingred.put(19, 3); // TEST ITEM (3 needed)
 
         Map<Integer, Integer> recipe2_Ingredients = new HashMap<>();
         recipe2_Ingredients.put(11, 3); // Chicken
@@ -94,6 +95,7 @@ public class RecipeDatabase {
         addRecipe("Chicken Noodle Soup", "Lorem ipsum...", recipe2_Ingredients, 2, false, "25 mins", 90, "Easy", new ArrayList<>() ,"invalid_image");
         addRecipe("Chicken Parmesan", "Lorem ipsum...", recipe3_Ingredients, 2, false, "45 mins", 650, "Medium", new ArrayList<>(),"recipe_image_parm");
         addRecipe("Test Recipe", "Lorem ipsum...", recipe4_Ingredients, 2, false, "1 hour", 100, "Medium", new ArrayList<>(), "");
+        addRecipe("Test Recipe 2", "Lorem ipsum...", recipe4_Ingredients, 2, false, "1 hour", 100, "Medium", new ArrayList<>(), "");
 
 
         //printIngredientsForRecipe(1); //testing
@@ -107,13 +109,28 @@ public class RecipeDatabase {
         nextRecipeId++;
     }
 
+    // RecipeDatabase.java changes
     public void removeRecipe(int recipeId) {
-        recipes.removeIf(recipe -> recipe.getRecipeId() == recipeId);
-        idToRecipeMap.remove(recipeId);
+        Recipe recipeToRemove = idToRecipeMap.get(recipeId);
+        if (recipeToRemove != null) {
+            System.out.println("DEBUG: Removing recipe: " + recipeToRemove.getName() + " Recipe ID: " + recipeId);
+            recipes.removeIf(recipe -> recipe.getRecipeId() == recipeId);
+            idToRecipeMap.remove(recipeId);
+
+            // After removal, print current recipes
+            printRecipeDatabase();
+        }
     }
 
     public List<Recipe> getRecipes() {
         return recipes;
+    }
+
+    public void printRecipeDatabase() {
+        System.out.println("DEBUG: Current recipes in the database:");
+        for (Recipe recipe : recipes) {
+            System.out.println("Recipe ID: " + recipe.getRecipeId() + ", Name: " + recipe.getName());
+        }
     }
 
     public String printIngredientsForRecipe(int recipeId) {

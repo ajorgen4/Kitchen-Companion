@@ -9,7 +9,7 @@ public class FoodBatch {
     private static int nextBatchId = 0;
     private int batchId;
     private FoodType food;
-    int itemCount;
+    private int itemCount;
     private LocalDate expirationDate;
 
     public FoodBatch(FoodType food, int itemCount, LocalDate expirationDate) {

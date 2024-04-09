@@ -19,10 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpdateListener {
+public class MainActivity extends AppCompatActivity implements Tab2.PantryUpdateListener, Tab4.HouseNameUpdateListener {
 
     NavigationBarView bottomNavigationView;
     Settings settings;
+    private RecipeDatabase recipeDatabase;
 
     private final Map<Integer, Fragment> fragmentMap = new HashMap<>();
 
@@ -35,13 +36,18 @@ public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpd
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        Tab2 tab2 = new Tab2();
-        fragmentMap.put(R.id.pantry, tab2);
-        fragmentMap.put(R.id.recipes, new Tab1(tab2.getFoodDictionary()));
-        fragmentMap.put(R.id.shopping, new Tab3(tab2.getFoodDictionary()));
-        fragmentMap.put(R.id.settings, new Tab4(tab2.getFoodDictionary()));
+        HashMap<Integer, FoodType> foodDictionary = new HashMap<>();
+        recipeDatabase = new RecipeDatabase(foodDictionary);
 
-        // Instantiate Settings class
+        Tab2 tab2 = new Tab2(foodDictionary);
+        tab2.setPantryUpdateListener(this);
+        fragmentMap.put(R.id.pantry, tab2);
+        Tab1 tab1 = new Tab1(tab2.getFoodDictionary(), recipeDatabase, tab2.getPantryList());
+        fragmentMap.put(R.id.recipes, tab1);
+
+        fragmentMap.put(R.id.shopping, new Tab3(foodDictionary, tab2));
+        fragmentMap.put(R.id.settings, new Tab4(foodDictionary));
+
         settings = new Settings();
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -60,9 +66,30 @@ public class MainActivity extends AppCompatActivity implements Tab4.HouseNameUpd
         bottomNavigationView.setSelectedItemId(R.id.recipes);
     }
 
+    public Tab2 getTab2() {
+        return (Tab2) fragmentMap.get(R.id.pantry);
+    }
+
+
     @Override
     public void onUpdateHouseName(String newName) {
         TextView houseNameTextView = findViewById(R.id.pantryAddFoodTitle);
         houseNameTextView.setText(newName);
+    }
+
+
+    public void addItemsToPantry(int foodTypeId, int count) {
+        FoodType foodType = ((Tab2) fragmentMap.get(R.id.pantry)).getFoodDictionary().get(foodTypeId);
+        if (foodType != null) {
+            ((Tab2) fragmentMap.get(R.id.pantry)).addItems(foodType, count);
+        }
+    }
+
+    @Override
+    public void onPantryUpdated() {
+        Tab1 tab1 = (Tab1) fragmentMap.get(R.id.recipes);
+        if (tab1 != null) {
+            tab1.refreshRecipeAdapter();
+        }
     }
 }

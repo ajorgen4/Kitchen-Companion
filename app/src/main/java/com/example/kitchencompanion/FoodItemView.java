@@ -11,6 +11,7 @@ import android.widget.TextView;
 public class FoodItemView extends RelativeLayout implements View.OnClickListener {
 
     private TextView foodNameTextView;
+    private TextView foodQuantityTextView;
     private LinearLayout expandView;
 
     // Constructors
@@ -35,6 +36,7 @@ public class FoodItemView extends RelativeLayout implements View.OnClickListener
 
         // FoodNameTextView is the default view
         foodNameTextView = findViewById(R.id.foodName);
+        foodQuantityTextView = findViewById(R.id.pantryQuantityDisplay);
         // expandView has the extra details
         expandView = findViewById(R.id.expandView);
         // It should be collapsed by default
@@ -45,6 +47,10 @@ public class FoodItemView extends RelativeLayout implements View.OnClickListener
 
     public void setFoodName(String foodName) {
         foodNameTextView.setText(foodName);
+    }
+
+    public void setFoodCount(int count) {
+        foodQuantityTextView.setText(Integer.toString(count));
     }
 
     @Override
