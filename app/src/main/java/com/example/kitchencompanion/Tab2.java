@@ -441,8 +441,11 @@ public class Tab2 extends Fragment {
             pantryList.add(potentialItem);
         }
 
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
+
 
     public void addItemsPrivate(FoodType foodType, int count, boolean isPrivate) {
         addItemsInternal(foodType, count, isPrivate, LocalDate.now().plusDays(foodType.getExpirationPeriod()));
@@ -460,17 +463,22 @@ public class Tab2 extends Fragment {
 
         for (PantryItem item : pantryList) {
             if (item.equalTo(potentialItem)) {
-                item.removeItemCount(count);
+                int removingCount = Math.min(count, item.getCount());
+                System.out.println("Removing: " + foodType.getItemName() + " (ID: " + foodType.getID() + ") Count: " + removingCount);
+                item.removeItemCount(removingCount);
 
-                adapter.notifyDataSetChanged();
-                notifyPantryUpdated(); // Added to make changes take place instantly
-
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+                notifyPantryUpdated();
                 return true;
             }
         }
-
         return false;
     }
+
+
+
 
     // Recipes, minus button use this
     public void removeItems(FoodType foodType, int count) {
