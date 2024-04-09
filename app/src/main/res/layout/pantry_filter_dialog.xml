@@ -56,7 +56,7 @@
                 android:id="@+id/pantryFilterExpirationText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Expires in x days"
+                android:hint="Expires within x days"
                 android:textSize="25sp"
                 android:inputType="number"
                 android:layout_marginTop="10dp"
@@ -103,9 +103,24 @@
                 android:textColor="@android:color/black"
                 app:strokeWidth="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/pantryFilterCancelButton"
+                app:layout_constraintEnd_toStartOf="@+id/pantryFilterResetButton"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pantryFilterButtonBarrier" />
+
+            <Button
+                android:id="@+id/pantryFilterResetButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset"
+                android:textSize="30sp"
+                android:textColor="@android:color/black"
+                app:strokeWidth="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/pantryFilterCancelButton"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/pantryFilterApplyButton"
                 app:layout_constraintTop_toBottomOf="@+id/pantryFilterButtonBarrier" />
 
             <Button
@@ -119,7 +134,7 @@
                 app:strokeWidth="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/pantryFilterApplyButton"
+                app:layout_constraintStart_toEndOf="@+id/pantryFilterResetButton"
                 app:layout_constraintTop_toBottomOf="@+id/pantryFilterButtonBarrier" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

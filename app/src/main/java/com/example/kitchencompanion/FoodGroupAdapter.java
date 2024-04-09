@@ -19,9 +19,10 @@ public class FoodGroupAdapter extends ArrayAdapter<Enums.FoodGroup> {
     private List<Enums.FoodGroup> foodGroups;
     private List<Enums.FoodGroup> selectedFoodGroups = new ArrayList<>();
 
-    public FoodGroupAdapter(Context context, List<Enums.FoodGroup> foodGroups) {
+    public FoodGroupAdapter(Context context, List<Enums.FoodGroup> foodGroups, List<Enums.FoodGroup> initialSelection) {
         super(context, 0, foodGroups);
         this.foodGroups = foodGroups;
+        this.selectedFoodGroups.addAll(initialSelection);
     }
 
     @NonNull
@@ -47,6 +48,11 @@ public class FoodGroupAdapter extends ArrayAdapter<Enums.FoodGroup> {
         });
 
         return convertView;
+    }
+
+    public void clearSelection() {
+        selectedFoodGroups.clear();
+        notifyDataSetChanged();
     }
 
     public List<Enums.FoodGroup> getSelectedFoodGroups() {

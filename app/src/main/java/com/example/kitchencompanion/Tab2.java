@@ -54,6 +54,7 @@ public class Tab2 extends Fragment {
     private Dialog foodTypeSelector;
     // THIS IS WHERE YOU ACCESS THE FOOD SELECTED BY THE FOODTYPE SELECTOR
     private FoodType selectedFood;
+    private PantryItemFilterFields filterFields;
 
 
     public interface PantryUpdateListener {
@@ -76,6 +77,7 @@ public class Tab2 extends Fragment {
         this.foodDictionary = foodDictionary;
         createFoodDictionary(foodDictionary);
         prePopulatePantry();
+        this.filterFields = new PantryItemFilterFields();
     }
 
     @Override
@@ -95,6 +97,27 @@ public class Tab2 extends Fragment {
         filterButton = view.findViewById(R.id.pantryFiltersButton);
         filterButton.setOnClickListener(v -> showFilterDialog());
 
+        EditText pantrySearchBar = view.findViewById(R.id.pantrySearchBar);
+        pantrySearchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String searchText = s.toString();
+                filterFields.setName(searchText);
+                // You can also apply the filter here if needed
+                // adapter.getFilter().filter(searchText);
+            }
+        });
+
         // Filter UI management
         setFilters();
 
@@ -107,24 +130,26 @@ public class Tab2 extends Fragment {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.pantry_filter_dialog, null);
 
         // Find and set up the views inside the dialog layout
+        Button applyButton = dialogView.findViewById(R.id.pantryFilterApplyButton);
+        Button resetButton = dialogView.findViewById(R.id.pantryFilterResetButton);
         Button cancelButton = dialogView.findViewById(R.id.pantryFilterCancelButton);
         CheckBox pantryFilterLowBox = dialogView.findViewById(R.id.pantryFilterLowBox);
         CheckBox pantryFilterPrivateBox = dialogView.findViewById(R.id.pantryFilterPrivateBox);
         EditText pantryFilterExpirationText = dialogView.findViewById(R.id.pantryFilterExpirationText);
 
-
         ListView foodGroupListView = dialogView.findViewById(R.id.pantryFilterFoodGroups);
         List<Enums.FoodGroup> foodGroups = Arrays.asList(Enums.FoodGroup.values());
-        FoodGroupAdapter adapter = new FoodGroupAdapter(requireContext(), foodGroups);
-        foodGroupListView.setAdapter(adapter);
+        List<Enums.FoodGroup> initialSelection = (filterFields.getFoodGroups() != null) ? filterFields.getFoodGroups() : new ArrayList<>();
+        FoodGroupAdapter foodGroupAdapter = new FoodGroupAdapter(requireContext(), foodGroups, initialSelection);
+        foodGroupListView.setAdapter(foodGroupAdapter);
 
-        Button applyButton = dialogView.findViewById(R.id.pantryFilterApplyButton);
-        applyButton.setOnClickListener(v -> {
-            List<Enums.FoodGroup> selectedFoodGroups = adapter.getSelectedFoodGroups();
-            // TODO: input cleaning, functionality
-            // Im thinking put all this in a class with setters and getters for each parameter and the search string.
-            // Do something with the selectedFoodGroups list
-        });
+        // TODO: Default these to the already set values
+        // Update UI if values exist
+        pantryFilterLowBox.setChecked(filterFields.getLow());
+        pantryFilterPrivateBox.setChecked(filterFields.getPrivate());
+        if (filterFields.getExpirationMax() != Integer.MIN_VALUE) {
+            pantryFilterExpirationText.setText(String.valueOf(filterFields.getExpirationMax()));
+        }
 
         builder.setView(dialogView);
 
@@ -142,6 +167,35 @@ public class Tab2 extends Fragment {
         dialog.getWindow().setDimAmount(0.5f);
 
         cancelButton.setOnClickListener(v -> dialog.dismiss());
+
+        resetButton.setOnClickListener(v -> {
+            // Reset UI only. If they click Apply, it will reset values in model. If they Cancel, it won't
+            pantryFilterLowBox.setChecked(false);
+            pantryFilterPrivateBox.setChecked(false);
+            pantryFilterExpirationText.getText().clear();
+            pantryFilterExpirationText.setHint("Expires within x days");
+            foodGroupAdapter.clearSelection();
+        });
+
+        applyButton.setOnClickListener(v -> {
+            List<Enums.FoodGroup> selectedFoodGroups = foodGroupAdapter.getSelectedFoodGroups();
+            boolean isLowChecked = pantryFilterLowBox.isChecked();
+            boolean isPrivateChecked = pantryFilterPrivateBox.isChecked();
+            String expirationTextValue = pantryFilterExpirationText.getText().toString().trim();
+            int expirationDays = Integer.MIN_VALUE; // Integer.MIN_VALUE indicates no value in the filter fields class
+            if (!expirationTextValue.isEmpty()) {
+                expirationDays = Integer.parseInt(expirationTextValue);
+            }
+
+            filterFields.setLow(isLowChecked);
+            filterFields.setPrivate(isPrivateChecked);
+            filterFields.setExpirationMax(expirationDays);
+            filterFields.setFoodGroups(selectedFoodGroups);
+
+            // TODO: call to filter to update
+
+            dialog.dismiss();
+        });
 
         dialog.show();
     }
@@ -762,15 +816,6 @@ public class Tab2 extends Fragment {
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(25), 4, LocalDate.now().plusDays(foodDictionary.get(25).getExpirationPeriod())), false));
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(10), 3, LocalDate.now().plusDays(foodDictionary.get(10).getExpirationPeriod())), false));
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(28), 7, LocalDate.now().plusDays(foodDictionary.get(28).getExpirationPeriod())), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(36), 9, LocalDate.now().plusDays(foodDictionary.get(36).getExpirationPeriod())), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(63), 2, LocalDate.now().plusDays(foodDictionary.get(63).getExpirationPeriod())), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(47), 3, LocalDate.now().plusDays(foodDictionary.get(47).getExpirationPeriod())), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(42), 5, LocalDate.now().plusDays(foodDictionary.get(42).getExpirationPeriod())), true));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(58), 4, LocalDate.now().plusDays(foodDictionary.get(58).getExpirationPeriod())), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(34), 2, LocalDate.now().plusDays(foodDictionary.get(34).getExpirationPeriod())), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(24), 1, LocalDate.now().plusDays(foodDictionary.get(24).getExpirationPeriod())), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(75), 1, LocalDate.now().plusDays(foodDictionary.get(75).getExpirationPeriod())), false));
-        this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(11), 3, LocalDate.now().plusDays(foodDictionary.get(11).getExpirationPeriod())), false));
     }
 
     public ArrayList<PantryItem> getPantryList() {
