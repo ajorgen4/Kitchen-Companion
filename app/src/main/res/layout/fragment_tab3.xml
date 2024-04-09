@@ -63,6 +63,26 @@
     </ListView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pushPresetShopListButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="36dp"
+        android:src="@drawable/preset_icon"
+        app:backgroundTint="?attr/colorSecondary"
+        app:layout_constraintBottom_toTopOf="@+id/addPresetShopListButton"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addPresetShopListButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="36dp"
+        android:src="@drawable/preset_push_icon"
+        app:backgroundTint="?attr/colorSecondary"
+        app:layout_constraintBottom_toTopOf="@id/addShopListFoodButton"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addShopListFoodButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
