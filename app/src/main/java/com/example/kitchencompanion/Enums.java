@@ -11,4 +11,9 @@ public class Enums {
     public enum DietaryAttribute {
         VEGAN, ORGANIC, CONTAINS_NUTS, TEST
     }
+
+    public enum CommonFoodAllergy {
+        GLUTEN, DAIRY, NUTS, SHELLFISH, SOY, EGGS, FISH, WHEAT
+    }
+    public static final CommonFoodAllergy[] commonFoodAllergies = CommonFoodAllergy.values();
 }
