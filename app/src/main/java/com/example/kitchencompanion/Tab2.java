@@ -479,7 +479,8 @@ public class Tab2 extends Fragment {
         return false;
     }
 
-    // Recipes, minus button use this
+    // Recipes, minus button use this\
+    // TEMP CHANGE for removing private stuff, fix later?
 
     public void removeItems(FoodType foodType, int count) {
         PantryItem item = pantryList.stream()
