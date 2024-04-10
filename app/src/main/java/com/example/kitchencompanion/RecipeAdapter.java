@@ -160,12 +160,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         // Set 1st textview in popup_recipe_desc
         StringBuilder attributesBuilder = new StringBuilder();
 
-        // Recipe Dietary Attributes
+                // Recipe Dietary Attributes
         for (Enums.DietaryAttribute attribute : recipe.getDietaryAttributes()) {
             if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append(attribute.toString());
         }
-        // Recipe Allergens
+                // Recipe Allergens
         for (Enums.CommonFoodAllergy allergy : recipe.getCommonFoodAllergies()) {
             if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append("Allergen-" + allergy.toString());
@@ -359,6 +359,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                 foregroundView.animate().translationX(0).setDuration(300).start();
             }
         }
+
+        // Fix to stop multiple swipes opened at once
+        // Still need to fix multiple clicks
+        MainActivity mainActivity = (MainActivity) context;
+        mainActivity.refreshTab1Adapter();
     }
 
     private int calculateAvailableIngredients(Recipe recipe) {
