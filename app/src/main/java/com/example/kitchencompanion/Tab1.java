@@ -2,16 +2,15 @@ package com.example.kitchencompanion;
 
 import android.app.AlertDialog;
 import android.graphics.Canvas;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.os.Handler;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -19,10 +18,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import android.view.ViewGroup;
+import android.os.Handler;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 public class Tab1 extends Fragment {
     private FloatingActionButton addRecipeButton;
@@ -47,6 +47,10 @@ public class Tab1 extends Fragment {
     private RecipeDatabase recipeDatabase;
 
     // General info I used for views: https://developer.android.com/reference/android/app/Fragment
+    // OnCreateView definition: https://stackoverflow.com/questions/43780548/how-oncreateview-works
+    // YOUTUBE TUTORIAL, SWIPE RECYCLER VIEW: https://www.youtube.com/watch?v=rcSNkSJ624U
+    // OnCreateView: fragment layout inflation
+    // onCreate: fragment init, no view
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +84,7 @@ public class Tab1 extends Fragment {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 // don't think we need anything here for now
+                // actions in onChildDraw
             }
 
             // Tutorial for onChildDraw: https://developer.android.com/reference/androidx/recyclerview/widget/ItemTouchHelper.Callback
@@ -119,7 +124,8 @@ public class Tab1 extends Fragment {
 
 
 
-            // Restoring recycler view: https://stackoverflow.com/questions/57353844/how-to-restore-recycler-view-item-after-swipe
+            // Restoring recycler view(clearView, onSelectedChange): https://stackoverflow.com/questions/57353844/how-to-restore-recycler-view-item-after-swipe
+            // https://stackoverflow.com/questions/39189159/recyclerview-swipe-with-a-view-below-not-detecting-click
             @Override
             public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 final View foregroundView = ((RecipeAdapter.ViewHolder) viewHolder).viewForeground;
@@ -188,11 +194,10 @@ public class Tab1 extends Fragment {
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
+        DisplayMetrics displayMetrics = new DisplayMetrics();  // https://developer.android.com/reference/android/util/DisplayMetrics, Get info about screen size, etc
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = (int) (displayMetrics.widthPixels * 0.75);
-        int height = (int) (displayMetrics.heightPixels * 0.75);
-        dialog.getWindow().setLayout(width, height);
+        // popup =  75% of screen width/height
+        dialog.getWindow().setLayout((int) (displayMetrics.widthPixels * 0.75), (int) (displayMetrics.heightPixels * 0.75));
         cancelButton.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }

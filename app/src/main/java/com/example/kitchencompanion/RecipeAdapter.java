@@ -161,12 +161,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         // Set 1st textview in popup_recipe_desc
         StringBuilder attributesBuilder = new StringBuilder();
 
-                // Recipe Dietary Attributes
+        // Recipe Dietary Attributes
         for (Enums.DietaryAttribute attribute : recipe.getDietaryAttributes()) {
             if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append(attribute.toString());
         }
-                // Recipe Allergens
+        // Recipe Allergens
         for (Enums.CommonFoodAllergy allergy : recipe.getCommonFoodAllergies()) {
             if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append("Allergen-" + allergy.toString());
@@ -175,20 +175,23 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         // Set the textview 1 text with bold and underline for the label
         String labelAttributes = "Recipe Dietary Attributes/Allergens: \n";
         String attributes = attributesBuilder.toString();
+
+        // Allows for dynamic config of popup with some part of string bolded, other part not, etc
+        // https://developer.android.com/reference/android/text/SpannableStringBuilder
         SpannableString spannableAttributes = new SpannableString(labelAttributes + attributes);
         spannableAttributes.setSpan(new StyleSpan(Typeface.BOLD), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         spannableAttributes.setSpan(new UnderlineSpan(), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         attributesTextView.setText(spannableAttributes);
 
         // Convert ingredient IDs --> names
-        StringBuilder ingredientsBuilder = new StringBuilder();
+        List<String> ingredientNames = new ArrayList<>();
         for (Map.Entry<Integer, Integer> ingredient : recipe.getRecipe_Requirements().entrySet()) {
             FoodType foodType = this.foodDictionary.get(ingredient.getKey());
-            String ingredientName = (foodType != null) ? foodType.getItemName() : "Unknown Ingredient(Invalid ID)";
-            ingredientsBuilder.append(ingredient.getValue()).append(" ").append(ingredientName).append(", ");
+            String ingredientName = (foodType != null) ? ingredient.getValue() + " " + foodType.getItemName() : "Unknown Ingredient(Invalid ID)";
+            ingredientNames.add(ingredientName);
         }
-        // Remove trailing space, comma
-        String ingredientsText = ingredientsBuilder.length() > 0 ? ingredientsBuilder.substring(0, ingredientsBuilder.length() - 2) : "";
+        String ingredientsText = String.join(", ", ingredientNames);
+
 
         // INGREDIENTS TEXT
         String labelIngredients = "Ingredients: \n";
@@ -226,11 +229,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                 FoodType foodType = tab2.getFoodDictionary().get(foodTypeId);
 
                 if (foodType != null) {
-                    int pantryCount = tab2.getPantryList().stream()
-                            .filter(item -> item.getType().getID() == foodTypeId)
-                            .findFirst()
-                            .map(PantryItem::getCount)
-                            .orElse(0);
+                    int pantryCount = 0;
+                    for (PantryItem item : tab2.getPantryList()) {
+                        if (item.getType().getID() == foodTypeId) {
+                            pantryCount = item.getCount();
+                            break;
+                        }
+                    }
                     int amountToRemove = Math.min(pantryCount, requiredAmount);
                     tab2.removeItems(foodType, amountToRemove);
 
@@ -290,6 +295,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     // Have to do this way since clicking the Add Missing button wasn't working since only detecting swipes.
 
     public void showAddMissingConfirmation(int position) {
+
+        // Attempt to fix issue of multiple popups/swipes opening at once
         if (currentDialog != null && currentDialog.isShowing()) {
             if (currentDialogPosition != position) {
                 currentDialog.dismiss();
@@ -314,10 +321,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             for (Map.Entry<Integer, Integer> entry : recipe.getRecipe_Requirements().entrySet()) {
                 int foodTypeId = entry.getKey();
                 int requiredAmount = entry.getValue();
-                PantryItem pantryItem = tab2.getPantryList().stream()
-                        .filter(item -> item.getType().getID() == foodTypeId)
-                        .findFirst()
-                        .orElse(null);
+                PantryItem pantryItem = null;
+                for (PantryItem item : tab2.getPantryList()) {
+                    if (item.getType().getID() == foodTypeId) {
+                        pantryItem = item;
+                        break;
+                    }
+                }
 
                 int currentAmountInPantry = pantryItem != null ? pantryItem.getCount() : 0;
                 int amountToAdd = requiredAmount - currentAmountInPantry;
@@ -329,30 +339,40 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
             if (tab3.getAdapter() != null) {
                 tab3.getAdapter().addShopListItemBatch(toAdd);
-                updateRecipes(recipeDatabase.getRecipes());
+                // updateRecipes(recipeDatabase.getRecipes());
+            } else {
+                // Show error if the shopping list adapter is not initialized
+                new AlertDialog.Builder(context)
+                        .setTitle("Error")
+                        .setMessage("The shopping list has not been loaded. Open the shopping list tab and try again.")
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setIcon(R.drawable.warning)
+                        .show();
             }
-
+            updateRecipes(recipeDatabase.getRecipes());
             currentDialog.dismiss();
-            resetSwipeView(position);
+            resetSwipeView(position); // Attempt to fix issue of multiple popups/swipes opening at once
             currentDialog = null;
             currentDialogPosition = -1;
         });
 
         dialogView.findViewById(R.id.cancelAddMissingButton).setOnClickListener(v -> {
             currentDialog.dismiss();
-            resetSwipeView(position);
+            resetSwipeView(position); // Attempt to fix issue of multiple popups/swipes opening at once
             currentDialog = null;
             currentDialogPosition = -1;
         });
 
         currentDialog.show();
     }
+
+    // Attempt to fix issue of multiple popups/swipes opening at once
     public void resetSwipeView(int position) {
         RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
         if (viewHolder != null) {
             View foregroundView = viewHolder.itemView.findViewById(R.id.recipeItemLayout);
             if (foregroundView != null) {
-                foregroundView.animate().translationX(0).setDuration(300).start();
+                foregroundView.animate().translationX(0).setDuration(300).start(); // Slide back
             }
         }
 
