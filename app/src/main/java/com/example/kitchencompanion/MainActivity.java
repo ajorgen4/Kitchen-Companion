@@ -41,14 +41,23 @@ public class MainActivity extends AppCompatActivity implements Tab2.PantryUpdate
         HashMap<Integer, FoodType> foodDictionary = new HashMap<>();
         recipeDatabase = new RecipeDatabase(foodDictionary);
 
+        // Tab2
         Tab2 tab2 = new Tab2(foodDictionary);
         tab2.setPantryUpdateListener(this);
-        fragmentMap.put(R.id.pantry, tab2);
-        Tab1 tab1 = new Tab1(tab2.getFoodDictionary(), recipeDatabase, tab2.getPantryList());
-        fragmentMap.put(R.id.recipes, tab1);
 
-        fragmentMap.put(R.id.shopping, new Tab3(foodDictionary, tab2));
-        fragmentMap.put(R.id.settings, new Tab4(foodDictionary));
+        // Tab3
+        Tab3 tab3 = new Tab3(foodDictionary, tab2);
+
+        // Tab1
+        Tab1 tab1 = new Tab1(tab2.getFoodDictionary(), recipeDatabase, tab2.getPantryList(), tab3.getAdapter());
+
+        // Tab4
+        Tab4 tab4 = new Tab4(foodDictionary);
+
+        fragmentMap.put(R.id.recipes, tab1);
+        fragmentMap.put(R.id.pantry, tab2);
+        fragmentMap.put(R.id.shopping, tab3);
+        fragmentMap.put(R.id.settings, tab4);
 
         settings = new Settings();
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

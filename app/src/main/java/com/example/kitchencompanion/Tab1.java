@@ -34,11 +34,13 @@ public class Tab1 extends Fragment {
     private boolean isAddMissingPopupShown = false;
 
     private List<PantryItem> pantryList;
+    private ShopListAdapter shoppingList;
 
-    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList) {
+    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, ShopListAdapter shoppingList) {
         this.foodDictionary = foodDictionary;
         this.recipeDatabase = recipeDatabase;
         this.pantryList = pantryList;
+        this.shoppingList = shoppingList;
     }
 
 

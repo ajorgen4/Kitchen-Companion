@@ -436,4 +436,8 @@ public class Tab3 extends Fragment {
         });
         return view;
     }
+
+    public ShopListAdapter getAdapter() {
+        return adapter;
+    }
 }

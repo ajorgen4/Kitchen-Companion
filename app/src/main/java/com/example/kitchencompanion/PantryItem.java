@@ -98,7 +98,7 @@ public class PantryItem {
     }
 
     public boolean equalTo(PantryItem other) {
-        return (this.type == other.type) && (this.isPrivate == other.isPrivate) && (this.low == other.low);
+        return (this.type == other.type) && (this.isPrivate == other.isPrivate);
     }
 
     public void setLow(boolean low) {
