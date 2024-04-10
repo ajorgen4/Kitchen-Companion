@@ -46,6 +46,8 @@ public class Tab1 extends Fragment {
 
     private RecipeDatabase recipeDatabase;
 
+    // General info I used for views: https://developer.android.com/reference/android/app/Fragment
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab1, container, false);
@@ -77,17 +79,20 @@ public class Tab1 extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                // don't think we need anything here for now
             }
 
+            // Tutorial for onChildDraw: https://developer.android.com/reference/androidx/recyclerview/widget/ItemTouchHelper.Callback
+            // Swipe recyler: https://stackoverflow.com/questions/57353844/how-to-restore-recycler-view-item-after-swipe
+            // Swipe click issue? (Scrapped - workaround) https://stackoverflow.com/questions/39189159/recyclerview-swipe-with-a-view-below-not-detecting-click
             @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float xVal, float yVal, int actionState, boolean isCurrentlyActive) {
                 RecipeAdapter.ViewHolder holder = (RecipeAdapter.ViewHolder) viewHolder;
-                final View foregroundView = holder.viewForeground;
                 FrameLayout addMissingLayout = holder.addMissingLayout;
-
+                final View foregroundView = holder.viewForeground;
                 float maxSwipeDistance = -addMissingLayout.getWidth();
-                float restrictedDX = Math.max(dX, maxSwipeDistance);
-                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, restrictedDX, dY, actionState, isCurrentlyActive);
+                float restrictedDX = Math.max(xVal, maxSwipeDistance);
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, restrictedDX, yVal, actionState, isCurrentlyActive);
 
                 if (restrictedDX == maxSwipeDistance && isCurrentlyActive) {
                     if (addMissingLayout.getVisibility() != View.VISIBLE) {
@@ -105,7 +110,7 @@ public class Tab1 extends Fragment {
                             if (!isCurrentlyActive) {
                                 holder.isPopupShown = false;
                             }
-                        }, 500);
+                        }, 0); //change delay if needed, time before popup appears
                     }
                 } else if (restrictedDX != maxSwipeDistance) {
                     if (addMissingLayout.getVisibility() != View.GONE) {
@@ -118,7 +123,7 @@ public class Tab1 extends Fragment {
 
 
 
-
+            // Restoring recycler view: https://stackoverflow.com/questions/57353844/how-to-restore-recycler-view-item-after-swipe
             @Override
             public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 final View foregroundView = ((RecipeAdapter.ViewHolder) viewHolder).viewForeground;
@@ -175,17 +180,11 @@ public class Tab1 extends Fragment {
 
             filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
             // Here, we will need to make a call to actually apply the filter in the backend
+            // Unimplemented - Horizontal Prototype - UI Only
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (recipeAdapter != null) {
-            recipeAdapter.updateRecipes(recipeDatabase.getRecipes());
-        }
-    }
-
+    // Unimplemented - Horizontal prototype - UI Only
     private void showAddRecipeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.add_recipe_dialog, null);
@@ -202,9 +201,20 @@ public class Tab1 extends Fragment {
         dialog.show();
     }
 
+    // Ensure Tab1 refreshes if we change values for the recipeCard like by Marking Cooked, etc
+    // notifyDataSetChanges(): https://stackoverflow.com/questions/2345875/android-notifydatasetchanged
     public void refreshRecipeAdapter() {
         if (recipeAdapter != null) {
             recipeAdapter.notifyDataSetChanged();
+        }
+    }
+
+    // https://developer.android.com/images/activity_lifecycle.png
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (recipeAdapter != null) {
+            recipeAdapter.updateRecipes(recipeDatabase.getRecipes());
         }
     }
 }

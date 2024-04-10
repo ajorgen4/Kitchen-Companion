@@ -176,24 +176,24 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         spannableAttributes.setSpan(new UnderlineSpan(), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         attributesTextView.setText(spannableAttributes);
 
-        // Convert ingredient IDs to names and display them
+        // Convert ingredient IDs --> names
         StringBuilder ingredientsBuilder = new StringBuilder();
         for (Map.Entry<Integer, Integer> ingredient : recipe.getRecipe_Requirements().entrySet()) {
             FoodType foodType = this.foodDictionary.get(ingredient.getKey());
-            String ingredientName = (foodType != null) ? foodType.getItemName() : "Unknown Ingredient";
+            String ingredientName = (foodType != null) ? foodType.getItemName() : "Unknown Ingredient(Invalid ID)";
             ingredientsBuilder.append(ingredient.getValue()).append(" ").append(ingredientName).append(", ");
         }
-        // Remove the trailing comma and space from the ingredients list
+        // Remove trailing space, comma
         String ingredientsText = ingredientsBuilder.length() > 0 ? ingredientsBuilder.substring(0, ingredientsBuilder.length() - 2) : "";
 
-        // Set the Ingredients text with bold and underline for the label
+        // INGREDIENTS TEXT
         String labelIngredients = "Ingredients: \n";
         SpannableString spannableIngredients = new SpannableString(labelIngredients + ingredientsText);
         spannableIngredients.setSpan(new StyleSpan(Typeface.BOLD), 0, labelIngredients.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         spannableIngredients.setSpan(new UnderlineSpan(), 0, labelIngredients.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         ingredientsTextView.setText(spannableIngredients);
 
-        // Set the Recipe Instructions text with bold and underline for the label
+        // RECIPE INSTRUCTIONS TEXT
         String labelInstructions = "Recipe Instructions: \n";
         String instructionsText = recipe.getDescription();
         SpannableString spannableInstructions = new SpannableString(labelInstructions + instructionsText);
@@ -253,7 +253,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         dialogView.findViewById(R.id.confirmDeleteButton).setOnClickListener(v -> {
             int recipeId = recipe.getRecipeId();
             recipeDatabase.removeRecipe(recipeId);
-            // Remove using recipeId, not position, to avoid index issues
+            // NOTE: Remove using recipeId, not position
             recipes.removeIf(r -> r.getRecipeId() == recipeId);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, recipes.size() - position);
