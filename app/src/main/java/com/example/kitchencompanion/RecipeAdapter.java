@@ -16,11 +16,13 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,15 +46,16 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private Map<Integer, Fragment> fragmentMap;
     private int lastSwipedPosition = -1;
 
-    private ShopListAdapter shoppingList;
+    private Tab3 tab3;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, HashMap<Integer, FoodType> foodDictionary, Map<Integer, Fragment> fragmentMap,ShopListAdapter shoppingList) {    this.context = context;
+    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, HashMap<Integer, FoodType> foodDictionary, Map<Integer, Fragment> fragmentMap, Tab3 tab3) {    this.context = context;
         this.recipes = recipes;
         this.recipeDatabase = recipeDatabase;
         this.pantryList = pantryList;
         this.foodDictionary = foodDictionary;
         this.fragmentMap = fragmentMap;
-        this.shoppingList = shoppingList;
+        this.tab3 = tab3;
+        this.context = context;
     }
 
     @Override
@@ -292,6 +295,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         AlertDialog dialog = builder.create();
 
         dialogView.findViewById(R.id.confirmAddMissingButton).setOnClickListener(v -> {
+            List<ShopListItem> toAdd = new ArrayList<ShopListItem>();
             for (Map.Entry<Integer, Integer> entry : recipe.getRecipe_Requirements().entrySet()) {
                 int foodTypeId = entry.getKey();
                 int requiredAmount = entry.getValue();
@@ -304,9 +308,19 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                 int amountToAdd = requiredAmount - currentAmountInPantry;
 
                 if (amountToAdd > 0) {
-                    tab2.addItems(foodDictionary.get(foodTypeId), amountToAdd);
+                    toAdd.add(new ShopListItem(foodDictionary.get(foodTypeId), amountToAdd));
                     System.out.println("DEBUG - Adding missing for Recipe: " + recipe.getName() + " - Item: " + foodDictionary.get(foodTypeId).getItemName() + ", Amount Added: " + amountToAdd + ", Current Pantry Count: " + (currentAmountInPantry + amountToAdd));
                 }
+            }
+            if (tab3.getAdapter() == null) {
+                new AlertDialog.Builder(context)
+                        .setTitle("Error")
+                        .setMessage("The shopping list has not been loaded. Open the shopping list tab and try again.")
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setIcon(R.drawable.warning)
+                        .show();
+            } else {
+                tab3.getAdapter().addShopListItemBatch(toAdd);
             }
 
             updateRecipes(recipeDatabase.getRecipes());

@@ -34,13 +34,13 @@ public class Tab1 extends Fragment {
     private boolean isAddMissingPopupShown = false;
 
     private List<PantryItem> pantryList;
-    private ShopListAdapter shoppingList;
+    private Tab3 tab3;
 
-    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, ShopListAdapter shoppingList) {
+    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, Tab3 tab3) {
         this.foodDictionary = foodDictionary;
         this.recipeDatabase = recipeDatabase;
         this.pantryList = pantryList;
-        this.shoppingList = shoppingList;
+        this.tab3 = tab3;
     }
 
 
@@ -59,7 +59,7 @@ public class Tab1 extends Fragment {
 
         // Use shared RecipeDatabase instance across tabs
         Map<Integer, Fragment> fragmentMap = ((MainActivity) getActivity()).getFragmentMap();
-        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap, shoppingList);
+        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap, tab3);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
         setFilters(view);

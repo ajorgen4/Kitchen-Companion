@@ -125,16 +125,19 @@ public class ShopListAdapter extends BaseAdapter {
         }
         return anyItemSelected;
     }
-    public List<ShopListItem> getAndRemoveSelectedItems(){
+    public List<ShopListItem> getSelectedItems(){
         List<ShopListItem> selectedItems = new ArrayList<ShopListItem>();
         for(int i = 0; i < shopList.size(); i++){
             if(shopList.get(i).getSelected()){
                 selectedItems.add(shopList.get(i));
             }
         }
+        return selectedItems;
+    }
+
+    public void removeSelectedItems(List<ShopListItem> selectedItems){
         shopList.removeAll(selectedItems);
         notifyDataSetChanged();
-        return selectedItems;
     }
 
     public void addShopListItem(ShopListItem item){

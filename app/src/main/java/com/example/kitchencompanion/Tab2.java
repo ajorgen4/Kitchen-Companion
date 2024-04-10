@@ -448,10 +448,15 @@ public class Tab2 extends Fragment {
     }
 
     // Shopping list, plus button use this
-    public void addItems(FoodType foodType, int count) {
+    public boolean addItems(FoodType foodType, int count) {
+        if (adapter == null) {
+            return false;
+        }
         // Assumed not private, default expiration period
         addItemsInternal(foodType, count, false, LocalDate.now().plusDays(foodType.getExpirationPeriod()));
         notifyPantryUpdated(); // Added this, remove if broken?
+
+        return true;
     }
 
     // For anyone reading this, the adapter will handle removing empty items. It doesn't need to be done explicitly.

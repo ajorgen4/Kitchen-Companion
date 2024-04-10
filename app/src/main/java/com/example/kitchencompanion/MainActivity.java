@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements Tab2.PantryUpdate
         Tab3 tab3 = new Tab3(foodDictionary, tab2);
 
         // Tab1
-        Tab1 tab1 = new Tab1(tab2.getFoodDictionary(), recipeDatabase, tab2.getPantryList(), tab3.getAdapter());
+        Tab1 tab1 = new Tab1(tab2.getFoodDictionary(), recipeDatabase, tab2.getPantryList(), tab3);
 
         // Tab4
         Tab4 tab4 = new Tab4(foodDictionary);
