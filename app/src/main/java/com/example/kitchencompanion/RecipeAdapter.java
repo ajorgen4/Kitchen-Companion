@@ -42,6 +42,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private List<PantryItem> pantryList;
     private HashMap<Integer, FoodType> foodDictionary;
     private Map<Integer, Fragment> fragmentMap;
+    private int lastSwipedPosition = -1;
 
     public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, HashMap<Integer, FoodType> foodDictionary, Map<Integer, Fragment> fragmentMap) {    this.context = context;
         this.recipes = recipes;
@@ -96,7 +97,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         // Warning Icon
         // Debug print statements to check dietary attributes
-        if (recipe.getDietaryAttributes() != null && !recipe.getDietaryAttributes().isEmpty()) {
+        if (!recipe.getCommonFoodAllergies().isEmpty()) {
             holder.warningIcon.setVisibility(View.VISIBLE);
         } else {
             holder.warningIcon.setVisibility(View.GONE);
@@ -150,13 +151,21 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         TextView ingredientsTextView = dialogView.findViewById(R.id.ingredientsTextView);
         TextView descriptionTextView = dialogView.findViewById(R.id.descriptionTextView);
 
-        // Set the attributes
+        // Set 1st textview in popup_recipe_desc
         StringBuilder attributesBuilder = new StringBuilder();
+
+                // Recipe Dietary Attributes
         for (Enums.DietaryAttribute attribute : recipe.getDietaryAttributes()) {
             if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append(attribute.toString());
         }
-        // Set the Attributes text with bold and underline for the label
+                // Recipe Allergens
+        for (Enums.CommonFoodAllergy allergy : recipe.getCommonFoodAllergies()) {
+            if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
+            attributesBuilder.append("Allergen-" + allergy.toString());
+        }
+
+        // Set the textview 1 text with bold and underline for the label
         String labelAttributes = "Recipe Dietary Attributes/Allergens: \n";
         String attributes = attributesBuilder.toString();
         SpannableString spannableAttributes = new SpannableString(labelAttributes + attributes);
@@ -201,10 +210,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             MainActivity mainActivity = (MainActivity) context;
             Tab2 tab2 = mainActivity.getTab2();
             Map<Integer, Integer> ingredients = recipe.getRecipe_Requirements();
+
+            System.out.println("DEBUG - Marking as cooked for Recipe: " + recipe.getName());
+
             for (Map.Entry<Integer, Integer> ingredient : ingredients.entrySet()) {
                 int foodTypeId = ingredient.getKey();
                 int requiredAmount = ingredient.getValue();
                 FoodType foodType = tab2.getFoodDictionary().get(foodTypeId);
+
                 if (foodType != null) {
                     int pantryCount = tab2.getPantryList().stream()
                             .filter(item -> item.getType().getID() == foodTypeId)
@@ -212,15 +225,16 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                             .map(PantryItem::getCount)
                             .orElse(0);
                     int amountToRemove = Math.min(pantryCount, requiredAmount);
-                    System.out.println("DEBUG - RecipeAdapter - Removing: " + foodType.getItemName() + " (ID: " + foodTypeId + ") Count: " + amountToRemove);
                     tab2.removeItems(foodType, amountToRemove);
+
+                    System.out.println("DEBUG - Recipe: " + recipe.getName() + " - Removing: " + foodType.getItemName() + " (ID: " + foodTypeId + ") Count: " + amountToRemove + ", Current Pantry Count: " + (pantryCount - amountToRemove));
                 }
             }
+
+            // Update the adapter immediately after modifications
+            updateRecipes(recipeDatabase.getRecipes());
             dialog.dismiss(); // Close the dialog after marking as cooked
         });
-
-
-
 
         dialog.show();
     }
@@ -261,69 +275,104 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         this.recyclerView = recyclerView;
     }
 
-    // Popup appears when swiped out on recipe card for 0.5 seconds
+    // Popup appears when swiped out on recipe card to allow user to add all required ingredients for recipe not in pantry currently
     // Have to do this way since clicking the Add Missing button wasn't working since only detecting swipes.
+
     public void showAddMissingConfirmation(int position) {
+        Recipe recipe = recipes.get(position);
+        MainActivity mainActivity = (MainActivity) context;
+        Tab2 tab2 = mainActivity.getTab2();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.confirmation_add_missing, null);
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
 
         dialogView.findViewById(R.id.confirmAddMissingButton).setOnClickListener(v -> {
-            Recipe recipe = recipes.get(position);
-            MainActivity mainActivity = (MainActivity) context;
-            Tab2 tab2 = mainActivity.getTab2();
-
             for (Map.Entry<Integer, Integer> entry : recipe.getRecipe_Requirements().entrySet()) {
                 int foodTypeId = entry.getKey();
                 int requiredAmount = entry.getValue();
-                int currentAmountInPantry = tab2.getPantryList().stream()
+                PantryItem pantryItem = tab2.getPantryList().stream()
                         .filter(item -> item.getType().getID() == foodTypeId)
                         .findFirst()
-                        .map(PantryItem::getCount)
-                        .orElse(0);
+                        .orElse(null);
 
+                int currentAmountInPantry = pantryItem != null ? pantryItem.getCount() : 0;
                 int amountToAdd = requiredAmount - currentAmountInPantry;
+
                 if (amountToAdd > 0) {
-                    tab2.addItems(tab2.getFoodDictionary().get(foodTypeId), amountToAdd);
+                    tab2.addItems(foodDictionary.get(foodTypeId), amountToAdd);
+                    System.out.println("DEBUG - Adding missing for Recipe: " + recipe.getName() + " - Item: " + foodDictionary.get(foodTypeId).getItemName() + ", Amount Added: " + amountToAdd + ", Current Pantry Count: " + (currentAmountInPantry + amountToAdd));
                 }
             }
 
-            mainActivity.refreshTab1Adapter();
+            updateRecipes(recipeDatabase.getRecipes());
             dialog.dismiss();
+            resetSwipeView(position); // Reset the swipe view if confirm button
+            lastSwipedPosition = -1;
         });
 
         dialogView.findViewById(R.id.cancelAddMissingButton).setOnClickListener(v -> {
             dialog.dismiss();
-            notifyItemChanged(position);
+            resetSwipeView(position); // Reset the swipe view if cancel button
+            lastSwipedPosition = -1;
         });
 
+        if (lastSwipedPosition != -1 && lastSwipedPosition != position) {
+            // Reset previous swipe before new swipe
+            resetSwipeView(lastSwipedPosition);
+        }
+
+        lastSwipedPosition = position;
         dialog.show();
+    }
+
+    private void closeOpenSwipeViews() {
+        if (lastSwipedPosition != -1) {
+            resetSwipeView(lastSwipedPosition);
+        }
+        lastSwipedPosition = -1;
+    }
+
+    public void resetSwipeView(int position) {
+        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+        if (viewHolder != null) {
+            View foregroundView = viewHolder.itemView.findViewById(R.id.recipeItemLayout);
+            if (foregroundView != null) {
+                foregroundView.animate().translationX(0).setDuration(300).start();
+            }
+        }
     }
 
     private int calculateAvailableIngredients(Recipe recipe) {
         int availableIngredients = 0;
-        int totalRequiredIngredients = 0;
         Map<Integer, Integer> recipeRequirements = recipe.getRecipe_Requirements();
+
+        System.out.println("Calculating Required Ingredients for Recipe: " + recipe.getName() + " (ID: " + recipe.getRecipeId() + ")");
 
         for (Map.Entry<Integer, Integer> requirement : recipeRequirements.entrySet()) {
             int ingredientId = requirement.getKey();
             int requiredAmount = requirement.getValue();
-            totalRequiredIngredients += requiredAmount; // Sum up all required ingredient amounts
+            int currentAmountInPantry = 0;
 
-            // Find this ingredient in pantry
+            // Find this ingredient in the pantry
             for (PantryItem item : pantryList) {
                 if (item.getType().getID() == ingredientId) {
+                    currentAmountInPantry = item.totalCount();
                     // Count the available amount, not exceeding the required amount
-                    availableIngredients += Math.min(item.totalCount(), requiredAmount);
-                    break; // Skip to the next ingredient since we've found the current one
+                    availableIngredients += Math.min(currentAmountInPantry, requiredAmount);
+                    break; // Found the current ingredient, move to next
                 }
             }
+
+            System.out.println("Ingredient ID: " + ingredientId +
+                    ", In Pantry: " + currentAmountInPantry +
+                    ", Required: " + requiredAmount);
         }
 
-        // The caller should use the return value to update the UI
         return availableIngredients; // Return the count of available ingredients
     }
+
 
     private void addMissingIngredients(Recipe recipe) {
         Map<Integer, Integer> recipeRequirements = recipe.getRecipe_Requirements();

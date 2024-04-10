@@ -98,9 +98,9 @@ public class Tab1 extends Fragment {
                             if (restrictedDX == maxSwipeDistance && isCurrentlyActive && !holder.isPopupShown) {
                                 holder.isPopupShown = true;
                                 ((RecipeAdapter) recyclerView.getAdapter()).showAddMissingConfirmation(holder.getAdapterPosition());
-                                holder.isHandlerRunning = false;
-                            } else {
-                                holder.isHandlerRunning = false;
+                            }
+                            holder.isHandlerRunning = false;
+                            if (!isCurrentlyActive) {
                                 holder.isPopupShown = false;
                             }
                         }, 500);
@@ -113,6 +113,8 @@ public class Tab1 extends Fragment {
                     holder.isPopupShown = false;
                 }
             }
+
+
 
 
             @Override

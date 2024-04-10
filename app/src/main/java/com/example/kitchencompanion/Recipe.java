@@ -18,10 +18,11 @@ public class Recipe {
     private int calories;
     private String difficulty;
     private List<Enums.DietaryAttribute> dietaryAttributes;
+    private List<Enums.CommonFoodAllergy> commonFoodAllergies;
     private String imageFile;
     public Recipe(int recipeId, String name, String description, Map<Integer, Integer> ingredients,
                   int servings, boolean isFavorited, String cookTime, int calories, String difficulty,
-                  List<Enums.DietaryAttribute> dietaryAttributes, String imageFile) {
+                  List<Enums.DietaryAttribute> dietaryAttributes, List<Enums.CommonFoodAllergy> commonFoodAllergies, String imageFile) {
         this.recipeId = recipeId;
         this.name = name;
         this.description = description;
@@ -33,6 +34,7 @@ public class Recipe {
         this.calories = calories;
         this.difficulty = difficulty;
         this.dietaryAttributes = new ArrayList<>(dietaryAttributes);
+        this.commonFoodAllergies = new ArrayList<>(commonFoodAllergies);
         this.imageFile = imageFile;
         // Debug print statement
         System.out.println("In Constructor - Recipe ID: " + recipeId + " Dietary Attributes: " + dietaryAttributes);
@@ -89,6 +91,9 @@ public class Recipe {
     }
 
     public List<Enums.DietaryAttribute> getDietaryAttributes() { return dietaryAttributes; }
+    public List<Enums.CommonFoodAllergy> getCommonFoodAllergies() {
+        return commonFoodAllergies;
+    }
 
     public String getImageFile() { return imageFile;}
 
