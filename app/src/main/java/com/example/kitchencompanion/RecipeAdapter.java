@@ -44,12 +44,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private Map<Integer, Fragment> fragmentMap;
     private int lastSwipedPosition = -1;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, HashMap<Integer, FoodType> foodDictionary, Map<Integer, Fragment> fragmentMap) {    this.context = context;
+    private ShopListAdapter shoppingList;
+
+    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, HashMap<Integer, FoodType> foodDictionary, Map<Integer, Fragment> fragmentMap,ShopListAdapter shoppingList) {    this.context = context;
         this.recipes = recipes;
         this.recipeDatabase = recipeDatabase;
         this.pantryList = pantryList;
         this.foodDictionary = foodDictionary;
         this.fragmentMap = fragmentMap;
+        this.shoppingList = shoppingList;
     }
 
     @Override

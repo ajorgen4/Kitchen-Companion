@@ -57,7 +57,7 @@ public class Tab1 extends Fragment {
 
         // Use shared RecipeDatabase instance across tabs
         Map<Integer, Fragment> fragmentMap = ((MainActivity) getActivity()).getFragmentMap();
-        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap);
+        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap, shoppingList);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
         setFilters(view);
