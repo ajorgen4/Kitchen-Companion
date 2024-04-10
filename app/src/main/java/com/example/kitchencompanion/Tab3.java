@@ -24,7 +24,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -161,9 +160,18 @@ public class Tab3 extends Fragment {
         submitShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<ShopListItem> temp = adapter.getAndRemoveSelectedItems();
+                List<ShopListItem> temp = adapter.getSelectedItems();
                 for(ShopListItem item: temp){
-                    tab2.addItems(item.getFood(), item.getAmount());
+                    if (!tab2.addItems(item.getFood(), item.getAmount())) { // If error, its because tab2 hasn't been opened
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Error")
+                                .setMessage("The pantry has not been loaded. Open the pantry tab and try again.")
+                                .setPositiveButton(android.R.string.ok, null)
+                                .setIcon(R.drawable.warning)
+                                .show();
+                    } else {
+                        adapter.removeSelectedItems(temp);
+                    }
                 }
             }
         });

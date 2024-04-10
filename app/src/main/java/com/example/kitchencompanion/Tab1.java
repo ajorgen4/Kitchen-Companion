@@ -2,16 +2,15 @@ package com.example.kitchencompanion;
 
 import android.app.AlertDialog;
 import android.graphics.Canvas;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.os.Handler;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -19,10 +18,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import android.view.ViewGroup;
+import android.os.Handler;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 public class Tab1 extends Fragment {
     private FloatingActionButton addRecipeButton;
@@ -34,17 +34,23 @@ public class Tab1 extends Fragment {
     private boolean isAddMissingPopupShown = false;
 
     private List<PantryItem> pantryList;
-    private ShopListAdapter shoppingList;
+    private Tab3 tab3;
 
-    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, ShopListAdapter shoppingList) {
+    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, Tab3 tab3) {
         this.foodDictionary = foodDictionary;
         this.recipeDatabase = recipeDatabase;
         this.pantryList = pantryList;
-        this.shoppingList = shoppingList;
+        this.tab3 = tab3;
     }
 
 
     private RecipeDatabase recipeDatabase;
+
+    // General info I used for views: https://developer.android.com/reference/android/app/Fragment
+    // OnCreateView definition: https://stackoverflow.com/questions/43780548/how-oncreateview-works
+    // YOUTUBE TUTORIAL, SWIPE RECYCLER VIEW: https://www.youtube.com/watch?v=rcSNkSJ624U
+    // OnCreateView: fragment layout inflation
+    // onCreate: fragment init, no view
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +63,7 @@ public class Tab1 extends Fragment {
 
         // Use shared RecipeDatabase instance across tabs
         Map<Integer, Fragment> fragmentMap = ((MainActivity) getActivity()).getFragmentMap();
-        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap, shoppingList);
+        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap, tab3);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
         setFilters(view);
@@ -77,23 +83,25 @@ public class Tab1 extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                // don't think we need anything here for now
+                // actions in onChildDraw
             }
 
+            // Tutorial for onChildDraw: https://developer.android.com/reference/androidx/recyclerview/widget/ItemTouchHelper.Callback
+            // Swipe recyler: https://stackoverflow.com/questions/57353844/how-to-restore-recycler-view-item-after-swipe
+            // Swipe click issue? (Scrapped - workaround) https://stackoverflow.com/questions/39189159/recyclerview-swipe-with-a-view-below-not-detecting-click
             @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float xVal, float yVal, int actionState, boolean isCurrentlyActive) {
                 RecipeAdapter.ViewHolder holder = (RecipeAdapter.ViewHolder) viewHolder;
-                final View foregroundView = holder.viewForeground;
                 FrameLayout addMissingLayout = holder.addMissingLayout;
-
+                final View foregroundView = holder.viewForeground;
                 float maxSwipeDistance = -addMissingLayout.getWidth();
-                float restrictedDX = Math.max(dX, maxSwipeDistance);
-                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, restrictedDX, dY, actionState, isCurrentlyActive);
+                float restrictedDX = Math.max(xVal, maxSwipeDistance);
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, restrictedDX, yVal, actionState, isCurrentlyActive);
 
-                if (restrictedDX == maxSwipeDistance && isCurrentlyActive) {
-                    if (addMissingLayout.getVisibility() != View.VISIBLE) {
-                        addMissingLayout.setVisibility(View.VISIBLE);
-                    }
-
+                // Check if a dialog is already shown
+                if (restrictedDX == maxSwipeDistance && isCurrentlyActive && !((RecipeAdapter) recyclerView.getAdapter()).isDialogShown()) {
+                    addMissingLayout.setVisibility(View.VISIBLE);
                     if (!holder.isHandlerRunning && !holder.isPopupShown) {
                         holder.isHandlerRunning = true;
                         new Handler().postDelayed(() -> {
@@ -105,12 +113,10 @@ public class Tab1 extends Fragment {
                             if (!isCurrentlyActive) {
                                 holder.isPopupShown = false;
                             }
-                        }, 500);
+                        }, 300); // Adjust delay as needed
                     }
                 } else if (restrictedDX != maxSwipeDistance) {
-                    if (addMissingLayout.getVisibility() != View.GONE) {
-                        addMissingLayout.setVisibility(View.GONE);
-                    }
+                    addMissingLayout.setVisibility(View.GONE);
                     holder.isHandlerRunning = false;
                     holder.isPopupShown = false;
                 }
@@ -118,7 +124,8 @@ public class Tab1 extends Fragment {
 
 
 
-
+            // Restoring recycler view(clearView, onSelectedChange): https://stackoverflow.com/questions/57353844/how-to-restore-recycler-view-item-after-swipe
+            // https://stackoverflow.com/questions/39189159/recyclerview-swipe-with-a-view-below-not-detecting-click
             @Override
             public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 final View foregroundView = ((RecipeAdapter.ViewHolder) viewHolder).viewForeground;
@@ -175,17 +182,11 @@ public class Tab1 extends Fragment {
 
             filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
             // Here, we will need to make a call to actually apply the filter in the backend
+            // Unimplemented - Horizontal Prototype - UI Only
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (recipeAdapter != null) {
-            recipeAdapter.updateRecipes(recipeDatabase.getRecipes());
-        }
-    }
-
+    // Unimplemented - Horizontal prototype - UI Only
     private void showAddRecipeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.add_recipe_dialog, null);
@@ -193,18 +194,28 @@ public class Tab1 extends Fragment {
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
+        DisplayMetrics displayMetrics = new DisplayMetrics();  // https://developer.android.com/reference/android/util/DisplayMetrics, Get info about screen size, etc
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = (int) (displayMetrics.widthPixels * 0.75);
-        int height = (int) (displayMetrics.heightPixels * 0.75);
-        dialog.getWindow().setLayout(width, height);
+        // popup =  75% of screen width/height
+        dialog.getWindow().setLayout((int) (displayMetrics.widthPixels * 0.75), (int) (displayMetrics.heightPixels * 0.75));
         cancelButton.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
+    // Ensure Tab1 refreshes if we change values for the recipeCard like by Marking Cooked, etc
+    // notifyDataSetChanges(): https://stackoverflow.com/questions/2345875/android-notifydatasetchanged
     public void refreshRecipeAdapter() {
         if (recipeAdapter != null) {
             recipeAdapter.notifyDataSetChanged();
+        }
+    }
+
+    // https://developer.android.com/images/activity_lifecycle.png
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (recipeAdapter != null) {
+            recipeAdapter.updateRecipes(recipeDatabase.getRecipes());
         }
     }
 }

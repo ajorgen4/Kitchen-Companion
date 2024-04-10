@@ -25,7 +25,7 @@ public class RecipeDatabase {
         // Key is the FoodType ID, count is value
         // If you want to test with other preset ones, see getFoodDictionary output from Tab2.java
 
-                // RecipeS IN DATABASE
+         // Recipes IN DATABASE
         // Recipe 1: Oven Baked Risotto
         Map<Integer, Integer> rec1Ingred = new HashMap<>();
         rec1Ingred.put(3, 2); // Onion
@@ -68,7 +68,7 @@ public class RecipeDatabase {
         Map<Integer, Integer> rec5Ingred = new HashMap<>();
         rec5Ingred.put(41, 2); // Tomato
         rec5Ingred.put(3, 1); // Onion
-        rec5Ingred.put(12, 1); // Pasta (using ID 12 for Pasta)
+        rec5Ingred.put(12, 1); // Pasta
         rec5Ingred.put(8, 1); // Basil
         rec5Ingred.put(9, 1); // Salt
         rec5Ingred.put(10, 1); // Pepper
@@ -77,16 +77,16 @@ public class RecipeDatabase {
         Map<Integer, Integer> rec6Ingred = new HashMap<>();
         rec6Ingred.put(42, 1); // Spinach
         rec6Ingred.put(73, 1); // Cheese
-        rec6Ingred.put(17, 2); // Eggs
-        rec6Ingred.put(49, 1); // Garlic
+        rec6Ingred.put(16, 2); // Eggs
+        rec6Ingred.put(48, 1); // Garlic
         rec6Ingred.put(9, 1); // Salt
         rec6Ingred.put(10, 1); // Pepper
 
         // Recipe 7: Quinoa Salad
         Map<Integer, Integer> rec7Ingred = new HashMap<>();
-        rec7Ingred.put(56, 2); // Quinoa (using ID 56 for Quinoa)
+        rec7Ingred.put(56, 2); // Quinoa
         rec7Ingred.put(41, 1); // Tomato
-        rec7Ingred.put(44, 1); // Cucumber (using ID 44 for Cucumber)
+        rec7Ingred.put(44, 1); // Cucumber
         rec7Ingred.put(8, 1); // Parsley
         rec7Ingred.put(9, 1); // Salt
         rec7Ingred.put(10, 1); // Pepper
@@ -94,7 +94,7 @@ public class RecipeDatabase {
         // Recipe 8: Garlic Lemon Chicken
         Map<Integer, Integer> rec8Ingred = new HashMap<>();
         rec8Ingred.put(49, 2); // Garlic
-        rec8Ingred.put(11, 2); // Chicken (using ID 11 for Chicken)
+        rec8Ingred.put(11, 2); // Chicken
         rec8Ingred.put(93, 1); // Lemon Juice
         rec8Ingred.put(4, 1); // Olive Oil
         rec8Ingred.put(9, 1); // Salt
@@ -102,27 +102,26 @@ public class RecipeDatabase {
 
         // Recipe 9: Beef Stir-Fry
         Map<Integer, Integer> rec9Ingred = new HashMap<>();
-        rec9Ingred.put(73, 1); // Cheese (using ID 73 for Cheese)
-        rec9Ingred.put(15, 2); // Bread Crumbs (using ID 15 for Bread Crumbs)
+        rec9Ingred.put(73, 1); // Cheese
+        rec9Ingred.put(15, 2); // Bread Crumbs
         rec9Ingred.put(75, 1); // Butter
-        rec9Ingred.put(15, 1); // Bread Crumbs
         rec9Ingred.put(76, 1); // Cream
         rec9Ingred.put(77, 1); // Cream Cheese
 
         // Recipe 10: Mixed Berry Smoothie
         Map<Integer, Integer> rec10Ingred = new HashMap<>();
-        rec10Ingred.put(19, 1); // Grapes (using ID 19 for Grapes)
+        rec10Ingred.put(19, 1); // Grapes
         rec10Ingred.put(24, 1); // Strawberry
         rec10Ingred.put(25, 1); // Raspberry
         rec10Ingred.put(26, 1); // Blueberry
-        rec10Ingred.put(38, 1); // Cranberry (using ID 38 for Cranberry)
+        rec10Ingred.put(38, 1); // Cranberry
         rec10Ingred.put(39, 1); // Coconut
-        rec10Ingred.put(119, 1); // Coconut Milk (using ID 119 for Coconut Milk)
+        rec10Ingred.put(119, 1); // Coconut Milk
 
         // Recipe 11: Mozzarella and Tomato Salad
         Map<Integer, Integer> rec11Ingred = new HashMap<>();
         rec11Ingred.put(41, 2); // Tomato
-        rec11Ingred.put(18, 1); // Mozzarella (using ID 18 for Mozzarella)
+        rec11Ingred.put(18, 1); // Mozzarella
         rec11Ingred.put(8, 1); // Parsley
         rec11Ingred.put(9, 1); // Salt
         rec11Ingred.put(10, 1); // Pepper
@@ -149,7 +148,7 @@ public class RecipeDatabase {
 
         // Recipe 14: Baked Lemon Pepper Fish
         Map<Integer, Integer> rec14Ingred = new HashMap<>();
-        rec14Ingred.put(65, 1); // Fish (using ID 65 for Fish)
+        rec14Ingred.put(65, 1); // Fish )
         rec14Ingred.put(93, 1); // Lemon Juice
         rec14Ingred.put(10, 1); // Black Pepper
         rec14Ingred.put(9, 1); // Salt
@@ -157,7 +156,7 @@ public class RecipeDatabase {
 
         // Recipe 15: Chickpea Salad
         Map<Integer, Integer> rec15Ingred = new HashMap<>();
-        rec15Ingred.put(69, 1); // Chickpeas (using ID 69 for Chickpeas)
+        rec15Ingred.put(69, 1); // Chickpeas
         rec15Ingred.put(44, 1); // Cucumber
         rec15Ingred.put(41, 1); // Tomato
         rec15Ingred.put(8, 1); // Parsley
@@ -209,26 +208,28 @@ public class RecipeDatabase {
                 "8. Add grated parmesan cheese and parsley to the top and stir.\n" +
                 "9. Season with salt and pepper.\n"
                 ;
-        String rec2Desc = "Lorem Ipsum...";
-        String rec3Desc = "Lorem Ipsum...";
-        String rec4Desc = "Lorem Ipsum...";
-        String rec5Desc = "Lorem Ipsum...";
-        String rec6Desc = "Lorem Ipsum...";
-        String rec7Desc = "Lorem Ipsum...";
-        String rec8Desc = "Lorem Ipsum...";
-        String rec9Desc = "Lorem Ipsum...";
-        String rec10Desc = "Lorem Ipsum...";
-        String rec11Desc = "Lorem Ipsum...";
-        String rec12Desc = "Lorem Ipsum...";
-        String rec13Desc = "Lorem Ipsum...";
-        String rec14Desc = "Lorem Ipsum...";
-        String rec15Desc = "Lorem Ipsum...";
 
-        // RecipeS. First item below is ID 1, second item is ID 2, etc
-        addRecipe("Oven-Baked Risotto", rec1Desc, rec1Ingred, 4, false, "45 mins", 350, "Medium", rec1Attributes, rec1Allergies, "recipe_image_risotto");
-        addRecipe("Chicken Noodle Soup", rec2Desc, recipe2Ingred, 3, false, "30 mins", 250, "Easy", rec2Attributes, rec2Allergies, "recipe_image_chickennoodlesoup");
-        addRecipe("Chicken Parm", rec3Desc, recipe3Ingred, 2, false, "50 mins", 450, "Hard", rec3Attributes, rec3Allergies, "recipe_image_chickenparm");
-        addRecipe("Vegetarian Stir-Fry", rec4Desc, rec4Ingred, 4, true, "20 mins", 300, "Easy", rec4Attributes, rec4Allergies, "recipe_image_vegestirfry");
+        String rec2Desc = "Fill a large pot with water and 4 cups of Vegetable broth over the stove on Medium heat. Add 3 shredded chicken breasts. Add 2 packets of pasta. Then add 2 carrots sliced to desired size. Add 2 stalks of celery cut into small pieces. Cook for 15 mins";
+        String rec3Desc = "Note to self: visit (https://www.bonappetit.com/recipe/bas-best-chicken-parm) for the recipe. I don't like garlic so avoid that.";
+        String rec4Desc = "In a wok or similar pot, add 1 diced potato, 2 brocolli stalks separated into individual pieces, 1 tsp salt, 1 pack of spinach leaves, 1 tsp of black pepper, 1 bell pepper shredded, and 1 cucumber shredded. Mix well.";
+        String rec5Desc = "In a medium sized pot over medium heat, add these chopped ingredients: 1 onion, 1 pack of parsley, 2 brocolli stalks, 1 tsp salt, 1 tsp black pepper, 1 cup of pasta. Mix well";
+        String rec6Desc = "<No Description Provided>";
+        String rec7Desc = "<No Description Provided>";
+        String rec8Desc = "<No Description Provided>";
+        String rec9Desc = "<No Description Provided>";
+        String rec10Desc = "<No Description Provided>";
+        String rec11Desc = "<No Description Provided>";
+        String rec12Desc = "<No Description Provided>";
+        String rec13Desc = "<No Description Provided>";
+        String rec14Desc = "<No Description Provided>";
+        String rec15Desc = "<No Description Provided>";
+
+        // Recipes. First item below is ID 1, second item is ID 2, etc
+
+        addRecipe("Oven-Baked Risotto", rec1Desc, rec1Ingred, 3, false, "35 mins", 300, "Easy", rec1Attributes, rec1Allergies, "recipe_image_risotto");
+        addRecipe("Chicken Noodle Soup", rec2Desc, recipe2Ingred, 2, false, "20 mins", 200, "Easy", rec2Attributes, rec2Allergies, "recipe_image_chickennoodlesoup");
+        addRecipe("Chicken Parm", rec3Desc, recipe3Ingred, 2, false, "40 mins", 600, "Medium", rec3Attributes, rec3Allergies, "recipe_image_chickenparm");
+        addRecipe("Vegetarian Stir-Fry", rec4Desc, rec4Ingred, 1, false, "20 mins", 300, "Easy", rec4Attributes, rec4Allergies, "recipe_image_vegestirfry");
         addRecipe("Tomato Basil Pasta", rec5Desc, rec5Ingred, 2, false, "25 mins", 400, "Medium", rec5Attributes, rec5Allergies, "recipe_image_tomatobasilpasta");
         addRecipe("Spinach Cheese Omelette", rec6Desc, rec6Ingred, 1, false, "15 mins", 200, "Easy", rec6Attributes, rec6Allergies, "recipe_image_spinachcheeseomelette");
         addRecipe("Quinoa Salad", rec7Desc, rec7Ingred, 3, false, "30 mins", 350, "Easy", rec7Attributes, rec7Allergies, "recipe_image_quinsalad");
@@ -241,9 +242,30 @@ public class RecipeDatabase {
         addRecipe("Baked Lemon Pepper Fish", rec14Desc, rec14Ingred, 2, false, "30 mins", 300, "Easy", rec14Attributes, rec14Allergies, "recipe_image_bakedlemonpepperfish");
         addRecipe("Chickpea Salad", rec15Desc, rec15Ingred, 2, false, "20 mins", 250, "Easy", rec15Attributes, rec15Allergies, "recipe_image_chickpeasalad");
         //printIngredientsForRecipe(1); //testing
+
+        /*
+        // RECIPE CITATIONS (IMAGES are from these links):
+        1 https://www.thekitchn.com/easy-oven-baked-risotto-256190
+        2 https://therecipecritic.com/chicken-noodle-soup-recipe/
+        3 https://www.bonappetit.com/recipe/bas-best-chicken-parm
+        4 https://therecipecritic.com/vegetable-stir-fry/
+        5 https://tastesbetterfromscratch.com/tomato-basil-chicken-pasta/
+        6 https://www.allrecipes.com/recipe/69471/baby-spinach-omelet/
+        7 https://cookieandkate.com/best-quinoa-salad-recipe/
+        8 https://www.themediterraneandish.com/lemon-garlic-chicken/
+        9 https://www.allrecipes.com/recipe/228823/quick-beef-stir-fry/
+        10 https://www.dinneratthezoo.com/mixed-berry-smoothie/
+        11 https://www.food.com/recipe/fresh-tomato-mozzarella-salad-173875
+        12 https://runningonrealfood.com/easy-coconut-veggie-curry-with-tofu/
+        13 https://www.loveandlemons.com/pasta-primavera/
+        14 https://www.theendlessmeal.com/lemon-pepper-fish/
+        15 https://www.loveandlemons.com/chickpea-salad/
+        */
+
     }
 
 
+    // Add a recipe to the database
     private void addRecipe(String name, String description, Map<Integer, Integer> ingredients, int servings, boolean isFavorited, String cookTime, int calories, String difficulty, List<Enums.DietaryAttribute> dietaryAttributes, List<Enums.CommonFoodAllergy> commonFoodAllergies, String imageFile) {
         Recipe recipe = new Recipe(nextRecipeId, name, description, ingredients, servings, isFavorited, cookTime, calories, difficulty, dietaryAttributes, commonFoodAllergies, imageFile);
         recipes.add(recipe);
@@ -251,7 +273,7 @@ public class RecipeDatabase {
         nextRecipeId++;
     }
 
-            // RecipeDatabase.java changes
+    // remove a recipe from the database
     public void removeRecipe(int recipeId) {
         Recipe recipeToRemove = idToRecipeMap.get(recipeId);
         if (recipeToRemove != null) {
@@ -264,10 +286,12 @@ public class RecipeDatabase {
         }
     }
 
+    // get all recipes in the database
     public List<Recipe> getRecipes() {
         return recipes;
     }
 
+    // debugging - print the database
     public void printRecipeDatabase() {
         System.out.println("DEBUG: Current recipes in the database:");
         for (Recipe recipe : recipes) {
@@ -275,6 +299,7 @@ public class RecipeDatabase {
         }
     }
 
+    // debugging - print ingredients for recipe
     public String printIngredientsForRecipe(int recipeId) {
         Recipe recipe = idToRecipeMap.get(recipeId);
         if (recipe != null) {

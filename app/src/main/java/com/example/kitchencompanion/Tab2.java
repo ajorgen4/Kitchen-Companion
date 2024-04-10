@@ -448,10 +448,15 @@ public class Tab2 extends Fragment {
     }
 
     // Shopping list, plus button use this
-    public void addItems(FoodType foodType, int count) {
+    public boolean addItems(FoodType foodType, int count) {
+        if (adapter == null) {
+            return false;
+        }
         // Assumed not private, default expiration period
         addItemsInternal(foodType, count, false, LocalDate.now().plusDays(foodType.getExpirationPeriod()));
         notifyPantryUpdated(); // Added this, remove if broken?
+
+        return true;
     }
 
     // For anyone reading this, the adapter will handle removing empty items. It doesn't need to be done explicitly.
@@ -474,13 +479,15 @@ public class Tab2 extends Fragment {
         return false;
     }
 
-    // TEMP CHANGE for removing private stuff, fix later?
-    /*
+    // Recipes, minus button use this
     public void removeItems(FoodType foodType, int count) {
-        PantryItem item = pantryList.stream()
-                .filter(p -> p.getType().equals(foodType))
-                .findFirst()
-                .orElse(null);
+        PantryItem item = null;
+        for (PantryItem pItem : pantryList) {
+            if (pItem.getType().equals(foodType)) {
+                item = pItem;
+                break;
+            }
+        }
 
         if (item != null) {
             int pantryCountBefore = item.getCount();
@@ -494,14 +501,14 @@ public class Tab2 extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         }
-    } */
+    }
 
-    // Recipes, minus button use this
-    public void removeItems(FoodType foodType, int count) {
+
+    /*public void removeItems(FoodType foodType, int count) {
         if (!removeItemsInternal(foodType, count, false)) { // try to remove from public first
             removeItemsInternal(foodType, count, true);
         }
-    }
+    }*/
 
 
     // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java
