@@ -98,8 +98,20 @@ public class FoodAdapter extends BaseAdapter implements Filterable {
         ImageView deleteButton = foodItemView.findViewById(R.id.closePantryItemButton);
         // If they click the delete button, remove the item from the list
         deleteButton.setOnClickListener(v -> {
-            // TODO: needs to remove from filteredData and foodList. Don't know the correct foodList index.
-            foodList.remove(itemPosition);
+            // Remove from list
+            PantryItem toRemove = filteredData.get(itemPosition);
+            int i = 0;
+            for (PantryItem potentialMatch : foodList) {
+                if (potentialMatch.equalTo(toRemove)) {
+                    foodList.remove(i);
+                    break;
+                }
+                i++;
+            }
+            // Remove from filter (mostly visual)
+            if (filteredData != foodList) { // They begin as the same reference. If this is still the case, don't double remove.
+                filteredData.remove(itemPosition);
+            }
             notifyDataSetChanged();
         });
 
@@ -112,8 +124,20 @@ public class FoodAdapter extends BaseAdapter implements Filterable {
         minusButton.setOnClickListener(v -> {
             tab2.removeItemsInternal(item.getType(), 1, item.getIsPrivate());
             if (item.totalCount() == 0) {
-                // TODO: needs to remove from filteredData and foodList. Don't know the correct foodList index.
-                foodList.remove(itemPosition);
+                // Remove from list
+                PantryItem toRemove = filteredData.get(itemPosition);
+                int i = 0;
+                for (PantryItem potentialMatch : foodList) {
+                    if (potentialMatch.equalTo(toRemove)) {
+                        foodList.remove(i);
+                        break;
+                    }
+                    i++;
+                }
+                // Remove from filter (mostly visual)
+                if (filteredData != foodList) { // They begin as the same reference. If this is still the case, don't double remove.
+                    filteredData.remove(itemPosition);
+                }
                 notifyDataSetChanged();
             }
         });

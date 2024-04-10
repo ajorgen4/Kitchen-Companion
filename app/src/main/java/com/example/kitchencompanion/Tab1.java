@@ -34,11 +34,13 @@ public class Tab1 extends Fragment {
     private boolean isAddMissingPopupShown = false;
 
     private List<PantryItem> pantryList;
+    private ShopListAdapter shoppingList;
 
-    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList) {
+    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, ShopListAdapter shoppingList) {
         this.foodDictionary = foodDictionary;
         this.recipeDatabase = recipeDatabase;
         this.pantryList = pantryList;
+        this.shoppingList = shoppingList;
     }
 
 
@@ -55,7 +57,7 @@ public class Tab1 extends Fragment {
 
         // Use shared RecipeDatabase instance across tabs
         Map<Integer, Fragment> fragmentMap = ((MainActivity) getActivity()).getFragmentMap();
-        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap);
+        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap, shoppingList);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
         setFilters(view);
@@ -98,9 +100,9 @@ public class Tab1 extends Fragment {
                             if (restrictedDX == maxSwipeDistance && isCurrentlyActive && !holder.isPopupShown) {
                                 holder.isPopupShown = true;
                                 ((RecipeAdapter) recyclerView.getAdapter()).showAddMissingConfirmation(holder.getAdapterPosition());
-                                holder.isHandlerRunning = false;
-                            } else {
-                                holder.isHandlerRunning = false;
+                            }
+                            holder.isHandlerRunning = false;
+                            if (!isCurrentlyActive) {
                                 holder.isPopupShown = false;
                             }
                         }, 500);
@@ -113,6 +115,8 @@ public class Tab1 extends Fragment {
                     holder.isPopupShown = false;
                 }
             }
+
+
 
 
             @Override

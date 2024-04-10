@@ -13,13 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Button;
@@ -123,7 +121,6 @@ public class Tab2 extends Fragment {
         return view;
     }
 
-    // TODO: Functionality
     private void showFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.pantry_filter_dialog, null);
@@ -142,7 +139,6 @@ public class Tab2 extends Fragment {
         FoodGroupAdapter foodGroupAdapter = new FoodGroupAdapter(requireContext(), foodGroups, initialSelection);
         foodGroupListView.setAdapter(foodGroupAdapter);
 
-        // TODO: Default these to the already set values
         // Update UI if values exist
         pantryFilterLowBox.setChecked(filterFields.getLow());
         pantryFilterPrivateBox.setChecked(filterFields.getPrivate());
@@ -177,7 +173,7 @@ public class Tab2 extends Fragment {
         });
 
         applyButton.setOnClickListener(v -> {
-            List<Enums.FoodGroup> selectedFoodGroups = foodGroupAdapter.getSelectedFoodGroups();
+            List<Enums.FoodGroup> selectedFoodGroups = foodGroupAdapter.getSelectedFoodGroups(); // ArrayList
             boolean isLowChecked = pantryFilterLowBox.isChecked();
             boolean isPrivateChecked = pantryFilterPrivateBox.isChecked();
             String expirationTextValue = pantryFilterExpirationText.getText().toString().trim();
@@ -191,7 +187,6 @@ public class Tab2 extends Fragment {
             filterFields.setExpirationMax(expirationDays);
             filterFields.setFoodGroups(selectedFoodGroups);
 
-            // TODO: call to filter to update
             adapter.getFilter().filter("Not needed");
 
             dialog.dismiss();
@@ -385,7 +380,7 @@ public class Tab2 extends Fragment {
                 boolean privateStorageBool = privateStorage.isChecked();
                 LocalDate expirationDate = LocalDate.of(
                         expirationDatePicker.getYear(),
-                        expirationDatePicker.getMonth(),
+                        expirationDatePicker.getMonth() + 1, // date pickers indexed at 0 for some reason
                         expirationDatePicker.getDayOfMonth());
 
                 // Data cleaning
@@ -447,6 +442,7 @@ public class Tab2 extends Fragment {
         notifyPantryUpdated();
     }
 
+
     public void addItemsPrivate(FoodType foodType, int count, boolean isPrivate) {
         addItemsInternal(foodType, count, isPrivate, LocalDate.now().plusDays(foodType.getExpirationPeriod()));
     }
@@ -455,8 +451,10 @@ public class Tab2 extends Fragment {
     public void addItems(FoodType foodType, int count) {
         // Assumed not private, default expiration period
         addItemsInternal(foodType, count, false, LocalDate.now().plusDays(foodType.getExpirationPeriod()));
+        notifyPantryUpdated(); // Added this, remove if broken?
     }
 
+    // For anyone reading this, the adapter will handle removing empty items. It doesn't need to be done explicitly.
     public boolean removeItemsInternal(FoodType foodType, int count, boolean isPrivate) {
         FoodBatch batch = new FoodBatch(foodType, count, LocalDate.now());
         PantryItem potentialItem = new PantryItem(batch, isPrivate);
@@ -476,12 +474,35 @@ public class Tab2 extends Fragment {
         return false;
     }
 
+    // TEMP CHANGE for removing private stuff, fix later?
+    /*
+    public void removeItems(FoodType foodType, int count) {
+        PantryItem item = pantryList.stream()
+                .filter(p -> p.getType().equals(foodType))
+                .findFirst()
+                .orElse(null);
+
+        if (item != null) {
+            int pantryCountBefore = item.getCount();
+            item.removeItemCount(count);
+            int pantryCountAfter = item.getCount();
+            //System.out.println("DEBUG - Tab2 - Removing: " + foodType.getItemName() + " (ID: " + foodType.getID() + ") Count: " + count + " Current Pantry Count: " + pantryCountAfter);
+            if (pantryCountAfter == 0) {
+                pantryList.remove(item);
+            }
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+        }
+    } */
+
     // Recipes, minus button use this
     public void removeItems(FoodType foodType, int count) {
         if (!removeItemsInternal(foodType, count, false)) { // try to remove from public first
             removeItemsInternal(foodType, count, true);
         }
     }
+
 
     // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java
     private void setFilters() {
@@ -491,25 +512,29 @@ public class Tab2 extends Fragment {
         // Private filter elements
         filterButtonMap.put("private", view.findViewById(R.id.privateFilterButton));
         filterTextMap.put("private", view.findViewById(R.id.privateFilterText));
-        // Meats filter elements
-        filterButtonMap.put("meats", view.findViewById(R.id.meatsFilterButton));
-        filterTextMap.put("meats", view.findViewById(R.id.meatsFilterText));
+        // Proteins filter elements
+        filterButtonMap.put("proteins", view.findViewById(R.id.meatsFilterButton));
+        filterTextMap.put("proteins", view.findViewById(R.id.proteinsFilterText));
         // Expires filter elements
         filterButtonMap.put("expires", view.findViewById(R.id.expiresFilterButton));
         filterTextMap.put("expires", view.findViewById(R.id.expiresFilterText));
         // Fruits/Vegetables filter elements
         filterButtonMap.put("fruits/vegetables", view.findViewById(R.id.fruitsVegetablesFilterButton));
         filterTextMap.put("fruits/vegetables", view.findViewById(R.id.fruitsVegetablesFilterText));
+        // Low filter elements
+        filterButtonMap.put("low", view.findViewById(R.id.lowFilterButton));
+        filterTextMap.put("low", view.findViewById(R.id.lowFilterText));
+        // IF ADDING A NEW FILTER, FIRST ADD BUTTON ELEMENT HERE
 
         // Create filters
         createFilter("private", filterButtonMap, filterTextMap);
-        createFilter("meats", filterButtonMap, filterTextMap);
+        createFilter("proteins", filterButtonMap, filterTextMap);
         createFilter("expires", filterButtonMap, filterTextMap);
         createFilter("fruits/vegetables", filterButtonMap, filterTextMap);
+        createFilter("low", filterButtonMap, filterTextMap);
+        // SECOND, ADD A CALL HERE. THEN ADD FUNCTIONALITY IN createFilter()
     }
 
-    // In the future (when the backend model is made), these will need to pass filter instructions to FoodAdapter.java
-    // TODO: Filters
     private void createFilter(String filter, Map<String, LinearLayout> filterButtonMap, Map<String, TextView> filterTextMap) {
         Drawable selected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_selected);
         Drawable unselected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_unselected);
@@ -532,15 +557,62 @@ public class Tab2 extends Fragment {
             }
 
             filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
-            // TODO
-            // Here, we will need to make a call to actually apply the filter in the backend
+
+            // Functionality
+            if (!isFilterSelected) { // Applying filter
+                if (filter.equals("private")) {
+                    filterFields.resetLow();
+                    filterFields.resetFoodGroups();
+                    filterFields.resetExpirationMax();
+
+                    filterFields.setPrivate(true);
+                } else if (filter.equals("proteins")) {
+                    ArrayList<Enums.FoodGroup> foodGroups = new ArrayList<>();
+                    foodGroups.add(Enums.FoodGroup.PROTEIN);
+
+                    filterFields.resetLow();
+                    filterFields.resetExpirationMax();
+                    filterFields.resetPrivate();
+
+                    filterFields.setFoodGroups(foodGroups);
+                } else if (filter.equals("expires")) {
+                    filterFields.resetFoodGroups();
+                    filterFields.resetLow();
+                    filterFields.resetPrivate();
+
+                    filterFields.setExpirationMax(7);
+                } else if (filter.equals("fruits/vegetables")) {
+                    ArrayList<Enums.FoodGroup> foodGroups = new ArrayList<>();
+                    foodGroups.add(Enums.FoodGroup.FRUIT);
+                    foodGroups.add(Enums.FoodGroup.VEGETABLE);
+
+                    filterFields.resetLow();
+                    filterFields.resetExpirationMax();
+                    filterFields.resetPrivate();
+
+                    filterFields.setFoodGroups(foodGroups);
+                } else if (filter.equals("low")) {
+                    filterFields.resetExpirationMax();
+                    filterFields.resetFoodGroups();
+                    filterFields.resetPrivate();
+
+                    filterFields.setLow(true);
+                }
+                // THIRD, ADD FUNCTIONALITY IN AN IF HERE
+            } else { // Removing filter
+                filterFields.resetExpirationMax();
+                filterFields.resetLow();
+                filterFields.resetFoodGroups();
+                filterFields.resetPrivate();
+            }
+            adapter.getFilter().filter("Not needed");
         });
     }
 
     private void createFoodDictionary(HashMap<Integer, FoodType> foodDictionary) {
         FoodType currItem;
 
-        // First items
+        // First items(Apple is ID 0 for reference)
         currItem = new FoodType("Apple", Enums.FoodGroup.FRUIT, 7);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Banana", Enums.FoodGroup.FRUIT, 7);
@@ -548,7 +620,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Orange", Enums.FoodGroup.FRUIT, 7);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // New Items for Oven Baked Risotto
+        // New Items for Oven Baked Risotto(Onion is ID 3 for reference)
         currItem = new FoodType("Onion", Enums.FoodGroup.VEGETABLE, 80);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Olive Oil", Enums.FoodGroup.CONDIMENT, 600);
@@ -566,7 +638,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Black Pepper", Enums.FoodGroup.SPICE, 1100);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // New Items for Chicken Noodle Soup
+        // New Items for Chicken Noodle Soup(Chicken is ID 11 for reference)
         currItem = new FoodType("Chicken", Enums.FoodGroup.PROTEIN, 6);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Pasta", Enums.FoodGroup.GRAIN, 700);
@@ -577,7 +649,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Celery", Enums.FoodGroup.VEGETABLE, 30);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // New Items for Chicken Parmesan
+        // New Items for Chicken Parmesan(Bread Crumbs is ID 15 for reference)
         currItem = new FoodType("Bread Crumbs", Enums.FoodGroup.GRAIN, 365);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Eggs", Enums.FoodGroup.PROTEIN, 30);
@@ -587,7 +659,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Mozzarella", Enums.FoodGroup.DAIRY, 35);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // Fruits
+        // Fruits(Grapes is ID 19 for reference)
         currItem = new FoodType("Grapes", Enums.FoodGroup.FRUIT, 14);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Peach", Enums.FoodGroup.FRUIT, 5);
@@ -631,7 +703,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Coconut", Enums.FoodGroup.FRUIT, 180);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // Vegetables
+        // Vegetables(Tomato is ID 40 for reference)
         currItem = new FoodType("Tomato", Enums.FoodGroup.VEGETABLE, 10);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Broccoli", Enums.FoodGroup.VEGETABLE, 5);
@@ -665,7 +737,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Corn", Enums.FoodGroup.VEGETABLE, 6);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // Grains
+        // Grains(Quinoa is ID 56 for reference)
         currItem = new FoodType("Quinoa", Enums.FoodGroup.GRAIN, 1100);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Oats", Enums.FoodGroup.GRAIN, 700);
@@ -681,7 +753,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Hard Taco Shell", Enums.FoodGroup.GRAIN, 150);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // Proteins
+        // Proteins(Beed is ID 63 for reference)
         currItem = new FoodType("Beef", Enums.FoodGroup.PROTEIN, 10);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Pork", Enums.FoodGroup.PROTEIN, 5);
@@ -701,7 +773,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Seeds", Enums.FoodGroup.PROTEIN, 365);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // Dairies
+        // Dairies(Milk is ID 72 for reference)
         currItem = new FoodType("Milk", Enums.FoodGroup.DAIRY, 10);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Cheese", Enums.FoodGroup.DAIRY, 7);
@@ -719,7 +791,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Greek Yogurt", Enums.FoodGroup.DAIRY, 11);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // Condiments
+        // Condiments(Ketchup is ID 80 for reference)
         currItem = new FoodType("Ketchup", Enums.FoodGroup.CONDIMENT, 300);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Mustard", Enums.FoodGroup.CONDIMENT, 210);
@@ -739,7 +811,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Remoulade", Enums.FoodGroup.CONDIMENT, 180);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // Beverages
+        // Beverages(Water is ID 89 for reference)
         currItem = new FoodType("Water", Enums.FoodGroup.BEVERAGE, 10000);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Coffee", Enums.FoodGroup.BEVERAGE, 1);
@@ -753,7 +825,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Soda", Enums.FoodGroup.BEVERAGE, 400);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // Herbs
+        // Herbs(Basil is ID 95 for reference)
         currItem = new FoodType("Basil", Enums.FoodGroup.HERB, 700);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Cilantro", Enums.FoodGroup.HERB, 14);
@@ -783,7 +855,7 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Lemongrass", Enums.FoodGroup.HERB, 7);
         foodDictionary.put(currItem.getID(), currItem);
 
-        // Spices
+        // Spices(Cumin is ID 109 for reference)
         currItem = new FoodType("Cumin", Enums.FoodGroup.SPICE, 500);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Paprika", Enums.FoodGroup.SPICE, 500);
@@ -799,6 +871,16 @@ public class Tab2 extends Fragment {
         currItem = new FoodType("Cardamom", Enums.FoodGroup.SPICE, 1200);
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Turmeric", Enums.FoodGroup.SPICE, 800);
+        foodDictionary.put(currItem.getID(), currItem);
+
+        // Extra Food Items(Honey is ID 117 for reference)
+        currItem = new FoodType("Honey", Enums.FoodGroup.CONDIMENT, 300);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Balsamic Vinegar", Enums.FoodGroup.CONDIMENT,80);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Coconut Milk", Enums.FoodGroup.BEVERAGE, 230);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Curry Powder", Enums.FoodGroup.SPICE, 325);
         foodDictionary.put(currItem.getID(), currItem);
     }
 
@@ -820,6 +902,7 @@ public class Tab2 extends Fragment {
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(25), 4, LocalDate.now().plusDays(foodDictionary.get(25).getExpirationPeriod())), false));
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(10), 3, LocalDate.now().plusDays(foodDictionary.get(10).getExpirationPeriod())), false));
         this.pantryList.add(new PantryItem(new FoodBatch(foodDictionary.get(28), 7, LocalDate.now().plusDays(foodDictionary.get(28).getExpirationPeriod())), false));
+        printAllFoodTypes();
     }
 
     public ArrayList<PantryItem> getPantryList() {
@@ -829,7 +912,9 @@ public class Tab2 extends Fragment {
     // Debugging - List all the IDs
     public void printAllFoodTypes() {
         for (Map.Entry<Integer, FoodType> entry : foodDictionary.entrySet()) {
+            System.out.println("DEBUGGING: PRINTING FOOD DATABASE");
             System.out.println("ID: " + entry.getKey() + ", Name: " + entry.getValue().getItemName());
         }
     }
+
 }
