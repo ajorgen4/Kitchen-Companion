@@ -148,7 +148,7 @@ public class RecipeDatabase {
 
         // Recipe 14: Baked Lemon Pepper Fish
         Map<Integer, Integer> rec14Ingred = new HashMap<>();
-        rec14Ingred.put(65, 1); // Fish )
+        rec14Ingred.put(65, 1); // Fish
         rec14Ingred.put(93, 1); // Lemon Juice
         rec14Ingred.put(10, 1); // Black Pepper
         rec14Ingred.put(9, 1); // Salt
@@ -213,8 +213,8 @@ public class RecipeDatabase {
         String rec3Desc = "Note to self: visit (https://www.bonappetit.com/recipe/bas-best-chicken-parm) for the recipe. I don't like garlic so avoid that.";
         String rec4Desc = "In a wok or similar pot, add 1 diced potato, 2 brocolli stalks separated into individual pieces, 1 tsp salt, 1 pack of spinach leaves, 1 tsp of black pepper, 1 bell pepper shredded, and 1 cucumber shredded. Mix well.";
         String rec5Desc = "In a medium sized pot over medium heat, add these chopped ingredients: 1 onion, 1 pack of parsley, 2 brocolli stalks, 1 tsp salt, 1 tsp black pepper, 1 cup of pasta. Mix well";
-        String rec6Desc = "<No Description Provided>";
-        String rec7Desc = "<No Description Provided>";
+        String rec6Desc = "Scramble and add your eggs to a frying pan over medium heat. Then add in all of the desired veggies and seasonings. Cook for 2 minutes per side.  ";
+        String rec7Desc = "Add 2 cups of quinoa to a large mixing bowl. Add in sliced tomatoes, cucumbers, parsely, and finally salt and pepper. Serve with your favorite dressing";
         String rec8Desc = "<No Description Provided>";
         String rec9Desc = "<No Description Provided>";
         String rec10Desc = "<No Description Provided>";
