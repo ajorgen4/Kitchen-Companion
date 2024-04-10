@@ -479,27 +479,55 @@ public class Tab2 extends Fragment {
         return false;
     }
 
-            // Recipes, minus button use this
+    // Recipes, minus button use this
 
     public void removeItems(FoodType foodType, int count) {
-                PantryItem item = pantryList.stream()
-                        .filter(p -> p.getType().equals(foodType))
-                        .findFirst()
-                        .orElse(null);
+        PantryItem item = pantryList.stream()
+                .filter(p -> p.getType().equals(foodType))
+                .findFirst()
+                .orElse(null);
 
-                if (item != null) {
-                    int pantryCountBefore = item.getCount();
-                    item.removeItemCount(count);
-                    int pantryCountAfter = item.getCount();
-                    System.out.println("DEBUG - Tab2 - Removing: " + foodType.getItemName() + " (ID: " + foodType.getID() + ") Count: " + count + " Current Pantry Count: " + pantryCountAfter);
-                    if (pantryCountAfter == 0) {
-                        pantryList.remove(item);
-                    }
-                    if (adapter != null) {
-                        adapter.notifyDataSetChanged();
-                    }
-                }
+        if (item != null) {
+            int pantryCountBefore = item.getCount();
+            item.removeItemCount(count);
+            int pantryCountAfter = item.getCount();
+            System.out.println("DEBUG - Tab2 - Removing: " + foodType.getItemName() + " (ID: " + foodType.getID() + ") Count: " + count + " Current Pantry Count: " + pantryCountAfter);
+            if (pantryCountAfter == 0) {
+                pantryList.remove(item);
+            }
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
+
+    /* REVERT IN CASE BROKEN
+
+    public boolean removeItemsInternal(FoodType foodType, int count, boolean isPrivate) {
+        FoodBatch batch = new FoodBatch(foodType, count, LocalDate.now());
+        PantryItem potentialItem = new PantryItem(batch, isPrivate);
+
+        for (PantryItem item : pantryList) {
+            if (item.equalTo(potentialItem)) {
+                item.removeItemCount(count);
+
+                adapter.notifyDataSetChanged();
+                adapter.getFilter().filter("Not needed");
+                notifyPantryUpdated(); // Added to make changes take place instantly
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void removeItems(FoodType foodType, int count) {
+        if (!removeItemsInternal(foodType, count, false)) { // try to remove from public first
+            removeItemsInternal(foodType, count, true);
+        }
+    }
+     */
 
 
     // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java
