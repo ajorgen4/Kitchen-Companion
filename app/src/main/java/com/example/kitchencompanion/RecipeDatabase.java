@@ -225,10 +225,11 @@ public class RecipeDatabase {
         String rec15Desc = "<No Description Provided>";
 
         // Recipes. First item below is ID 1, second item is ID 2, etc
-        addRecipe("Oven-Baked Risotto", rec1Desc, rec1Ingred, 4, false, "45 mins", 350, "Medium", rec1Attributes, rec1Allergies, "recipe_image_risotto");
-        addRecipe("Chicken Noodle Soup", rec2Desc, recipe2Ingred, 3, false, "30 mins", 250, "Easy", rec2Attributes, rec2Allergies, "recipe_image_chickennoodlesoup");
-        addRecipe("Chicken Parm", rec3Desc, recipe3Ingred, 2, false, "50 mins", 450, "Hard", rec3Attributes, rec3Allergies, "recipe_image_chickenparm");
-        addRecipe("Vegetarian Stir-Fry", rec4Desc, rec4Ingred, 4, true, "20 mins", 300, "Easy", rec4Attributes, rec4Allergies, "recipe_image_vegestirfry");
+
+        addRecipe("Oven-Baked Risotto", rec1Desc, rec1Ingred, 3, false, "35 mins", 300, "Easy", rec1Attributes, rec1Allergies, "recipe_image_risotto");
+        addRecipe("Chicken Noodle Soup", rec2Desc, recipe2Ingred, 2, false, "20 mins", 200, "Easy", rec2Attributes, rec2Allergies, "recipe_image_chickennoodlesoup");
+        addRecipe("Chicken Parm", rec3Desc, recipe3Ingred, 2, false, "40 mins", 600, "Medium", rec3Attributes, rec3Allergies, "recipe_image_chickenparm");
+        addRecipe("Vegetarian Stir-Fry", rec4Desc, rec4Ingred, 1, false, "20 mins", 300, "Easy", rec4Attributes, rec4Allergies, "recipe_image_vegestirfry");
         addRecipe("Tomato Basil Pasta", rec5Desc, rec5Ingred, 2, false, "25 mins", 400, "Medium", rec5Attributes, rec5Allergies, "recipe_image_tomatobasilpasta");
         addRecipe("Spinach Cheese Omelette", rec6Desc, rec6Ingred, 1, false, "15 mins", 200, "Easy", rec6Attributes, rec6Allergies, "recipe_image_spinachcheeseomelette");
         addRecipe("Quinoa Salad", rec7Desc, rec7Ingred, 3, false, "30 mins", 350, "Easy", rec7Attributes, rec7Allergies, "recipe_image_quinsalad");

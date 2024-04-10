@@ -160,12 +160,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         // Set 1st textview in popup_recipe_desc
         StringBuilder attributesBuilder = new StringBuilder();
 
-                // Recipe Dietary Attributes
+        // Recipe Dietary Attributes
         for (Enums.DietaryAttribute attribute : recipe.getDietaryAttributes()) {
             if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append(attribute.toString());
         }
-                // Recipe Allergens
+        // Recipe Allergens
         for (Enums.CommonFoodAllergy allergy : recipe.getCommonFoodAllergies()) {
             if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append("Allergen-" + allergy.toString());
