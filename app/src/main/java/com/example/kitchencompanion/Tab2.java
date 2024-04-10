@@ -385,7 +385,7 @@ public class Tab2 extends Fragment {
                 boolean privateStorageBool = privateStorage.isChecked();
                 LocalDate expirationDate = LocalDate.of(
                         expirationDatePicker.getYear(),
-                        expirationDatePicker.getMonth(),
+                        expirationDatePicker.getMonth() + 1, // date pickers indexed at 0 for some reason
                         expirationDatePicker.getDayOfMonth());
 
                 // Data cleaning
