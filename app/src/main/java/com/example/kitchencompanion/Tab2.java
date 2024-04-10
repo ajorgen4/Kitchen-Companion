@@ -13,13 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Button;
@@ -123,7 +121,6 @@ public class Tab2 extends Fragment {
         return view;
     }
 
-    // TODO: Functionality
     private void showFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.pantry_filter_dialog, null);
@@ -142,7 +139,6 @@ public class Tab2 extends Fragment {
         FoodGroupAdapter foodGroupAdapter = new FoodGroupAdapter(requireContext(), foodGroups, initialSelection);
         foodGroupListView.setAdapter(foodGroupAdapter);
 
-        // TODO: Default these to the already set values
         // Update UI if values exist
         pantryFilterLowBox.setChecked(filterFields.getLow());
         pantryFilterPrivateBox.setChecked(filterFields.getPrivate());
@@ -177,7 +173,7 @@ public class Tab2 extends Fragment {
         });
 
         applyButton.setOnClickListener(v -> {
-            List<Enums.FoodGroup> selectedFoodGroups = foodGroupAdapter.getSelectedFoodGroups();
+            List<Enums.FoodGroup> selectedFoodGroups = foodGroupAdapter.getSelectedFoodGroups(); // ArrayList
             boolean isLowChecked = pantryFilterLowBox.isChecked();
             boolean isPrivateChecked = pantryFilterPrivateBox.isChecked();
             String expirationTextValue = pantryFilterExpirationText.getText().toString().trim();
@@ -191,7 +187,6 @@ public class Tab2 extends Fragment {
             filterFields.setExpirationMax(expirationDays);
             filterFields.setFoodGroups(selectedFoodGroups);
 
-            // TODO: call to filter to update
             adapter.getFilter().filter("Not needed");
 
             dialog.dismiss();
@@ -422,7 +417,7 @@ public class Tab2 extends Fragment {
 
     // FOR INTERNAL USE ONLY
     // Allows support for custom expiration dates and private storage
-    public void addItemsInternal(FoodType foodType, int count, boolean isPrivate, LocalDate expirationDate) {
+    private void addItemsInternal(FoodType foodType, int count, boolean isPrivate, LocalDate expirationDate) {
         if (count <= 0) {
             return;
         }
@@ -438,14 +433,13 @@ public class Tab2 extends Fragment {
             }
         }
 
-        if (!exists) {
+        if (!exists) { // If the proper item wasn't found (it isn't in their pantry)
             pantryList.add(potentialItem);
         }
 
-        // Check if adapter is not null before notifying data set changed
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
+        adapter.notifyDataSetChanged();
+        adapter.getFilter().filter("Not needed");
+        notifyPantryUpdated();
     }
 
 
@@ -460,6 +454,7 @@ public class Tab2 extends Fragment {
         notifyPantryUpdated(); // Added this, remove if broken?
     }
 
+    // For anyone reading this, the adapter will handle removing empty items. It doesn't need to be done explicitly.
     public boolean removeItemsInternal(FoodType foodType, int count, boolean isPrivate) {
         FoodBatch batch = new FoodBatch(foodType, count, LocalDate.now());
         PantryItem potentialItem = new PantryItem(batch, isPrivate);
@@ -479,9 +474,8 @@ public class Tab2 extends Fragment {
         return false;
     }
 
-    // Recipes, minus button use this\
     // TEMP CHANGE for removing private stuff, fix later?
-
+    /*
     public void removeItems(FoodType foodType, int count) {
         PantryItem item = pantryList.stream()
                 .filter(p -> p.getType().equals(foodType))
@@ -492,7 +486,7 @@ public class Tab2 extends Fragment {
             int pantryCountBefore = item.getCount();
             item.removeItemCount(count);
             int pantryCountAfter = item.getCount();
-            System.out.println("DEBUG - Tab2 - Removing: " + foodType.getItemName() + " (ID: " + foodType.getID() + ") Count: " + count + " Current Pantry Count: " + pantryCountAfter);
+            //System.out.println("DEBUG - Tab2 - Removing: " + foodType.getItemName() + " (ID: " + foodType.getID() + ") Count: " + count + " Current Pantry Count: " + pantryCountAfter);
             if (pantryCountAfter == 0) {
                 pantryList.remove(item);
             }
@@ -500,35 +494,14 @@ public class Tab2 extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         }
-    }
+    } */
 
-    /* REVERT IN CASE BROKEN
-
-    public boolean removeItemsInternal(FoodType foodType, int count, boolean isPrivate) {
-        FoodBatch batch = new FoodBatch(foodType, count, LocalDate.now());
-        PantryItem potentialItem = new PantryItem(batch, isPrivate);
-
-        for (PantryItem item : pantryList) {
-            if (item.equalTo(potentialItem)) {
-                item.removeItemCount(count);
-
-                adapter.notifyDataSetChanged();
-                adapter.getFilter().filter("Not needed");
-                notifyPantryUpdated(); // Added to make changes take place instantly
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
+    // Recipes, minus button use this
     public void removeItems(FoodType foodType, int count) {
         if (!removeItemsInternal(foodType, count, false)) { // try to remove from public first
             removeItemsInternal(foodType, count, true);
         }
     }
-     */
 
 
     // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java
@@ -539,25 +512,29 @@ public class Tab2 extends Fragment {
         // Private filter elements
         filterButtonMap.put("private", view.findViewById(R.id.privateFilterButton));
         filterTextMap.put("private", view.findViewById(R.id.privateFilterText));
-        // Meats filter elements
-        filterButtonMap.put("meats", view.findViewById(R.id.meatsFilterButton));
-        filterTextMap.put("meats", view.findViewById(R.id.meatsFilterText));
+        // Proteins filter elements
+        filterButtonMap.put("proteins", view.findViewById(R.id.meatsFilterButton));
+        filterTextMap.put("proteins", view.findViewById(R.id.proteinsFilterText));
         // Expires filter elements
         filterButtonMap.put("expires", view.findViewById(R.id.expiresFilterButton));
         filterTextMap.put("expires", view.findViewById(R.id.expiresFilterText));
         // Fruits/Vegetables filter elements
         filterButtonMap.put("fruits/vegetables", view.findViewById(R.id.fruitsVegetablesFilterButton));
         filterTextMap.put("fruits/vegetables", view.findViewById(R.id.fruitsVegetablesFilterText));
+        // Low filter elements
+        filterButtonMap.put("low", view.findViewById(R.id.lowFilterButton));
+        filterTextMap.put("low", view.findViewById(R.id.lowFilterText));
+        // IF ADDING A NEW FILTER, FIRST ADD BUTTON ELEMENT HERE
 
         // Create filters
         createFilter("private", filterButtonMap, filterTextMap);
-        createFilter("meats", filterButtonMap, filterTextMap);
+        createFilter("proteins", filterButtonMap, filterTextMap);
         createFilter("expires", filterButtonMap, filterTextMap);
         createFilter("fruits/vegetables", filterButtonMap, filterTextMap);
+        createFilter("low", filterButtonMap, filterTextMap);
+        // SECOND, ADD A CALL HERE. THEN ADD FUNCTIONALITY IN createFilter()
     }
 
-    // In the future (when the backend model is made), these will need to pass filter instructions to FoodAdapter.java
-    // TODO: Filters
     private void createFilter(String filter, Map<String, LinearLayout> filterButtonMap, Map<String, TextView> filterTextMap) {
         Drawable selected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_selected);
         Drawable unselected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_unselected);
@@ -580,8 +557,55 @@ public class Tab2 extends Fragment {
             }
 
             filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
-            // TODO
-            // Here, we will need to make a call to actually apply the filter in the backend
+
+            // Functionality
+            if (!isFilterSelected) { // Applying filter
+                if (filter.equals("private")) {
+                    filterFields.resetLow();
+                    filterFields.resetFoodGroups();
+                    filterFields.resetExpirationMax();
+
+                    filterFields.setPrivate(true);
+                } else if (filter.equals("proteins")) {
+                    ArrayList<Enums.FoodGroup> foodGroups = new ArrayList<>();
+                    foodGroups.add(Enums.FoodGroup.PROTEIN);
+
+                    filterFields.resetLow();
+                    filterFields.resetExpirationMax();
+                    filterFields.resetPrivate();
+
+                    filterFields.setFoodGroups(foodGroups);
+                } else if (filter.equals("expires")) {
+                    filterFields.resetFoodGroups();
+                    filterFields.resetLow();
+                    filterFields.resetPrivate();
+
+                    filterFields.setExpirationMax(7);
+                } else if (filter.equals("fruits/vegetables")) {
+                    ArrayList<Enums.FoodGroup> foodGroups = new ArrayList<>();
+                    foodGroups.add(Enums.FoodGroup.FRUIT);
+                    foodGroups.add(Enums.FoodGroup.VEGETABLE);
+
+                    filterFields.resetLow();
+                    filterFields.resetExpirationMax();
+                    filterFields.resetPrivate();
+
+                    filterFields.setFoodGroups(foodGroups);
+                } else if (filter.equals("low")) {
+                    filterFields.resetExpirationMax();
+                    filterFields.resetFoodGroups();
+                    filterFields.resetPrivate();
+
+                    filterFields.setLow(true);
+                }
+                // THIRD, ADD FUNCTIONALITY IN AN IF HERE
+            } else { // Removing filter
+                filterFields.resetExpirationMax();
+                filterFields.resetLow();
+                filterFields.resetFoodGroups();
+                filterFields.resetPrivate();
+            }
+            adapter.getFilter().filter("Not needed");
         });
     }
 

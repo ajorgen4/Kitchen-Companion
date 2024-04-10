@@ -100,10 +100,10 @@
                 android:paddingBottom="8dp">
 
                 <TextView
-                    android:id="@+id/meatsFilterText"
+                    android:id="@+id/proteinsFilterText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Meats"
+                    android:text="Proteins"
                     android:textSize="24sp"
                     android:textColor="@android:color/black" />
             </LinearLayout>
@@ -146,6 +146,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fruits/Vegetables"
+                    android:textSize="24sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lowFilterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/filter_background_unselected"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/lowFilterText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Low"
                     android:textSize="24sp"
                     android:textColor="@android:color/black" />
             </LinearLayout>
