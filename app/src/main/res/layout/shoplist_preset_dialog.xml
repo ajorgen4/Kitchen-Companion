@@ -11,10 +11,11 @@
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -22,10 +23,10 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/shopListAddFoodTitle"
+                android:id="@+id/shopListPushPresetTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add New Food"
+                android:text="Add Preset to Shopping List"
                 android:textSize="40sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -33,44 +34,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/shopListAddFoodFoodTypeSelector"
-                android:layout_width="416dp"
-                android:layout_height="0dp"
-                android:hint="Select a Food"
-                android:textSize="25sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pantryAddFoodTitle"
-                app:layout_constraintWidth_percent="0.8"
-                android:layout_marginTop="50dp"
-                android:drawableEnd="@drawable/dropdown"
-                android:background="@drawable/quantity_background"/>
 
-            <EditText
-                android:id="@+id/shopListAddFoodCountInput"
-                android:layout_width="0dp"
+            <Spinner
+                android:id="@+id/shopListPushPresetSpinner"
+                android:layout_width="400dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="Count"
-                android:inputType="number"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="40dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shopListAddFoodFoodTypeSelector"
-                app:layout_constraintWidth_percent="0.8" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shopListPushPresetTitle">
+            </Spinner>
 
 
             <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/shopListAddFoodButtonBarrier"
+                android:id="@+id/shopListPushPresetButtonBarrier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="top"
-                app:constraint_referenced_ids="shopListAddFoodCreateButton,shopListAddFoodCancelButton" />
+                app:constraint_referenced_ids="shopListPushPresetCreateButton,shopListPushPresetCancelButton" />
 
             <Button
-                android:id="@+id/shopListAddFoodCreateButton"
+                android:id="@+id/shopListPushPresetCreateButton"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="175dp"
                 android:layout_height="wrap_content"
@@ -78,14 +62,14 @@
                 android:textColor="@android:color/black"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/shopListAddFoodCancelButton"
+                app:layout_constraintEnd_toStartOf="@+id/shopListPushPresetCancelButton"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shopListAddFoodButtonBarrier"
+                app:layout_constraintTop_toBottomOf="@+id/shopListPushPresetButtonBarrier"
                 app:strokeWidth="3dp" />
 
             <Button
-                android:id="@+id/shopListAddFoodCancelButton"
+                android:id="@+id/shopListPushPresetCancelButton"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="175dp"
                 android:layout_height="wrap_content"
@@ -94,8 +78,8 @@
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shopListAddFoodButtonBarrier"
-                app:layout_constraintStart_toEndOf="@id/shopListAddFoodCreateButton"
+                app:layout_constraintTop_toBottomOf="@+id/shopListPushPresetButtonBarrier"
+                app:layout_constraintStart_toEndOf="@id/shopListPushPresetCreateButton"
                 app:strokeWidth="3dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

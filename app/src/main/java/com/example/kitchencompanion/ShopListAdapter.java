@@ -96,8 +96,10 @@ public class ShopListAdapter extends BaseAdapter {
                         shopList.remove(position);
                         notifyDataSetChanged();
                     }
-                    shopList.get(position).subtractAmount();
-                    quantity.setText(String.valueOf(shopList.get(position).getAmount()));
+                    else {
+                        shopList.get(position).subtractAmount();
+                        quantity.setText(String.valueOf(shopList.get(position).getAmount()));
+                    }
                 }
             }
         });
@@ -136,13 +138,31 @@ public class ShopListAdapter extends BaseAdapter {
     }
 
     public void addShopListItem(ShopListItem item){
-        shopList.add(item);/*change to update item with new amount*/
+        boolean exists = false;
+        for(ShopListItem compared : shopList){
+            if(item.getName().equals(compared.getName())){
+                exists = true;
+                compared.setAmount(item.getAmount());
+            }
+        }
+        if(!exists) {
+            shopList.add(item);
+        }
         notifyDataSetChanged();
     }
 
     public void addShopListItemBatch(List<ShopListItem> list){
         for(ShopListItem item:list) {
-            shopList.add(item);/*fix to add amount to existing item if exists*/
+            boolean exists = false;
+            for(ShopListItem compared : shopList){
+                if(item.getName().equals(compared.getName())){
+                    exists = true;
+                    compared.setAmount(item.getAmount() + compared.getAmount());
+                }
+            }
+            if(!exists) {
+                shopList.add(item);
+            }
         }
         notifyDataSetChanged();
     }

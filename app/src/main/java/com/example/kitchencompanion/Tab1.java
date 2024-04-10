@@ -8,21 +8,18 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,13 +31,16 @@ public class Tab1 extends Fragment {
     // Reference to the set of all FoodType objects in the app
     // Maps FoodType.getID() to FoodType
     HashMap<Integer, FoodType> foodDictionary;
+    private boolean isAddMissingPopupShown = false;
 
     private List<PantryItem> pantryList;
+    private ShopListAdapter shoppingList;
 
-    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList) {
+    public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, ShopListAdapter shoppingList) {
         this.foodDictionary = foodDictionary;
         this.recipeDatabase = recipeDatabase;
         this.pantryList = pantryList;
+        this.shoppingList = shoppingList;
     }
 
 
@@ -56,7 +56,8 @@ public class Tab1 extends Fragment {
         addRecipeButton.setOnClickListener(v -> showAddRecipeDialog());
 
         // Use shared RecipeDatabase instance across tabs
-        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary);
+        Map<Integer, Fragment> fragmentMap = ((MainActivity) getActivity()).getFragmentMap();
+        recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap, shoppingList);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
         setFilters(view);
@@ -80,26 +81,41 @@ public class Tab1 extends Fragment {
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                final View foregroundView = ((RecipeAdapter.ViewHolder) viewHolder).viewForeground;
-                FrameLayout addMissingLayout = viewHolder.itemView.findViewById(R.id.addMissingLayout);
+                RecipeAdapter.ViewHolder holder = (RecipeAdapter.ViewHolder) viewHolder;
+                final View foregroundView = holder.viewForeground;
+                FrameLayout addMissingLayout = holder.addMissingLayout;
 
                 float maxSwipeDistance = -addMissingLayout.getWidth();
                 float restrictedDX = Math.max(dX, maxSwipeDistance);
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, restrictedDX, dY, actionState, isCurrentlyActive);
 
-                if (restrictedDX == maxSwipeDistance) {
+                if (restrictedDX == maxSwipeDistance && isCurrentlyActive) {
                     if (addMissingLayout.getVisibility() != View.VISIBLE) {
                         addMissingLayout.setVisibility(View.VISIBLE);
-                        System.out.println("DEBUG: addMissingLayout shown for item at position " + viewHolder.getAdapterPosition());
                     }
-                } else {
-                    if (addMissingLayout.getVisibility() == View.VISIBLE) {
-                        addMissingLayout.setVisibility(View.GONE);
-                        System.out.println("DEBUG: addMissingLayout hidden for item at position " + viewHolder.getAdapterPosition());
-                    }
-                }
 
-                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, restrictedDX, dY, actionState, isCurrentlyActive);
+                    if (!holder.isHandlerRunning && !holder.isPopupShown) {
+                        holder.isHandlerRunning = true;
+                        new Handler().postDelayed(() -> {
+                            if (restrictedDX == maxSwipeDistance && isCurrentlyActive && !holder.isPopupShown) {
+                                holder.isPopupShown = true;
+                                ((RecipeAdapter) recyclerView.getAdapter()).showAddMissingConfirmation(holder.getAdapterPosition());
+                            }
+                            holder.isHandlerRunning = false;
+                            if (!isCurrentlyActive) {
+                                holder.isPopupShown = false;
+                            }
+                        }, 500);
+                    }
+                } else if (restrictedDX != maxSwipeDistance) {
+                    if (addMissingLayout.getVisibility() != View.GONE) {
+                        addMissingLayout.setVisibility(View.GONE);
+                    }
+                    holder.isHandlerRunning = false;
+                    holder.isPopupShown = false;
+                }
             }
+
 
 
 

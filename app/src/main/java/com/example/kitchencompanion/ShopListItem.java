@@ -17,6 +17,7 @@ public class ShopListItem {
     public void addAmount(){amount += 1;}
 
     public void subtractAmount(){amount -= 1;}
+    public void setAmount(int num){amount = num;}
     public boolean getSelected(){return selected;}
     public int getAmount(){return amount;}
     public String getName(){return foodType.getItemName();}

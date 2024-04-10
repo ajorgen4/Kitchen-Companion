@@ -1,43 +1,78 @@
 package com.example.kitchencompanion;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 // Maybe change this to extend ArrayAdapter<Type> like in Phase 1.2?
-public class FoodAdapter extends BaseAdapter {
+public class FoodAdapter extends BaseAdapter implements Filterable {
+    private class PantryItemFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            List<PantryItem> filteredList = new ArrayList<>();
+
+            for (PantryItem item : foodList) {
+                if (filterFields.matchName(item.getItemName())
+                && filterFields.matchLow(item.getLow())
+                && filterFields.matchPrivate(item.getIsPrivate())
+                && filterFields.matchExpirationMax((int) LocalDate.now().until(item.nextExpiration(), ChronoUnit.DAYS))
+                && filterFields.matchFoodGroup(item.getType().getFoodGroup())) { // constraints here
+                    filteredList.add(item);
+                }
+            }
+
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredData = (List<PantryItem>) results.values;
+            notifyDataSetChanged();
+        }
+    }
 
     private List<PantryItem> foodList;
+    private List<PantryItem> filteredData;
     private Context context;
     private Tab2 tab2;
+    private PantryItemFilter pantryItemFilter = new PantryItemFilter();
+    PantryItemFilterFields filterFields;
 
-    public FoodAdapter(Context context, List<PantryItem> foodList, Tab2 tab2) {
+
+    public FoodAdapter(Context context, List<PantryItem> foodList, Tab2 tab2, PantryItemFilterFields filterFields) {
         this.foodList = foodList;
+        this.filteredData = foodList;
         this.context = context;
         this.tab2 = tab2;
+        this.filterFields = filterFields;
     }
 
     // Accessors
     @Override
     public int getCount() {
-        return foodList.size();
+        return filteredData.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return foodList.get(position);
+        return filteredData.get(position);
     }
 
     @Override
@@ -49,7 +84,7 @@ public class FoodAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final int itemPosition = position;
         FoodItemView foodItemView;
-        PantryItem item = foodList.get(itemPosition);
+        PantryItem item = filteredData.get(itemPosition);
 
         if (convertView == null) {
             foodItemView = new FoodItemView(context);
@@ -63,7 +98,20 @@ public class FoodAdapter extends BaseAdapter {
         ImageView deleteButton = foodItemView.findViewById(R.id.closePantryItemButton);
         // If they click the delete button, remove the item from the list
         deleteButton.setOnClickListener(v -> {
-            foodList.remove(itemPosition);
+            // Remove from list
+            PantryItem toRemove = filteredData.get(itemPosition);
+            int i = 0;
+            for (PantryItem potentialMatch : foodList) {
+                if (potentialMatch.equalTo(toRemove)) {
+                    foodList.remove(i);
+                    break;
+                }
+                i++;
+            }
+            // Remove from filter (mostly visual)
+            if (filteredData != foodList) { // They begin as the same reference. If this is still the case, don't double remove.
+                filteredData.remove(itemPosition);
+            }
             notifyDataSetChanged();
         });
 
@@ -76,7 +124,20 @@ public class FoodAdapter extends BaseAdapter {
         minusButton.setOnClickListener(v -> {
             tab2.removeItemsInternal(item.getType(), 1, item.getIsPrivate());
             if (item.totalCount() == 0) {
-                foodList.remove(itemPosition);
+                // Remove from list
+                PantryItem toRemove = filteredData.get(itemPosition);
+                int i = 0;
+                for (PantryItem potentialMatch : foodList) {
+                    if (potentialMatch.equalTo(toRemove)) {
+                        foodList.remove(i);
+                        break;
+                    }
+                    i++;
+                }
+                // Remove from filter (mostly visual)
+                if (filteredData != foodList) { // They begin as the same reference. If this is still the case, don't double remove.
+                    filteredData.remove(itemPosition);
+                }
                 notifyDataSetChanged();
             }
         });
@@ -103,7 +164,7 @@ public class FoodAdapter extends BaseAdapter {
         });
 
         TextView expirationDisplay = foodItemView.findViewById(R.id.expirationDisplay);
-        LocalDate expirationDate = foodList.get(itemPosition).nextExpiration();
+        LocalDate expirationDate = filteredData.get(itemPosition).nextExpiration();
         expirationDisplay.setText("Expiration Date: " + expirationDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
         expirationDisplay.setTextColor(ContextCompat.getColor(context, (ChronoUnit.DAYS.between(LocalDate.now(), expirationDate) > 7) ? R.color.green : (((ChronoUnit.DAYS.between(LocalDate.now(), expirationDate) > 3) ? R.color.light_orange : R.color.red))));
 
@@ -111,5 +172,10 @@ public class FoodAdapter extends BaseAdapter {
         expireIcon.setVisibility((ChronoUnit.DAYS.between(LocalDate.now(), expirationDate) > 7) ? convertView.INVISIBLE : convertView.VISIBLE);
 
         return foodItemView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return pantryItemFilter;
     }
 }

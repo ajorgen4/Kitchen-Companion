@@ -9,7 +9,7 @@ public class Enums {
 
     // Attributes per food/Recipe item
     public enum DietaryAttribute {
-        VEGAN, ORGANIC, CONTAINS_NUTS, TEST
+        VEGAN, GLUTEN_FREE, LOW_CALORIE, VEGETARIAN, LOW_SODIUM, LOW_FAT, LOW_CHOLESTEROL, LOW_SUGAR, LOW_CARB, ORGANIC
     }
 
     public enum CommonFoodAllergy {
