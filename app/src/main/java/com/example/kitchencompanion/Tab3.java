@@ -137,8 +137,8 @@ public class Tab3 extends Fragment {
         submitShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.getAndRemoveSelectedItems();
-                for(ShopListItem item: shopList){
+                List<ShopListItem> temp = adapter.getAndRemoveSelectedItems();
+                for(ShopListItem item: temp){
                     tab2.addItems(item.getFood(), item.getAmount());
                 }
             }
