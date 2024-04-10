@@ -474,8 +474,7 @@ public class Tab2 extends Fragment {
         return false;
     }
 
-    // TEMP CHANGE for removing private stuff, fix later?
-    /*
+    // Recipes, minus button use this
     public void removeItems(FoodType foodType, int count) {
         PantryItem item = pantryList.stream()
                 .filter(p -> p.getType().equals(foodType))
@@ -494,14 +493,14 @@ public class Tab2 extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         }
-    } */
+    }
 
-    // Recipes, minus button use this
-    public void removeItems(FoodType foodType, int count) {
+
+    /*public void removeItems(FoodType foodType, int count) {
         if (!removeItemsInternal(foodType, count, false)) { // try to remove from public first
             removeItemsInternal(foodType, count, true);
         }
-    }
+    }*/
 
 
     // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java
