@@ -44,7 +44,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private List<PantryItem> pantryList;
     private HashMap<Integer, FoodType> foodDictionary;
     private Map<Integer, Fragment> fragmentMap;
-    private int lastSwipedPosition = -1;
+    private AlertDialog currentDialog = null; // Track the current active dialog
+    private int currentDialogPosition = -1; // Track the position of the current active dialog
 
     private Tab3 tab3;
 
@@ -281,10 +282,23 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         this.recyclerView = recyclerView;
     }
 
+    public boolean isDialogShown() {
+        return currentDialog != null && currentDialog.isShowing();
+    }
+
     // Popup appears when swiped out on recipe card to allow user to add all required ingredients for recipe not in pantry currently
     // Have to do this way since clicking the Add Missing button wasn't working since only detecting swipes.
 
     public void showAddMissingConfirmation(int position) {
+        if (currentDialog != null && currentDialog.isShowing()) {
+            if (currentDialogPosition != position) {
+                currentDialog.dismiss();
+                resetSwipeView(currentDialogPosition);
+            } else {
+                return;
+            }
+        }
+
         Recipe recipe = recipes.get(position);
         MainActivity mainActivity = (MainActivity) context;
         Tab2 tab2 = mainActivity.getTab2();
@@ -292,10 +306,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.confirmation_add_missing, null);
         builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
+        currentDialog = builder.create();
+        currentDialogPosition = position;
 
         dialogView.findViewById(R.id.confirmAddMissingButton).setOnClickListener(v -> {
-            List<ShopListItem> toAdd = new ArrayList<ShopListItem>();
+            List<ShopListItem> toAdd = new ArrayList<>();
             for (Map.Entry<Integer, Integer> entry : recipe.getRecipe_Requirements().entrySet()) {
                 int foodTypeId = entry.getKey();
                 int requiredAmount = entry.getValue();
@@ -309,48 +324,29 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
                 if (amountToAdd > 0) {
                     toAdd.add(new ShopListItem(foodDictionary.get(foodTypeId), amountToAdd));
-                    System.out.println("DEBUG - Adding missing for Recipe: " + recipe.getName() + " - Item: " + foodDictionary.get(foodTypeId).getItemName() + ", Amount Added: " + amountToAdd + ", Current Pantry Count: " + (currentAmountInPantry + amountToAdd));
                 }
             }
-            if (tab3.getAdapter() == null) {
-                new AlertDialog.Builder(context)
-                        .setTitle("Error")
-                        .setMessage("The shopping list has not been loaded. Open the shopping list tab and try again.")
-                        .setPositiveButton(android.R.string.ok, null)
-                        .setIcon(R.drawable.warning)
-                        .show();
-            } else {
+
+            if (tab3.getAdapter() != null) {
                 tab3.getAdapter().addShopListItemBatch(toAdd);
+                updateRecipes(recipeDatabase.getRecipes());
             }
 
-            updateRecipes(recipeDatabase.getRecipes());
-            dialog.dismiss();
-            resetSwipeView(position); // Reset the swipe view if confirm button
-            lastSwipedPosition = -1;
+            currentDialog.dismiss();
+            resetSwipeView(position);
+            currentDialog = null;
+            currentDialogPosition = -1;
         });
 
         dialogView.findViewById(R.id.cancelAddMissingButton).setOnClickListener(v -> {
-            dialog.dismiss();
-            resetSwipeView(position); // Reset the swipe view if cancel button
-            lastSwipedPosition = -1;
+            currentDialog.dismiss();
+            resetSwipeView(position);
+            currentDialog = null;
+            currentDialogPosition = -1;
         });
 
-        if (lastSwipedPosition != -1 && lastSwipedPosition != position) {
-            // Reset previous swipe before new swipe
-            resetSwipeView(lastSwipedPosition);
-        }
-
-        lastSwipedPosition = position;
-        dialog.show();
+        currentDialog.show();
     }
-
-    private void closeOpenSwipeViews() {
-        if (lastSwipedPosition != -1) {
-            resetSwipeView(lastSwipedPosition);
-        }
-        lastSwipedPosition = -1;
-    }
-
     public void resetSwipeView(int position) {
         RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
         if (viewHolder != null) {

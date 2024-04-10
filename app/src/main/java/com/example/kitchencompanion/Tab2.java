@@ -481,10 +481,13 @@ public class Tab2 extends Fragment {
 
     // Recipes, minus button use this
     public void removeItems(FoodType foodType, int count) {
-        PantryItem item = pantryList.stream()
-                .filter(p -> p.getType().equals(foodType))
-                .findFirst()
-                .orElse(null);
+        PantryItem item = null;
+        for (PantryItem pItem : pantryList) {
+            if (pItem.getType().equals(foodType)) {
+                item = pItem;
+                break;
+            }
+        }
 
         if (item != null) {
             int pantryCountBefore = item.getCount();

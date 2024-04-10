@@ -94,11 +94,9 @@ public class Tab1 extends Fragment {
                 float restrictedDX = Math.max(xVal, maxSwipeDistance);
                 getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, restrictedDX, yVal, actionState, isCurrentlyActive);
 
-                if (restrictedDX == maxSwipeDistance && isCurrentlyActive) {
-                    if (addMissingLayout.getVisibility() != View.VISIBLE) {
-                        addMissingLayout.setVisibility(View.VISIBLE);
-                    }
-
+                // Check if a dialog is already shown
+                if (restrictedDX == maxSwipeDistance && isCurrentlyActive && !((RecipeAdapter) recyclerView.getAdapter()).isDialogShown()) {
+                    addMissingLayout.setVisibility(View.VISIBLE);
                     if (!holder.isHandlerRunning && !holder.isPopupShown) {
                         holder.isHandlerRunning = true;
                         new Handler().postDelayed(() -> {
@@ -110,12 +108,10 @@ public class Tab1 extends Fragment {
                             if (!isCurrentlyActive) {
                                 holder.isPopupShown = false;
                             }
-                        }, 0); //change delay if needed, time before popup appears
+                        }, 300); // Adjust delay as needed
                     }
                 } else if (restrictedDX != maxSwipeDistance) {
-                    if (addMissingLayout.getVisibility() != View.GONE) {
-                        addMissingLayout.setVisibility(View.GONE);
-                    }
+                    addMissingLayout.setVisibility(View.GONE);
                     holder.isHandlerRunning = false;
                     holder.isPopupShown = false;
                 }
