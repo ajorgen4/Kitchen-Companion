@@ -25,7 +25,7 @@ public class RecipeDatabase {
         // Key is the FoodType ID, count is value
         // If you want to test with other preset ones, see getFoodDictionary output from Tab2.java
 
-                // RecipeS IN DATABASE
+         // Recipes IN DATABASE
         // Recipe 1: Oven Baked Risotto
         Map<Integer, Integer> rec1Ingred = new HashMap<>();
         rec1Ingred.put(3, 2); // Onion
@@ -242,6 +242,26 @@ public class RecipeDatabase {
         addRecipe("Baked Lemon Pepper Fish", rec14Desc, rec14Ingred, 2, false, "30 mins", 300, "Easy", rec14Attributes, rec14Allergies, "recipe_image_bakedlemonpepperfish");
         addRecipe("Chickpea Salad", rec15Desc, rec15Ingred, 2, false, "20 mins", 250, "Easy", rec15Attributes, rec15Allergies, "recipe_image_chickpeasalad");
         //printIngredientsForRecipe(1); //testing
+
+        /*
+        // RECIPE CITATIONS (IMAGES are from these links):
+        1 https://www.thekitchn.com/easy-oven-baked-risotto-256190
+        2 https://therecipecritic.com/chicken-noodle-soup-recipe/
+        3 https://www.bonappetit.com/recipe/bas-best-chicken-parm
+        4 https://therecipecritic.com/vegetable-stir-fry/
+        5 https://tastesbetterfromscratch.com/tomato-basil-chicken-pasta/
+        6 https://www.allrecipes.com/recipe/69471/baby-spinach-omelet/
+        7 https://cookieandkate.com/best-quinoa-salad-recipe/
+        8 https://www.themediterraneandish.com/lemon-garlic-chicken/
+        9 https://www.allrecipes.com/recipe/228823/quick-beef-stir-fry/
+        10 https://www.dinneratthezoo.com/mixed-berry-smoothie/
+        11 https://www.food.com/recipe/fresh-tomato-mozzarella-salad-173875
+        12 https://runningonrealfood.com/easy-coconut-veggie-curry-with-tofu/
+        13 https://www.loveandlemons.com/pasta-primavera/
+        14 https://www.theendlessmeal.com/lemon-pepper-fish/
+        15 https://www.loveandlemons.com/chickpea-salad/
+        */
+
     }
 
 
