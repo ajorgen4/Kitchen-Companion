@@ -40,9 +40,10 @@ public class Tab4 extends Fragment {
 
     private View rootView;
 
-    private TextView allergyTextView;
-    private List<FoodType> foodTypes;
+    //private TextView allergyTextView;
+    //private List<FoodType> foodTypes;
 
+    private static final String SELECTED_ALLERGIES_KEY = "SelectedAllergies";
 
     private String[] dietaryOptions = {"Vegan", "Vegetarian", "Pescatarian", "Paleo", "Keto", "Low-carb", "Low-fat", "Mediterranean", "Flexitarian"};
 
@@ -95,8 +96,19 @@ public class Tab4 extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_tab4, container, false);
 
+        sharedPreferences = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
         SearchView searchView = rootView.findViewById(R.id.searchView);
         ListView listView = rootView.findViewById(R.id.listView);
+
+
+
+
+        // Load selected allergies from SharedPreferences
+        Set<String> savedSelectedAllergies = sharedPreferences.getStringSet(SELECTED_ALLERGIES_KEY, new HashSet<>());
+        selectedAllergies.clear();
+        selectedAllergies.addAll(savedSelectedAllergies);
+        updateSelectedAllergiesTextView();
 
         // Create an ArrayList of common allergy items, will try to make it filter fooditems instead of creating seperate entities.
         ArrayList<String> allergyList = new ArrayList<>();
@@ -115,6 +127,8 @@ public class Tab4 extends Fragment {
         // Create an ArrayAdapter to bind the allergyList to the ListView
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, filteredAllergyList);
         listView.setAdapter(adapter);
+
+
 
 
         // Set up the search functionality
@@ -173,6 +187,7 @@ public class Tab4 extends Fragment {
                     selectedAllergies.add(selectedAllergy);
                 }
                 updateSelectedAllergiesTextView();
+                saveSelectedAllergies(); // Save selected allergies to SharedPreferences
             }
         });
 
@@ -255,6 +270,12 @@ public class Tab4 extends Fragment {
             String allergiesText = TextUtils.join(", ", selectedAllergies);
             selectedAllergiesTextView.setText(allergiesText);
         }
+    }
+    //used for persisting allergy changes across tabs
+    private void saveSelectedAllergies() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet(SELECTED_ALLERGIES_KEY, new HashSet<>(selectedAllergies));
+        editor.apply();
     }
 
     private void filterItems(String query, ListView listView) {
