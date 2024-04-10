@@ -60,9 +60,33 @@ public class Tab3 extends Fragment {
         shopList.add(new ShopListItem(foodDictionary.get(1),5));
         shopList.add(new ShopListItem(foodDictionary.get(2),3));
         shopList.add(new ShopListItem(foodDictionary.get(3),1));
+
         ArrayList<ShopListItem> test = new ArrayList<ShopListItem>();
         test.add(new ShopListItem(foodDictionary.get(2),10));
         ShopListPresets.put("10 Oranges", test);
+
+        ArrayList<ShopListItem> test2 = new ArrayList<ShopListItem>();
+        test2.add(new ShopListItem(foodDictionary.get(16),4));
+        test2.add(new ShopListItem(foodDictionary.get(24),3));
+        test2.add(new ShopListItem(foodDictionary.get(39),2));
+        test2.add(new ShopListItem(foodDictionary.get(55),1));
+        test2.add(new ShopListItem(foodDictionary.get(63),2));
+        test2.add(new ShopListItem(foodDictionary.get(87),1));
+        test2.add(new ShopListItem(foodDictionary.get(119),2));
+        ShopListPresets.put("Favorite Foods", test2);
+
+        ArrayList<ShopListItem> test3 = new ArrayList<ShopListItem>();
+        test3.add(new ShopListItem(foodDictionary.get(4),2));
+        test3.add(new ShopListItem(foodDictionary.get(8),4));
+        test3.add(new ShopListItem(foodDictionary.get(16),3));
+        test3.add(new ShopListItem(foodDictionary.get(20),12));
+        test3.add(new ShopListItem(foodDictionary.get(54),2));
+        test3.add(new ShopListItem(foodDictionary.get(67),7));
+        test3.add(new ShopListItem(foodDictionary.get(53),4));
+        test3.add(new ShopListItem(foodDictionary.get(75),2));
+        test3.add(new ShopListItem(foodDictionary.get(48),1));
+        ShopListPresets.put("New Shopping List", test3);
+
         shoppingMode = false;
         this.tab2 = tab2;
     }
