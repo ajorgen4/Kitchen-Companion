@@ -9,7 +9,7 @@
         android:id="@+id/addMissingConfirmationText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Add Missing Items for this recipe to the pantry?"
+        android:text="Add missing items for this recipe to your shopping list?"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
         android:layout_marginBottom="20dp"
