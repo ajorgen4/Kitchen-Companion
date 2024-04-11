@@ -287,9 +287,13 @@ public class RecipeDatabase {
     }
 
     // get all recipes in the database
+    // Filter by isFavorited first!
     public List<Recipe> getRecipes() {
-        return recipes;
+        List<Recipe> sortedRecipeItems = new ArrayList<>(recipes);
+        sortedRecipeItems.sort((r1, r2) -> Boolean.compare(r2.isFavorited(), r1.isFavorited()));
+        return sortedRecipeItems;
     }
+
 
     // debugging - print the database
     public void printRecipeDatabase() {
