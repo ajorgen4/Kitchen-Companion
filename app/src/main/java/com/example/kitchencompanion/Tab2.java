@@ -889,6 +889,12 @@ public class Tab2 extends Fragment {
         foodDictionary.put(currItem.getID(), currItem);
         currItem = new FoodType("Curry Powder", Enums.FoodGroup.SPICE, 325);
         foodDictionary.put(currItem.getID(), currItem);
+
+        // Baking Week Task Scenario
+        currItem = new FoodType("Flour", Enums.FoodGroup.GRAIN, 230);
+        foodDictionary.put(currItem.getID(), currItem);
+        currItem = new FoodType("Sugar", Enums.FoodGroup.SUGARS, 10000);
+        foodDictionary.put(currItem.getID(), currItem);
     }
 
     public HashMap<Integer, FoodType> getFoodDictionary() {

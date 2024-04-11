@@ -4,7 +4,7 @@ public class Enums {
 
     // Overarching Classes foods can be in
     public enum FoodGroup {
-        FRUIT, VEGETABLE, GRAIN, PROTEIN, DAIRY, CONDIMENT, BEVERAGE, HERB, SPICE, MISC, LEFTOVERS
+        FRUIT, VEGETABLE, GRAIN, PROTEIN, DAIRY, CONDIMENT, BEVERAGE, HERB, SPICE, MISC, LEFTOVERS, SUGARS
     }
 
     // Attributes per food/Recipe item
