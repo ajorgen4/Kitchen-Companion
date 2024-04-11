@@ -165,7 +165,7 @@ public class RecipeDatabase {
 
         // Recipe ATTRIBUTES
         List<Enums.DietaryAttribute> rec1Attributes = Arrays.asList(Enums.DietaryAttribute.VEGAN, Enums.DietaryAttribute.ORGANIC);
-        List<Enums.DietaryAttribute> rec2Attributes = Arrays.asList(Enums.DietaryAttribute.GLUTEN_FREE, Enums.DietaryAttribute.LOW_CALORIE);
+        List<Enums.DietaryAttribute> rec2Attributes = Arrays.asList(Enums.DietaryAttribute.LOW_CALORIE);
         List<Enums.DietaryAttribute> rec3Attributes = Arrays.asList(Enums.DietaryAttribute.LOW_SODIUM, Enums.DietaryAttribute.ORGANIC);
         List<Enums.DietaryAttribute> rec4Attributes = Arrays.asList(Enums.DietaryAttribute.VEGETARIAN, Enums.DietaryAttribute.LOW_FAT);
         List<Enums.DietaryAttribute> rec5Attributes = Arrays.asList(Enums.DietaryAttribute.ORGANIC, Enums.DietaryAttribute.LOW_CHOLESTEROL);
