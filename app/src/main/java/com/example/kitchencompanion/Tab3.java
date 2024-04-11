@@ -387,12 +387,24 @@ public class Tab3 extends Fragment {
                 presetAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ArrayList<ShopListItem> temp = new ArrayList<ShopListItem>();
-                        for(ShopListItem i : shopList){
-                            temp.add(new ShopListItem(i.getFood(),i.getAmount()));
+                        boolean isValid = true;
+                        String name = listName.getText().toString();
+
+                        if (name.isEmpty()) {
+                            listName.setError("Please enter a name");
+                            isValid = false;
+                        } else {
+                            listName.setError(null);
                         }
-                        ShopListPresets.put(listName.getText().toString(), temp);
-                        dialog.dismiss();
+
+                        if (isValid) {
+                            ArrayList<ShopListItem> temp = new ArrayList<ShopListItem>();
+                            for (ShopListItem i : shopList) {
+                                temp.add(new ShopListItem(i.getFood(), i.getAmount()));
+                            }
+                            ShopListPresets.put(listName.getText().toString(), temp);
+                            dialog.dismiss();
+                        }
                     }
                 });
                 presetCancel.setOnClickListener(new View.OnClickListener() {
