@@ -351,8 +351,27 @@ public class Tab3 extends Fragment {
                 addButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        adapter.addShopListItem(new ShopListItem(selectedFood,Integer.parseInt(amount.getText().toString())));
-                        dialog.dismiss();
+                        boolean isValid = true;
+                        String countString = amount.getText().toString();
+
+                        if (selectedFood == null) {
+                            foodTypeSelector.setError("Please select a food");
+                            isValid = false;
+                        } else {
+                            foodTypeSelector.setError(null);
+                        }
+
+                        if (countString.isEmpty()) {
+                            amount.setError("Please enter a number of items");
+                            isValid = false;
+                        } else {
+                            amount.setError(null);
+                        }
+
+                        if (isValid) {
+                            adapter.addShopListItem(new ShopListItem(selectedFood, Integer.parseInt(amount.getText().toString())));
+                            dialog.dismiss();
+                        }
                     }
                 });
                 dialog.show();
