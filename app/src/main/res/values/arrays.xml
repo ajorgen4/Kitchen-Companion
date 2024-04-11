@@ -11,5 +11,6 @@
         <item>HERB</item>
         <item>SPICE</item>
         <item>MISC</item>
+        <item>LEFTOVERS</item>
     </string-array>
 </resources>
