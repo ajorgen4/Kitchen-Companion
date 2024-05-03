@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:ems="2"
             android:text="3"
+            android:textSize="20sp"
             android:textColor="@android:color/black"
             android:layout_gravity="center"
             android:textAlignment="center"
@@ -35,7 +36,7 @@
             android:id="@+id/pantryQuantityPlusButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="32dp"
             android:layout_marginStart="16dp"
             android:src="@drawable/plus_icon"
             android:layout_gravity="center"/>
@@ -46,14 +47,15 @@
             android:layout_height="wrap_content"
             android:textSize="32sp"
             android:text="Item text"
-            android:layout_marginStart="3dp" />
+            android:layout_marginStart="3dp"
+            android:textColor="?android:textColorPrimary" />
 
         <ImageView
             android:id="@+id/lowIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
             android:src="@drawable/low_warning_icon"
             android:layout_gravity="center"/>
 
@@ -61,8 +63,8 @@
             android:id="@+id/expireIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
             android:src="@drawable/clock_warning"
             android:layout_gravity="center"/>
 
@@ -70,18 +72,18 @@
             android:id="@+id/privateIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
             android:src="@drawable/private_icon"
             android:layout_gravity="center"/>
 
         <ImageView
             android:id="@+id/closePantryItemButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="12dp"
             android:layout_marginStart="3dp"
-            android:src="@drawable/x_icon"
+            android:src="@drawable/trash_icon"
             android:layout_gravity="center"/>
     </LinearLayout>
 

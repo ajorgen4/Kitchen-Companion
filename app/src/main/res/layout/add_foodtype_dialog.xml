@@ -26,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add New Item Type"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="40sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -56,6 +57,17 @@
                 android:textSize="25sp"
                 android:layout_marginTop="10dp"/>
 
+            <TextView
+                android:id="@+id/foodGroupSpinnerLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Food Group:"
+                android:textSize="20sp"
+                android:textColor="?android:textColorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addFoodExpirationEditText"
+                android:layout_marginTop="10dp"/>
+
             <Spinner
                 android:id="@+id/addFoodGroupSpinner"
                 android:layout_width="0dp"
@@ -63,7 +75,7 @@
                 android:entries="@array/food_groups"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addFoodExpirationEditText"
+                app:layout_constraintTop_toBottomOf="@+id/foodGroupSpinnerLabel"
                 android:layout_marginTop="10dp"/>
 
             <androidx.constraintlayout.widget.Barrier

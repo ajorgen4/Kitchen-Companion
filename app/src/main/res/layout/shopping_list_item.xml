@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:ems="2"
         android:text="3"
-        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textColor="?android:textColorPrimary"
         android:layout_gravity="center"
         android:textAlignment="center"
         android:background="@drawable/quantity_background"/>
@@ -43,15 +44,16 @@
         android:textSize="32sp"
         android:layout_marginEnd = "205dp"
         android:layout_marginStart="3dp"
-        android:text="Item text"/>
+        android:text="Item text"
+        android:textColor="?android:textColorPrimary" />
 
     <ImageView
         android:id="@+id/closeShopListItemButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="3dp"
-        android:src="@drawable/x_icon"
+        android:src="@drawable/trash_icon"
         android:layout_gravity="center"
         android:visibility="visible"/>
 

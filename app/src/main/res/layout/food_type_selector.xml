@@ -15,6 +15,7 @@
         android:text="Select a Food Type"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:textColor="?android:textColorPrimary"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="8dp"/>
 
@@ -54,7 +55,7 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create a New Food Type"
+            android:text="Add a New Food to This List"
             android:textSize="20sp"
             android:textColor="@android:color/black"
             android:layout_gravity="center_horizontal"
