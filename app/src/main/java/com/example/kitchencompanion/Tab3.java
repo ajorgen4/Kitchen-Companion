@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -125,35 +126,12 @@ public class Tab3 extends Fragment {
                     adapter.notifyDataSetChanged();
                 }
                 else{
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.shopmode_error_dialog, null);
-
-                    // Find and set up the views inside the dialog layout
-                    // ...
-                    ImageView cancelButton = dialogView.findViewById(R.id.closeShopListErrorButton);
-
-                    builder.setView(dialogView);
-
-                    AlertDialog dialog = builder.create();
-                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-                    // Set the dialog to occupy approximately 75% of the screen
-                    DisplayMetrics displayMetrics = new DisplayMetrics();
-                    getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                    int width = (int) (displayMetrics.widthPixels * 0.75);
-                    int height = (int) (displayMetrics.heightPixels * 0.75);
-                    dialog.getWindow().setLayout(width, height);
-
-                    // Dim the background
-                    dialog.getWindow().setDimAmount(0.5f);
-
-                    cancelButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Warning")
+                            .setMessage("Selected items must be bought using the Buy button before returning to edit mode.")
+                            .setPositiveButton(android.R.string.ok, null)
+                            .setIcon(R.drawable.warning)
+                            .show();
                 }
             }
         });
@@ -161,15 +139,16 @@ public class Tab3 extends Fragment {
             @Override
             public void onClick(View v) {
                 List<ShopListItem> temp = adapter.getSelectedItems();
+                if (tab2.getAdapter() == null) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Error")
+                            .setMessage("The pantry has not been loaded. Open the pantry tab and try again.")
+                            .setPositiveButton(android.R.string.ok, null)
+                            .setIcon(R.drawable.warning)
+                            .show();
+                }
                 for(ShopListItem item: temp){
-                    if (!tab2.addItems(item.getFood(), item.getAmount())) { // If error, its because tab2 hasn't been opened
-                        new AlertDialog.Builder(getContext())
-                                .setTitle("Error")
-                                .setMessage("The pantry has not been loaded. Open the pantry tab and try again.")
-                                .setPositiveButton(android.R.string.ok, null)
-                                .setIcon(R.drawable.warning)
-                                .show();
-                    } else {
+                    if (tab2.addItems(item.getFood(), item.getAmount())) {
                         adapter.removeSelectedItems(temp);
                     }
                 }
@@ -238,6 +217,14 @@ public class Tab3 extends Fragment {
                                 // Update visuals
                                 foodTypeSelector.setText(selectedFood.getItemName());
                                 // Dismiss dialog
+                                Tab3.this.foodTypeSelector.dismiss();
+                            }
+                        });
+
+                        ImageButton foodSelectorExitButton = Tab3.this.foodTypeSelector.findViewById(R.id.foodSelectorCloseButton);
+                        foodSelectorExitButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
                                 Tab3.this.foodTypeSelector.dismiss();
                             }
                         });

@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -265,6 +266,14 @@ public class Tab2 extends Fragment {
                                 defaultDate.getDayOfMonth()
                         );
                         // Dismiss dialog
+                        Tab2.this.foodTypeSelector.dismiss();
+                    }
+                });
+
+                ImageButton foodSelectorExitButton = Tab2.this.foodTypeSelector.findViewById(R.id.foodSelectorCloseButton);
+                foodSelectorExitButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         Tab2.this.foodTypeSelector.dismiss();
                     }
                 });
@@ -540,6 +549,10 @@ public class Tab2 extends Fragment {
         createFilter("fruits/vegetables", filterButtonMap, filterTextMap);
         createFilter("low", filterButtonMap, filterTextMap);
         // SECOND, ADD A CALL HERE. THEN ADD FUNCTIONALITY IN createFilter()
+    }
+
+    public FoodAdapter getAdapter() {
+        return adapter;
     }
 
     private void createFilter(String filter, Map<String, LinearLayout> filterButtonMap, Map<String, TextView> filterTextMap) {

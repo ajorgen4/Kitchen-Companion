@@ -7,24 +7,39 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/white" >
+    android:background="@android:color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select a Food Type"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="?android:textColorPrimary"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Select a Type of Food"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="?android:textColorPrimary"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"/>
+
+        <ImageButton
+            android:id="@+id/foodSelectorCloseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/x_icon"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
+    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/foodSelectorSearchBarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" >
+        android:layout_marginEnd="8dp">
 
         <EditText
             android:id="@+id/foodSelectorSearchBar"
