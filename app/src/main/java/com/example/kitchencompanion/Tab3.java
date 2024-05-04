@@ -104,10 +104,10 @@ public class Tab3 extends Fragment {
         FloatingActionButton addPreset = view.findViewById(R.id.addPresetShopListButton);
         FloatingActionButton pushPreset = view.findViewById(R.id.pushPresetShopListButton);
         if (shoppingMode) {
-            shopMode.setText("Edit List");
+            shopMode.setText("Open Edit Mode");
             submitShop.setVisibility(View.VISIBLE);
         } else {
-            shopMode.setText("Shopping");
+            shopMode.setText("Open Shopping Mode");
             submitShop.setVisibility(View.GONE);
         }
         shopMode.setOnClickListener(new View.OnClickListener() {
@@ -116,10 +116,10 @@ public class Tab3 extends Fragment {
                 if(!adapter.anySelected()) {
                     shoppingMode = !shoppingMode;
                     if (shoppingMode) {
-                        shopMode.setText("Edit List");
+                        shopMode.setText("Open Edit Mode");
                         submitShop.setVisibility(View.VISIBLE);
                     } else {
-                        shopMode.setText("Shopping");
+                        shopMode.setText("Open Shopping Mode");
                         submitShop.setVisibility(View.GONE);
                     }
                     adapter.changeMode();
@@ -434,10 +434,15 @@ public class Tab3 extends Fragment {
                 Button presetCancel = dialogView.findViewById(R.id.shopListPushPresetCancelButton);
                 Button presetPush = dialogView.findViewById(R.id.shopListPushPresetCreateButton);
                 Spinner presetList = dialogView.findViewById(R.id.shopListPushPresetSpinner);
+                ListView presetPushView = dialogView.findViewById(R.id.shopListPushPresetList);
+
+                ShopListPushPresetAdapter presetAdapter = new ShopListPushPresetAdapter(getContext());
+
                 List<String> presetListKeys= new ArrayList<String>(ShopListPresets.keySet());
                 ArrayAdapter<String> shopListAdapter = new ArrayAdapter<>(getContext(), R.layout.shoplist_spinner, presetListKeys);
 
                 presetList.setAdapter(shopListAdapter);
+                presetPushView.setAdapter(presetAdapter);
 
                 builder.setView(dialogView);
 
@@ -458,6 +463,8 @@ public class Tab3 extends Fragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         selectedKey = parent.getItemAtPosition(position).toString();
+                        presetAdapter.changeList(ShopListPresets.get(selectedKey));
+                        presetAdapter.notifyDataSetChanged();
                     }
 
                     @Override

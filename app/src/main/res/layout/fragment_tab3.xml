@@ -43,7 +43,7 @@
         android:layout_width="600dp"
         android:layout_height="75dp"
         android:layout_marginTop="10dp"
-        android:text="Shopping"
+        android:text="Open Shopping Mode"
         android:textSize="32sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

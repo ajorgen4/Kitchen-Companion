@@ -7,7 +7,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="550dp"
-        android:layout_height="500dp"
+        android:layout_height="800dp"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
@@ -44,6 +44,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shopListPushPresetTitle">
             </Spinner>
+
+            <ListView
+                android:id="@+id/shopListPushPresetList"
+                android:layout_height="500dp"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/shopListPushPresetButtonBarrier"
+                app:layout_constraintTop_toBottomOf="@id/shopListPushPresetSpinner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+            </ListView>
 
 
             <androidx.constraintlayout.widget.Barrier
