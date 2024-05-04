@@ -23,7 +23,7 @@
             android:id="@+id/pantrySearchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search Item..."
+            android:hint="Search..."
             android:textSize="32sp"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -37,144 +37,41 @@
         app:layout_constraintBottom_toBottomOf="@id/pantrySearchBarContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/pantrySearchBarContainer" />
-    <!-- TODO: add search functionality to this. Make it an enter button -->
 
     <Button
         android:id="@+id/pantryFiltersButton"
         android:layout_width="60dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:drawableBottom="@drawable/filter_icon"
         android:drawableTint="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="@id/pantryFiltersScrollView"
+        app:layout_constraintBottom_toBottomOf="@id/pantryFiltersContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pantrySearchBarContainer" />
 
-    <HorizontalScrollView
-        android:id="@+id/pantryFiltersScrollView"
+    <LinearLayout
+        android:id="@+id/pantryFiltersContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:orientation="horizontal"
         app:layout_constraintStart_toEndOf="@id/pantryFiltersButton"
         app:layout_constraintTop_toBottomOf="@id/pantrySearchBarContainer"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:id="@+id/pantryFiltersContainer"
+        <TextView
+            android:id="@+id/lowFilterText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:text="Low | Expiring | Private"
+            android:layout_marginStart="365dp"
+            android:textSize="24sp"
+            android:textColor="?android:textColorPrimary"
+            android:padding="8dp" />
 
-            <LinearLayout
-                android:id="@+id/privateFilterButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:background="@drawable/filter_background_unselected"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:id="@+id/privateFilterText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Private"
-                    android:textSize="24sp"
-                    android:textColor="@android:color/black" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/meatsFilterButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:background="@drawable/filter_background_unselected"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:id="@+id/proteinsFilterText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Proteins"
-                    android:textSize="24sp"
-                    android:textColor="@android:color/black" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/expiresFilterButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:background="@drawable/filter_background_unselected"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:id="@+id/expiresFilterText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Expires Soon"
-                    android:textSize="24sp"
-                    android:textColor="@android:color/black" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/lowFilterButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:background="@drawable/filter_background_unselected"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:id="@+id/lowFilterText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Low"
-                    android:textSize="24sp"
-                    android:textColor="@android:color/black" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/fruitsVegetablesFilterButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:background="@drawable/filter_background_unselected"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:id="@+id/fruitsVegetablesFilterText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fruits/Vegetables"
-                    android:textSize="24sp"
-                    android:textColor="@android:color/black" />
-            </LinearLayout>
-            <!-- Add more LinearLayouts like above for each filter -->
-            <!-- Be sure to add a new handler for it in setFilters() in Tab2.java -->
-
-        </LinearLayout>
-    </HorizontalScrollView>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/foodListView"
@@ -182,7 +79,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintTop_toBottomOf="@id/pantryFiltersScrollView"
+        app:layout_constraintTop_toBottomOf="@id/pantryFiltersContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

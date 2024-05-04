@@ -66,7 +66,6 @@ public class Tab1 extends Fragment {
         recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap, tab3);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
-        setFilters(view);
         setUpItemTouchHelper();
 
         return view;
@@ -140,50 +139,6 @@ public class Tab1 extends Fragment {
                 }
             }
         }).attachToRecyclerView(recipeRecyclerView);
-    }
-
-    private void setFilters(View view) {
-        Map<String, LinearLayout> filterButtonMap = new HashMap<>();
-        Map<String, TextView> filterTextMap = new HashMap<>();
-        filterButtonMap.put("favorites", view.findViewById(R.id.favoriteFilterButton));
-        filterTextMap.put("favorites", view.findViewById(R.id.favoritesFilterText));
-        filterButtonMap.put("make now", view.findViewById(R.id.makeNowFilterButton));
-        filterTextMap.put("make now", view.findViewById(R.id.makeNowFilterText));
-        filterButtonMap.put("low calorie", view.findViewById(R.id.lowCalorieFilterButton));
-        filterTextMap.put("low calorie", view.findViewById(R.id.lowCalorieFilterText));
-        filterButtonMap.put("breakfast", view.findViewById(R.id.breakfastFilterButton));
-        filterTextMap.put("breakfast", view.findViewById(R.id.breakfastFilterText));
-        createFilter("favorites", filterButtonMap, filterTextMap);
-        createFilter("make now", filterButtonMap, filterTextMap);
-        createFilter("low calorie", filterButtonMap, filterTextMap);
-        createFilter("breakfast", filterButtonMap, filterTextMap);
-    }
-
-    private void createFilter(String filter, Map<String, LinearLayout> filterButtonMap, Map<String, TextView> filterTextMap) {
-        Drawable selected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_selected);
-        Drawable unselected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_unselected);
-
-        filterButtonMap.get(filter).setOnClickListener(v -> {
-            Drawable currentBackground = filterButtonMap.get(filter).getBackground();
-            // If true, we are unselecting. If false, we are selecting
-            boolean isFilterSelected = currentBackground != null && currentBackground.getConstantState().equals(selected.getConstantState());
-
-            // If we are activating a new filter, deactivate the previous one
-            if (!isFilterSelected) {
-                // For all filters that are not filter
-                for (String key: filterButtonMap.entrySet().stream().filter(e -> !e.getKey().equals(filter)).map(Map.Entry::getKey).collect(Collectors.toList())) {
-                    Drawable keyBackground = filterButtonMap.get(key).getBackground();
-                    // If filter key is selected, deselect it
-                    if (keyBackground != null && keyBackground.getConstantState().equals(selected.getConstantState())) {
-                        filterButtonMap.get(key).setBackground(unselected);
-                    }
-                }
-            }
-
-            filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
-            // Here, we will need to make a call to actually apply the filter in the backend
-            // Unimplemented - Horizontal Prototype - UI Only
-        });
     }
 
     // Unimplemented - Horizontal prototype - UI Only

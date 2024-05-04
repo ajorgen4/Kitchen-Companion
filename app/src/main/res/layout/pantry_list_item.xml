@@ -43,7 +43,7 @@
 
         <TextView
             android:id="@+id/foodName"
-            android:layout_width="290dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:textSize="32sp"
             android:text="Item text"
@@ -54,7 +54,7 @@
             android:id="@+id/lowIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginStart="12dp"
             android:src="@drawable/low_warning_icon"
             android:layout_gravity="center"/>
@@ -63,8 +63,8 @@
             android:id="@+id/expireIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginStart="12dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
             android:src="@drawable/clock_warning"
             android:layout_gravity="center"/>
 
@@ -72,8 +72,8 @@
             android:id="@+id/privateIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginStart="12dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
             android:src="@drawable/private_icon"
             android:layout_gravity="center"/>
 

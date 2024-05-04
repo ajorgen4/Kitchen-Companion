@@ -116,9 +116,6 @@ public class Tab2 extends Fragment {
             }
         });
 
-        // Filter UI management
-        setFilters();
-
         return view;
     }
 
@@ -165,12 +162,13 @@ public class Tab2 extends Fragment {
         cancelButton.setOnClickListener(v -> dialog.dismiss());
 
         resetButton.setOnClickListener(v -> {
-            // Reset UI only. If they click Apply, it will reset values in model. If they Cancel, it won't
-            pantryFilterLowBox.setChecked(false);
-            pantryFilterPrivateBox.setChecked(false);
-            pantryFilterExpirationText.getText().clear();
-            pantryFilterExpirationText.setHint("Expires within x days");
-            foodGroupAdapter.clearSelection();
+            filterFields.resetLow();
+            filterFields.resetPrivate();
+            filterFields.resetFoodGroups();
+            filterFields.resetExpirationMax();
+            adapter.getFilter().filter("Not needed");
+
+            dialog.dismiss();
         });
 
         applyButton.setOnClickListener(v -> {
@@ -519,114 +517,8 @@ public class Tab2 extends Fragment {
         }
     }*/
 
-
-    // Only UI filters are handled here. Actual filtering is done in FoodAdapter.java
-    private void setFilters() {
-        Map<String, LinearLayout> filterButtonMap = new HashMap<>();
-        Map<String, TextView> filterTextMap = new HashMap<>();
-
-        // Private filter elements
-        filterButtonMap.put("private", view.findViewById(R.id.privateFilterButton));
-        filterTextMap.put("private", view.findViewById(R.id.privateFilterText));
-        // Proteins filter elements
-        filterButtonMap.put("proteins", view.findViewById(R.id.meatsFilterButton));
-        filterTextMap.put("proteins", view.findViewById(R.id.proteinsFilterText));
-        // Expires filter elements
-        filterButtonMap.put("expires", view.findViewById(R.id.expiresFilterButton));
-        filterTextMap.put("expires", view.findViewById(R.id.expiresFilterText));
-        // Fruits/Vegetables filter elements
-        filterButtonMap.put("fruits/vegetables", view.findViewById(R.id.fruitsVegetablesFilterButton));
-        filterTextMap.put("fruits/vegetables", view.findViewById(R.id.fruitsVegetablesFilterText));
-        // Low filter elements
-        filterButtonMap.put("low", view.findViewById(R.id.lowFilterButton));
-        filterTextMap.put("low", view.findViewById(R.id.lowFilterText));
-        // IF ADDING A NEW FILTER, FIRST ADD BUTTON ELEMENT HERE
-
-        // Create filters
-        createFilter("private", filterButtonMap, filterTextMap);
-        createFilter("proteins", filterButtonMap, filterTextMap);
-        createFilter("expires", filterButtonMap, filterTextMap);
-        createFilter("fruits/vegetables", filterButtonMap, filterTextMap);
-        createFilter("low", filterButtonMap, filterTextMap);
-        // SECOND, ADD A CALL HERE. THEN ADD FUNCTIONALITY IN createFilter()
-    }
-
     public FoodAdapter getAdapter() {
         return adapter;
-    }
-
-    private void createFilter(String filter, Map<String, LinearLayout> filterButtonMap, Map<String, TextView> filterTextMap) {
-        Drawable selected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_selected);
-        Drawable unselected = ContextCompat.getDrawable(getContext(), R.drawable.filter_background_unselected);
-
-        filterButtonMap.get(filter).setOnClickListener(v -> {
-            Drawable currentBackground = filterButtonMap.get(filter).getBackground();
-            // If true, we are unselecting. If false, we are selecting
-            boolean isFilterSelected = currentBackground != null && currentBackground.getConstantState().equals(selected.getConstantState());
-
-            // If we are activating a new filter, deactivate the previous one
-            if (!isFilterSelected) {
-                // For all filters that are not filter
-                for (String key: filterButtonMap.entrySet().stream().filter(e -> !e.getKey().equals(filter)).map(Map.Entry::getKey).collect(Collectors.toList())) {
-                    Drawable keyBackground = filterButtonMap.get(key).getBackground();
-                    // If filter key is selected, deselect it
-                    if (keyBackground != null && keyBackground.getConstantState().equals(selected.getConstantState())) {
-                        filterButtonMap.get(key).setBackground(unselected);
-                    }
-                }
-            }
-
-            filterButtonMap.get(filter).setBackground(isFilterSelected ? unselected : selected);
-
-            // Functionality
-            if (!isFilterSelected) { // Applying filter
-                if (filter.equals("private")) {
-                    filterFields.resetLow();
-                    filterFields.resetFoodGroups();
-                    filterFields.resetExpirationMax();
-
-                    filterFields.setPrivate(true);
-                } else if (filter.equals("proteins")) {
-                    ArrayList<Enums.FoodGroup> foodGroups = new ArrayList<>();
-                    foodGroups.add(Enums.FoodGroup.PROTEIN);
-
-                    filterFields.resetLow();
-                    filterFields.resetExpirationMax();
-                    filterFields.resetPrivate();
-
-                    filterFields.setFoodGroups(foodGroups);
-                } else if (filter.equals("expires")) {
-                    filterFields.resetFoodGroups();
-                    filterFields.resetLow();
-                    filterFields.resetPrivate();
-
-                    filterFields.setExpirationMax(7);
-                } else if (filter.equals("fruits/vegetables")) {
-                    ArrayList<Enums.FoodGroup> foodGroups = new ArrayList<>();
-                    foodGroups.add(Enums.FoodGroup.FRUIT);
-                    foodGroups.add(Enums.FoodGroup.VEGETABLE);
-
-                    filterFields.resetLow();
-                    filterFields.resetExpirationMax();
-                    filterFields.resetPrivate();
-
-                    filterFields.setFoodGroups(foodGroups);
-                } else if (filter.equals("low")) {
-                    filterFields.resetExpirationMax();
-                    filterFields.resetFoodGroups();
-                    filterFields.resetPrivate();
-
-                    filterFields.setLow(true);
-                }
-                // THIRD, ADD FUNCTIONALITY IN AN IF HERE
-            } else { // Removing filter
-                filterFields.resetExpirationMax();
-                filterFields.resetLow();
-                filterFields.resetFoodGroups();
-                filterFields.resetPrivate();
-            }
-            adapter.getFilter().filter("Not needed");
-        });
     }
 
     private void createFoodDictionary(HashMap<Integer, FoodType> foodDictionary) {
