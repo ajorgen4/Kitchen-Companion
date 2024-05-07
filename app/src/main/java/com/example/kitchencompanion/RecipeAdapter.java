@@ -182,8 +182,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         }
         String labelAttributes = "Recipe Dietary Attributes/Allergens:\n";
         SpannableString spannableAttributes = new SpannableString(labelAttributes + attributesBuilder.toString());
-        spannableAttributes.setSpan(new StyleSpan(Typeface.BOLD), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        spannableAttributes.setSpan(new UnderlineSpan(), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        // spannableAttributes.setSpan(new StyleSpan(Typeface.BOLD), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        //spannableAttributes.setSpan(new UnderlineSpan(), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         attributesTextView.setText(spannableAttributes);
 
         // Collect the required ingredients
@@ -205,6 +205,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         // Set Ingredients text, missing ones in bold, fully available ones after
         SpannableStringBuilder ingredientsSpannable = new SpannableStringBuilder("Ingredients:\n");
+        //ingredientsSpannable.setSpan(new StyleSpan(Typeface.BOLD), 0, labelInstructions.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        //singredientsSpannable.setSpan(new UnderlineSpan(), 0, labelInstructions.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         for (Map.Entry<Integer, Integer> requirement : ingredientsList) {
             int foodTypeId = requirement.getKey();
             int requiredAmount = requirement.getValue();
@@ -233,8 +235,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         // Set Recipe Instructions text
         String labelInstructions = "Recipe Instructions:\n";
         SpannableString spannableInstructions = new SpannableString(labelInstructions + recipe.getDescription());
-        spannableInstructions.setSpan(new StyleSpan(Typeface.BOLD), 0, labelInstructions.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        spannableInstructions.setSpan(new UnderlineSpan(), 0, labelInstructions.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        //spannableInstructions.setSpan(new StyleSpan(Typeface.BOLD), 0, labelInstructions.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        //spannableInstructions.setSpan(new UnderlineSpan(), 0, labelInstructions.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         descriptionTextView.setText(spannableInstructions);
 
         // Set up the dialog
