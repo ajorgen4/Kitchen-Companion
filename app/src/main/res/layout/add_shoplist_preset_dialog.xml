@@ -7,7 +7,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="550dp"
-        android:layout_height="500dp"
+        android:layout_height="900dp"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
@@ -26,10 +26,10 @@
                 android:id="@+id/shopListAddPresetTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add New Preset List"
+                android:text="Create New Preset"
+                android:textColor="@color/black"
                 android:textSize="40sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.501"
                 app:layout_constraintStart_toStartOf="parent"
@@ -40,16 +40,38 @@
                 android:id="@+id/shopListAddPresetNameInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:hint="Preset Name"
                 android:inputType="text"
+                android:textColor="@color/black"
                 android:textSize="25sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shopListAddPresetTitle"
                 app:layout_constraintWidth_percent="0.8" />
+
+            <Button
+                android:id="@+id/shopListAddPresetAddFoodButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:text="Add Food"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/shopListAddPresetNameInput"
+                android:layout_marginTop="20dp">
+            </Button>
+
+            <ListView
+                android:id="@+id/shopListAddPresetListView"
+                android:layout_width="match_parent"
+                android:layout_height="550dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/shopListAddPresetAddFoodButton">
+            </ListView>
 
 
             <androidx.constraintlayout.widget.Barrier
@@ -84,8 +106,8 @@
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shopListAddPresetButtonBarrier"
                 app:layout_constraintStart_toEndOf="@id/shopListAddPresetCreateButton"
+                app:layout_constraintTop_toBottomOf="@+id/shopListAddPresetButtonBarrier"
                 app:strokeWidth="3dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
