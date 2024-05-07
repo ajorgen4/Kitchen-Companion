@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
@@ -110,6 +111,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             holder.warningIcon.setVisibility(View.GONE);
         }
 
+        // Set the click listener for the warning icon to show an allergen message
+        holder.warningIcon.setOnClickListener(v -> {
+            if (recipe.getCommonFoodAllergies().isEmpty()) {
+                // No allergens present (optional)
+                Toast.makeText(context, "No allergens found", Toast.LENGTH_SHORT).show();
+            } else {
+                // Display allergen warning
+                Toast.makeText(context, "Allergens are present", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         //System.out.println("Icon Visibility for Recipe ID: " + recipe.getRecipeId() + ": " + holder.warningIcon.getVisibility());
     }
 
@@ -153,77 +165,91 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.popup_recipe_desc, null);
 
-        // Find TextViews
+        // Find the TextViews for attributes, ingredients, and description
         TextView attributesTextView = dialogView.findViewById(R.id.attributesTextView);
         TextView ingredientsTextView = dialogView.findViewById(R.id.ingredientsTextView);
         TextView descriptionTextView = dialogView.findViewById(R.id.descriptionTextView);
 
-        // Set 1st textview in popup_recipe_desc
+        // Set Recipe Dietary Attributes/Allergens text
         StringBuilder attributesBuilder = new StringBuilder();
-
-        // Recipe Dietary Attributes
         for (Enums.DietaryAttribute attribute : recipe.getDietaryAttributes()) {
             if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append(attribute.toString());
         }
-        // Recipe Allergens
         for (Enums.CommonFoodAllergy allergy : recipe.getCommonFoodAllergies()) {
             if (attributesBuilder.length() > 0) attributesBuilder.append(", ");
             attributesBuilder.append("Allergen-" + allergy.toString());
         }
-
-        // Set the textview 1 text with bold and underline for the label
-        String labelAttributes = "Recipe Dietary Attributes/Allergens: \n";
-        String attributes = attributesBuilder.toString();
-
-        // Allows for dynamic config of popup with some part of string bolded, other part not, etc
-        // https://developer.android.com/reference/android/text/SpannableStringBuilder
-        SpannableString spannableAttributes = new SpannableString(labelAttributes + attributes);
+        String labelAttributes = "Recipe Dietary Attributes/Allergens:\n";
+        SpannableString spannableAttributes = new SpannableString(labelAttributes + attributesBuilder.toString());
         spannableAttributes.setSpan(new StyleSpan(Typeface.BOLD), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         spannableAttributes.setSpan(new UnderlineSpan(), 0, labelAttributes.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         attributesTextView.setText(spannableAttributes);
 
-        // Convert ingredient IDs --> names
-        List<String> ingredientNames = new ArrayList<>();
-        for (Map.Entry<Integer, Integer> ingredient : recipe.getRecipe_Requirements().entrySet()) {
-            FoodType foodType = this.foodDictionary.get(ingredient.getKey());
-            String ingredientName = (foodType != null) ? ingredient.getValue() + " " + foodType.getItemName() : "Unknown Ingredient(Invalid ID)";
-            ingredientNames.add(ingredientName);
+        // Collect the required ingredients
+        List<Map.Entry<Integer, Integer>> ingredientsList = new ArrayList<>(recipe.getRecipe_Requirements().entrySet());
+
+        // Sort ingredients: missing ingredients (bolded) first
+        ingredientsList.sort((a, b) -> {
+            // Get pantry counts
+            int availableA = pantryList.stream().filter(item -> item.getType().getID() == a.getKey()).mapToInt(PantryItem::totalCount).sum();
+            int availableB = pantryList.stream().filter(item -> item.getType().getID() == b.getKey()).mapToInt(PantryItem::totalCount).sum();
+
+            // Check if missing
+            boolean missingA = a.getValue() > availableA;
+            boolean missingB = b.getValue() > availableB;
+
+            // Sort by missing first
+            return Boolean.compare(!missingA, !missingB); // Reverse boolean comparison
+        });
+
+        // Set Ingredients text, missing ones in bold, fully available ones after
+        SpannableStringBuilder ingredientsSpannable = new SpannableStringBuilder("Ingredients:\n");
+        for (Map.Entry<Integer, Integer> requirement : ingredientsList) {
+            int foodTypeId = requirement.getKey();
+            int requiredAmount = requirement.getValue();
+            FoodType foodType = foodDictionary.get(foodTypeId);
+
+            // Determine available amount in the pantry
+            int availableAmount = pantryList.stream()
+                    .filter(item -> item.getType().getID() == foodTypeId)
+                    .mapToInt(PantryItem::totalCount)
+                    .sum();
+
+            // Build ingredient string, apply bolding for missing ingredients
+            String ingredientInfo = requiredAmount + " " + (foodType != null ? foodType.getItemName() : "Unknown Ingredient");
+            String pantryInfo = " (" + availableAmount + " in pantry)";
+            if (requiredAmount > availableAmount) {
+                int start = ingredientsSpannable.length();
+                ingredientsSpannable.append(ingredientInfo).append(pantryInfo).append("\n");
+                int end = ingredientsSpannable.length();
+                ingredientsSpannable.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+                ingredientsSpannable.append(ingredientInfo).append(pantryInfo).append("\n");
+            }
         }
-        String ingredientsText = String.join(", ", ingredientNames);
+        ingredientsTextView.setText(ingredientsSpannable);
 
-
-        // INGREDIENTS TEXT
-        String labelIngredients = "Ingredients: \n";
-        SpannableString spannableIngredients = new SpannableString(labelIngredients + ingredientsText);
-        spannableIngredients.setSpan(new StyleSpan(Typeface.BOLD), 0, labelIngredients.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        spannableIngredients.setSpan(new UnderlineSpan(), 0, labelIngredients.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        ingredientsTextView.setText(spannableIngredients);
-
-        // RECIPE INSTRUCTIONS TEXT
-        String labelInstructions = "Recipe Instructions: \n";
-        String instructionsText = recipe.getDescription();
-        SpannableString spannableInstructions = new SpannableString(labelInstructions + instructionsText);
+        // Set Recipe Instructions text
+        String labelInstructions = "Recipe Instructions:\n";
+        SpannableString spannableInstructions = new SpannableString(labelInstructions + recipe.getDescription());
         spannableInstructions.setSpan(new StyleSpan(Typeface.BOLD), 0, labelInstructions.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         spannableInstructions.setSpan(new UnderlineSpan(), 0, labelInstructions.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         descriptionTextView.setText(spannableInstructions);
 
+        // Set up the dialog
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        // Close popup button
+        // Set up button click listeners
         dialogView.findViewById(R.id.rightCloseButton).setOnClickListener(v -> dialog.dismiss());
-
-        // Mark cooked button logic
         dialogView.findViewById(R.id.markCookedButton).setOnClickListener(v -> {
             MainActivity mainActivity = (MainActivity) context;
             Tab2 tab2 = mainActivity.getTab2();
-            Map<Integer, Integer> ingredients = recipe.getRecipe_Requirements();
 
-            System.out.println("DEBUG - Marking as cooked for Recipe: " + recipe.getName());
-
-            for (Map.Entry<Integer, Integer> ingredient : ingredients.entrySet()) {
+            // Reduce ingredient counts from the pantry
+            for (Map.Entry<Integer, Integer> ingredient : recipe.getRecipe_Requirements().entrySet()) {
                 int foodTypeId = ingredient.getKey();
                 int requiredAmount = ingredient.getValue();
                 FoodType foodType = tab2.getFoodDictionary().get(foodTypeId);
@@ -238,18 +264,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                     }
                     int amountToRemove = Math.min(pantryCount, requiredAmount);
                     tab2.removeItems(foodType, amountToRemove);
-
-                    System.out.println("DEBUG - Recipe: " + recipe.getName() + " - Removing: " + foodType.getItemName() + " (ID: " + foodTypeId + ") Count: " + amountToRemove + ", Current Pantry Count: " + (pantryCount - amountToRemove));
                 }
             }
 
             // Update the adapter immediately after modifications
             updateRecipes(recipeDatabase.getRecipes());
-            dialog.dismiss(); // Close the dialog after marking as cooked
+            dialog.dismiss();
         });
 
         dialog.show();
     }
+
+
 
 
     private void showConfirmationDialog(int position) {

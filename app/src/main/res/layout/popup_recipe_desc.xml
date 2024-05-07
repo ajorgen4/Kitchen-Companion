@@ -29,7 +29,8 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@android:color/black"/>
 
             <ScrollView
                 android:id="@+id/attributesScroll"
@@ -46,7 +47,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Attributes: "
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"/>
             </ScrollView>
 
             <!-- // Helpful guide: https://stackoverflow.com/questions/72318659/how-to-set-a-constraintlayout-view-to-percent-min-height -->
@@ -65,7 +67,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ingredients: "
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"/>
             </ScrollView>
 
             <ScrollView
@@ -84,7 +87,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Steps: "
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"/>
             </ScrollView>
 
             <androidx.constraintlayout.widget.Group
