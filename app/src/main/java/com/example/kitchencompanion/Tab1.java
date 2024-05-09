@@ -5,12 +5,12 @@ import android.graphics.Canvas;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.slider.RangeSlider;
 import android.view.ViewGroup;
 import android.os.Handler;
 import android.widget.Button;
@@ -28,13 +29,20 @@ public class Tab1 extends Fragment {
     private FloatingActionButton addRecipeButton;
     private RecyclerView recipeRecyclerView;
     private RecipeAdapter recipeAdapter;
+
+    // Dialog Elements
+    private RangeSlider cookTimeRangeSlider, caloriesRangeSlider;
+    private TextView cookTimeLabel, caloriesLabel;
+
+    private Button easyButton, mediumButton, hardButton;
+    private String difficultySelected = "Easy";
+
     // Reference to the set of all FoodType objects in the app
     // Maps FoodType.getID() to FoodType
     HashMap<Integer, FoodType> foodDictionary;
-    private boolean isAddMissingPopupShown = false;
-
     private List<PantryItem> pantryList;
     private Tab3 tab3;
+    private RecipeDatabase recipeDatabase;
 
     public Tab1(HashMap<Integer, FoodType> foodDictionary, RecipeDatabase recipeDatabase, List<PantryItem> pantryList, Tab3 tab3) {
         this.foodDictionary = foodDictionary;
@@ -43,38 +51,188 @@ public class Tab1 extends Fragment {
         this.tab3 = tab3;
     }
 
-
-    private RecipeDatabase recipeDatabase;
-
-    // General info I used for views: https://developer.android.com/reference/android/app/Fragment
-    // OnCreateView definition: https://stackoverflow.com/questions/43780548/how-oncreateview-works
-    // YOUTUBE TUTORIAL, SWIPE RECYCLER VIEW: https://www.youtube.com/watch?v=rcSNkSJ624U
-    // OnCreateView: fragment layout inflation
-    // onCreate: fragment init, no view
-
+    // Inflate layout and set up views
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab1, container, false);
 
+        // Initialize RecyclerView
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         addRecipeButton = view.findViewById(R.id.addRecipeButton);
         addRecipeButton.setOnClickListener(v -> showAddRecipeDialog());
 
-        // Use shared RecipeDatabase instance across tabs
+        // Use shared RecipeDatabase instance
         Map<Integer, Fragment> fragmentMap = ((MainActivity) getActivity()).getFragmentMap();
         recipeAdapter = new RecipeAdapter(getContext(), recipeDatabase.getRecipes(), recipeDatabase, pantryList, foodDictionary, fragmentMap, tab3);
         recipeRecyclerView.setAdapter(recipeAdapter);
 
+        // Set up ItemTouchHelper
         setUpItemTouchHelper();
+
+        // Button to open the filter dialog
+        Button filterButton = view.findViewById(R.id.recipeFiltersButton);
+        filterButton.setOnClickListener(v -> showFilterDialog());
 
         return view;
     }
 
-    //https://developer.android.com/reference/androidx/recyclerview/widget/ItemTouchHelper
+    // Dialog to show filters
+// Full method to handle dialogs and button appearance updates
+    private void showFilterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.recipe_filter_dialog, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        // Initialize Difficulty Buttons
+        easyButton = dialogView.findViewById(R.id.easyButton);
+        mediumButton = dialogView.findViewById(R.id.mediumButton);
+        hardButton = dialogView.findViewById(R.id.hardButton);
+
+        // TextView labels
+        cookTimeLabel = dialogView.findViewById(R.id.cookTimeLabel);
+        caloriesLabel = dialogView.findViewById(R.id.caloriesLabel);
+
+        // Set up the difficulty buttons and their appearance
+        View.OnClickListener difficultyClickListener = v -> {
+            if (v == easyButton) {
+                updateDifficultyButtonAppearance("Easy");
+            } else if (v == mediumButton) {
+                updateDifficultyButtonAppearance("Medium");
+            } else if (v == hardButton) {
+                updateDifficultyButtonAppearance("Hard");
+            }
+        };
+
+        easyButton.setOnClickListener(difficultyClickListener);
+        mediumButton.setOnClickListener(difficultyClickListener);
+        hardButton.setOnClickListener(difficultyClickListener);
+
+        // Set the initial appearance of the difficulty buttons
+        updateDifficultyButtonAppearance(difficultySelected);
+
+        // Initialize Range Sliders
+        cookTimeRangeSlider = dialogView.findViewById(R.id.cookTimeRangeSlider);
+        caloriesRangeSlider = dialogView.findViewById(R.id.caloriesRangeSlider);
+
+        setUpRangeSliders();
+
+        // Add dialog handlers for allergen and attributes lists
+        Button allergenDropdownButton = dialogView.findViewById(R.id.allergenDropdownButton);
+        Button attributesDropdownButton = dialogView.findViewById(R.id.attributesDropdownButton);
+
+        allergenDropdownButton.setOnClickListener(v -> showAllergenDialog());
+        attributesDropdownButton.setOnClickListener(v -> showAttributesDialog());
+
+        // Dialog action buttons
+        Button applyButton = dialogView.findViewById(R.id.recipeFilterApplyButton);
+        Button resetButton = dialogView.findViewById(R.id.recipeFilterResetButton);
+        Button cancelButton = dialogView.findViewById(R.id.recipeFilterCancelButton);
+
+        applyButton.setOnClickListener(v -> dialog.dismiss());
+        resetButton.setOnClickListener(v -> dialog.dismiss());
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+    // Set up difficulty buttons
+    private void setUpDifficultyButtons() {
+        View.OnClickListener difficultyClickListener = v -> {
+            if (v == easyButton) {
+                difficultySelected = "Easy";
+                setButtonAppearance(easyButton, true);
+                setButtonAppearance(mediumButton, false);
+                setButtonAppearance(hardButton, false);
+            } else if (v == mediumButton) {
+                difficultySelected = "Medium";
+                setButtonAppearance(easyButton, false);
+                setButtonAppearance(mediumButton, true);
+                setButtonAppearance(hardButton, false);
+            } else if (v == hardButton) {
+                difficultySelected = "Hard";
+                setButtonAppearance(easyButton, false);
+                setButtonAppearance(mediumButton, false);
+                setButtonAppearance(hardButton, true);
+            }
+        };
+
+        easyButton.setOnClickListener(difficultyClickListener);
+        mediumButton.setOnClickListener(difficultyClickListener);
+        hardButton.setOnClickListener(difficultyClickListener);
+
+        // Initialize the default selected difficulty
+        setButtonAppearance(easyButton, true);
+        setButtonAppearance(mediumButton, false);
+        setButtonAppearance(hardButton, false);
+    }
+
+    // Utility to set the appearance of difficulty buttons
+    private void updateDifficultyButtonAppearance(String selectedDifficulty) {
+        difficultySelected = selectedDifficulty;
+        setButtonAppearance(easyButton, "Easy".equals(selectedDifficulty));
+        setButtonAppearance(mediumButton, "Medium".equals(selectedDifficulty));
+        setButtonAppearance(hardButton, "Hard".equals(selectedDifficulty));
+    }
+
+    // Utility to modify button appearance based on selection
+    private void setButtonAppearance(Button button, boolean selected) {
+        if (selected) {
+            button.setBackgroundResource(android.R.drawable.btn_default); // Highlight
+        } else {
+            button.setBackgroundResource(android.R.color.transparent); // Normal
+        }
+    }
+
+    // Re-add the method to show the allergen list dialog
+    private void showAllergenDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Select Allergens");
+        String[] allergens = {"GLUTEN", "DAIRY", "NUTS", "SHELLFISH", "SOY", "EGGS", "FISH", "WHEAT"};
+        boolean[] checkedItems = new boolean[allergens.length];
+        builder.setMultiChoiceItems(allergens, checkedItems, (dialog, which, isChecked) -> checkedItems[which] = isChecked);
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+
+    // Re-add the method to show the attributes list dialog
+    private void showAttributesDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Select Attributes");
+        String[] attributes = {"VEGAN", "GLUTEN_FREE", "LOW_CALORIE", "VEGETARIAN", "LOW_SODIUM", "LOW_FAT", "LOW_CHOLESTEROL", "LOW_SUGAR", "LOW_CARB", "ORGANIC"};
+        boolean[] checkedItems = new boolean[attributes.length];
+        builder.setMultiChoiceItems(attributes, checkedItems, (dialog, which, isChecked) -> checkedItems[which] = isChecked);
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+    // Set up the range sliders again to show the dynamic ranges
+    private void setUpRangeSliders() {
+        cookTimeRangeSlider.setValues(0f, 300f);
+        cookTimeRangeSlider.setStepSize(5);
+        cookTimeRangeSlider.addOnChangeListener((slider, value, fromUser) -> {
+            int minMinutes = Math.round(slider.getValues().get(0));
+            int maxMinutes = Math.round(slider.getValues().get(1));
+            String maxMinutesText = maxMinutes == 300 ? maxMinutes + "+" : String.valueOf(maxMinutes);
+            cookTimeLabel.setText(minMinutes + " m - " + maxMinutesText + " m");
+        });
+
+        caloriesRangeSlider.setValues(0f, 2000f);
+        caloriesRangeSlider.setStepSize(50);
+        caloriesRangeSlider.addOnChangeListener((slider, value, fromUser) -> {
+            int minCalories = Math.round(slider.getValues().get(0));
+            int maxCalories = Math.round(slider.getValues().get(1));
+            String maxCaloriesText = maxCalories == 2000 ? maxCalories + "+" : String.valueOf(maxCalories);
+            caloriesLabel.setText(minCalories + " cal - " + maxCaloriesText + " cal");
+        });
+    }
+
+    // Other utility methods
     private void setUpItemTouchHelper() {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -82,13 +240,9 @@ public class Tab1 extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                // don't think we need anything here for now
-                // actions in onChildDraw
+                // Swipe actions handled in `onChildDraw`
             }
 
-            // Tutorial for onChildDraw: https://developer.android.com/reference/androidx/recyclerview/widget/ItemTouchHelper.Callback
-            // Swipe recyler: https://stackoverflow.com/questions/57353844/how-to-restore-recycler-view-item-after-swipe
-            // Swipe click issue? (Scrapped - workaround) https://stackoverflow.com/questions/39189159/recyclerview-swipe-with-a-view-below-not-detecting-click
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float xVal, float yVal, int actionState, boolean isCurrentlyActive) {
                 RecipeAdapter.ViewHolder holder = (RecipeAdapter.ViewHolder) viewHolder;
@@ -112,7 +266,7 @@ public class Tab1 extends Fragment {
                             if (!isCurrentlyActive) {
                                 holder.isPopupShown = false;
                             }
-                        }, 300); // Adjust delay as needed
+                        }, 300);
                     }
                 } else if (restrictedDX != maxSwipeDistance) {
                     addMissingLayout.setVisibility(View.GONE);
@@ -121,10 +275,6 @@ public class Tab1 extends Fragment {
                 }
             }
 
-
-
-            // Restoring recycler view(clearView, onSelectedChange): https://stackoverflow.com/questions/57353844/how-to-restore-recycler-view-item-after-swipe
-            // https://stackoverflow.com/questions/39189159/recyclerview-swipe-with-a-view-below-not-detecting-click
             @Override
             public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 final View foregroundView = ((RecipeAdapter.ViewHolder) viewHolder).viewForeground;
@@ -141,7 +291,6 @@ public class Tab1 extends Fragment {
         }).attachToRecyclerView(recipeRecyclerView);
     }
 
-    // Unimplemented - Horizontal prototype - UI Only
     private void showAddRecipeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.add_recipe_dialog, null);
@@ -149,23 +298,19 @@ public class Tab1 extends Fragment {
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        DisplayMetrics displayMetrics = new DisplayMetrics();  // https://developer.android.com/reference/android/util/DisplayMetrics, Get info about screen size, etc
+        DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        // popup =  75% of screen width/height
         dialog.getWindow().setLayout((int) (displayMetrics.widthPixels * 0.75), (int) (displayMetrics.heightPixels * 0.75));
         cancelButton.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
-    // Ensure Tab1 refreshes if we change values for the recipeCard like by Marking Cooked, etc
-    // notifyDataSetChanges(): https://stackoverflow.com/questions/2345875/android-notifydatasetchanged
     public void refreshRecipeAdapter() {
         if (recipeAdapter != null) {
             recipeAdapter.notifyDataSetChanged();
         }
     }
 
-    // https://developer.android.com/images/activity_lifecycle.png
     @Override
     public void onResume() {
         super.onResume();

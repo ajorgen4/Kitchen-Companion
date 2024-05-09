@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView android:layout_width="550dp"
-        android:layout_height="match_parent" app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="8dp" app:cardElevation="4dp"
-        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
+    <androidx.cardview.widget.CardView
+        android:layout_width="550dp"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-            android:layout_height="match_parent" android:padding="16dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/recipeAddRecipeTitle"
@@ -25,52 +33,88 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Recipe Name Input -->
-            <EditText android:id="@+id/recipeAddRecipeNameInput" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:hint="Recipe Name" android:textSize="25sp"
-                android:inputType="text" app:layout_constraintEnd_toEndOf="parent"
+            <EditText
+                android:id="@+id/recipeAddRecipeNameInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Recipe Name"
+                android:textSize="25sp"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recipeAddRecipeTitle"
-                app:layout_constraintWidth_percent="0.8" android:layout_marginTop="10dp" />
+                app:layout_constraintWidth_percent="0.8"
+                android:layout_marginTop="10dp" />
 
             <!-- Servings Input -->
-            <EditText android:id="@+id/recipeAddServingsInput" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:hint="Servings" android:textSize="25sp"
-                android:inputType="number" app:layout_constraintEnd_toEndOf="parent"
+            <EditText
+                android:id="@+id/recipeAddServingsInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Servings"
+                android:textSize="25sp"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recipeAddRecipeNameInput"
-                app:layout_constraintWidth_percent="0.8" android:layout_marginTop="10dp" />
+                app:layout_constraintWidth_percent="0.8"
+                android:layout_marginTop="10dp" />
 
             <!-- Recipe Cook Time Input -->
-            <EditText android:id="@+id/recipeAddCookTimeInput" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:hint="Cook Time" android:textSize="25sp"
-                android:inputType="text" app:layout_constraintEnd_toEndOf="parent"
+            <EditText
+                android:id="@+id/recipeAddCookTimeInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Cook Time"
+                android:textSize="25sp"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recipeAddServingsInput"
-                app:layout_constraintWidth_percent="0.8" android:layout_marginTop="10dp" />
+                app:layout_constraintWidth_percent="0.8"
+                android:layout_marginTop="10dp" />
 
             <!-- Recipe Calories Input -->
-            <EditText android:id="@+id/recipeAddCaloriesInput" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:hint="Calories" android:textSize="25sp"
-                android:inputType="number" app:layout_constraintEnd_toEndOf="parent"
+            <EditText
+                android:id="@+id/recipeAddCaloriesInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Calories"
+                android:textSize="25sp"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recipeAddCookTimeInput"
-                app:layout_constraintWidth_percent="0.8" android:layout_marginTop="10dp" />
+                app:layout_constraintWidth_percent="0.8"
+                android:layout_marginTop="10dp" />
 
             <!-- Recipe Difficulty Input -->
-            <EditText android:id="@+id/recipeAddDifficultyInput" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:hint="Difficulty" android:textSize="25sp"
-                android:inputType="text" app:layout_constraintEnd_toEndOf="parent"
+            <EditText
+                android:id="@+id/recipeAddDifficultyInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Difficulty"
+                android:textSize="25sp"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recipeAddCaloriesInput"
-                app:layout_constraintWidth_percent="0.8" android:layout_marginTop="10dp" />
+                app:layout_constraintWidth_percent="0.8"
+                android:layout_marginTop="10dp" />
 
             <!-- Recipe Attributes Input -->
-            <EditText android:id="@+id/recipeAddAttributesInput" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:hint="Attributes" android:textSize="25sp"
-                android:inputType="text" app:layout_constraintEnd_toEndOf="parent"
+            <EditText
+                android:id="@+id/recipeAddAttributesInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Attributes"
+                android:textSize="25sp"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recipeAddDifficultyInput"
-                app:layout_constraintWidth_percent="0.8" android:layout_marginTop="10dp" />
+                app:layout_constraintWidth_percent="0.8"
+                android:layout_marginTop="10dp" />
 
             <!-- Recipe Description Input -->
             <EditText
@@ -91,31 +135,227 @@
                 app:layout_constraintWidth_percent="0.8"
                 android:layout_marginTop="10dp"/>
 
+            <!-- Recipe Ingredients Title -->
+            <TextView
+                android:id="@+id/recipeAddIngredientsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ingredients:"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/recipeAddDescriptionInput"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="10dp" />
 
             <!-- Recipe Ingredients List Input -->
-            <EditText android:id="@+id/recipeAddIngredientsInput" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:hint="Ingredients List" android:inputType="text"
-                android:textSize="25sp" app:layout_constraintEnd_toEndOf="parent"
+            <LinearLayout
+                android:id="@+id/recipeAddIngredientsLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/shape_rectangle_border"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recipeAddDescriptionInput"
-                app:layout_constraintWidth_percent="0.8" android:layout_marginTop="10dp" />
+                app:layout_constraintTop_toBottomOf="@+id/recipeAddIngredientsTitle"
+                app:layout_constraintWidth_percent="0.8"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                >
+                <!-- Ingredient 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Number Input -->
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="2"
+                        android:textSize="25sp"
+                        android:gravity="center_horizontal"
+                        android:inputType="number"
+                        android:background="@drawable/shape_square_border" />
+
+                    <!-- Ingredient Name -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Chicken Broth (Cup)"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:textSize="25sp"
+                        android:background="@drawable/shape_rectangle_border" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/trash_icon" />
+                </LinearLayout>
+
+                <!-- Ingredient 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Number Input -->
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="1"
+                        android:gravity="center_horizontal"
+                        android:textSize="25sp"
+                        android:inputType="number"
+                        android:background="@drawable/shape_square_border" />
+
+                    <!-- Ingredient Name -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Ramen Noodle Packet"
+                        android:layout_weight="1"
+                        android:textSize="25sp"
+                        android:gravity="center_horizontal"
+                        android:background="@drawable/shape_rectangle_border" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/trash_icon" />
+                </LinearLayout>
+
+                <!-- Ingredient 3 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Number Input -->
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="1"
+                        android:textSize="25sp"
+                        android:gravity="center_horizontal"
+                        android:inputType="number"
+                        android:background="@drawable/shape_square_border" />
+
+                    <!-- Ingredient Name -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Chicken Breast"
+                        android:layout_weight="1"
+                        android:textSize="25sp"
+                        android:gravity="center_horizontal"
+                        android:background="@drawable/shape_rectangle_border" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/trash_icon" />
+                </LinearLayout>
+
+                <!-- Ingredient 4 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Number Input -->
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="1"
+                        android:textSize="25sp"
+                        android:gravity="center_horizontal"
+                        android:inputType="number"
+                        android:background="@drawable/shape_square_border" />
+
+                    <!-- Ingredient Name -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Green Onions"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:textSize="25sp"
+                        android:background="@drawable/shape_rectangle_border" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/trash_icon" />
+                </LinearLayout>
+
+                <!-- Ingredient 5 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Number Input -->
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="0"
+                        android:textSize="25sp"
+                        android:gravity="center_horizontal"
+                        android:inputType="number"
+                        android:background="@drawable/shape_square_border" />
+
+                    <!-- Ingredient Name -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Ingredient 5 (Adding)"
+                        android:layout_weight="1"
+                        android:textSize="25sp"
+                        android:gravity="center_horizontal"
+                        android:background="@drawable/shape_rectangle_border"/>
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/plus_icon" />
+                </LinearLayout>
+
+
+            </LinearLayout>
 
             <!-- Open/Close Buttons -->
-            <Button android:id="@+id/recipeAddOpenButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="175dp"
-                android:layout_height="wrap_content" android:text="Create" android:textSize="30sp"
-                android:textColor="@android:color/black" app:strokeWidth="3dp"
+            <Button
+                android:id="@+id/recipeAddOpenButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:text="Create"
+                android:textSize="30sp"
+                android:textColor="@android:color/black"
+                app:strokeWidth="3dp"
                 app:layout_constraintEnd_toStartOf="@+id/recipeAddCloseButton"
-                app:layout_constraintHorizontal_chainStyle="packed" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recipeAddIngredientsInput" />
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipeAddIngredientsLayout" />
 
-            <Button android:id="@+id/recipeAddCloseButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="175dp"
-                android:layout_height="wrap_content" android:text="Cancel" android:textSize="30sp"
-                android:textColor="@android:color/black" app:strokeWidth="3dp"
-                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            <Button
+                android:id="@+id/recipeAddCloseButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:textSize="30sp"
+                android:textColor="@android:color/black"
+                app:strokeWidth="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/recipeAddOpenButton"
-                app:layout_constraintTop_toBottomOf="@id/recipeAddIngredientsInput" />
+                app:layout_constraintTop_toBottomOf="@id/recipeAddIngredientsLayout" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

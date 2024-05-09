@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Container CardView -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="600dp"
+        android:layout_height="900dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <!-- Dialog Title -->
+            <TextView
+                android:id="@+id/recipeFilterTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filters"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/difficultyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/recipeFilterTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- Add this TextView here -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Difficulty:"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp" />
+
+                <!-- Easy Button -->
+                <Button
+                    android:id="@+id/easyButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Easy"
+                    android:textSize="25sp" />
+
+                <!-- Medium Button -->
+                <Button
+                    android:id="@+id/mediumButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Medium"
+                    android:textSize="25sp" />
+
+                <!-- Hard Button -->
+                <Button
+                    android:id="@+id/hardButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Hard"
+                    android:textSize="25sp" />
+            </LinearLayout>
+
+
+            <!-- Cook Time RangeSlider -->
+            <LinearLayout
+                android:id="@+id/cookTimeRangeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/difficultyLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cook Time:"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/cookTimeRangeSlider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:valueFrom="0"
+                    android:valueTo="300"
+                    android:stepSize="5"
+                    android:layout_marginStart="8dp" />
+
+                <TextView
+                    android:id="@+id/cookTimeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 m - 300 m"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Calories RangeSlider -->
+            <LinearLayout
+                android:id="@+id/caloriesRangeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/cookTimeRangeLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Calories:"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/caloriesRangeSlider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:valueFrom="0"
+                    android:valueTo="2000"
+                    android:stepSize="50"
+                    android:layout_marginStart="8dp" />
+
+                <TextView
+                    android:id="@+id/caloriesLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 cal - 2000 cal"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Allergen Filter Section -->
+            <TextView
+                android:id="@+id/allergenLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Allergens:"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/caloriesRangeLayout"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/allergenFilterLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/allergenLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/excludeProfileAllergensLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/excludeProfileAllergensLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Exclude Profile Allergens?"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/excludeProfileAllergens"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/excludeSpecificAllergensLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:id="@+id/excludeSpecificAllergensLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Exclude Specific Allergens?"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/allergenDropdownButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Allergen List"
+                        android:textSize="25sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Attributes Section -->
+            <LinearLayout
+                android:id="@+id/attributesSectionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/allergenFilterLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/attributesLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Attributes:"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/attributesDropdownButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Attributes List"
+                    android:textSize="25sp" />
+            </LinearLayout>
+
+            <!-- All Ingredients Present Checkbox -->
+            <LinearLayout
+                android:id="@+id/allIngredientsPresentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/attributesSectionLayout"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/allIngredientsPresentLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Omit recipes missing pantry items?"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <CheckBox
+                    android:id="@+id/allIngredientsPresent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Apply, Reset, Cancel Buttons -->
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/recipeFilterButtonBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="top"
+                app:constraint_referenced_ids="recipeFilterApplyButton, recipeFilterResetButton, recipeFilterCancelButton" />
+
+            <Button
+                android:id="@+id/recipeFilterApplyButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Apply"
+                android:textSize="30sp"
+                android:textColor="@android:color/black"
+                app:strokeWidth="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/recipeFilterResetButton"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recipeFilterButtonBarrier" />
+
+            <Button
+                android:id="@+id/recipeFilterResetButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset"
+                android:textSize="30sp"
+                android:textColor="@android:color/black"
+                app:strokeWidth="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/recipeFilterCancelButton"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/recipeFilterApplyButton"
+                app:layout_constraintTop_toBottomOf="@+id/recipeFilterButtonBarrier" />
+
+            <Button
+                android:id="@+id/recipeFilterCancelButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:textSize="30sp"
+                android:textColor="@android:color/black"
+                app:strokeWidth="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/recipeFilterResetButton"
+                app:layout_constraintTop_toBottomOf="@+id/recipeFilterButtonBarrier" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
