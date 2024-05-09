@@ -50,17 +50,20 @@ public class ShopListAdapter extends BaseAdapter {
         ImageView pushIcon = itemView.findViewById(R.id.pushShopListItemButton);
         ImageView plus = itemView.findViewById(R.id.shopListQuantityPlusButton);
         ImageView minus = itemView.findViewById(R.id.shopListQuantityMinusButton);
+        ImageView square = itemView.findViewById(R.id.shopListSelectSquare);
         foodName.setText(shopList.get(position).getName());
         quantity.setText(String.valueOf(shopList.get(position).getAmount()));
         if(shopMode){
             close.setVisibility(View.GONE);
             plus.setVisibility(View.INVISIBLE);
             minus.setVisibility(View.INVISIBLE);
+            square.setVisibility(View.VISIBLE);
         }
         else{
             close.setVisibility(View.VISIBLE);
             plus.setVisibility(View.VISIBLE);
             minus.setVisibility(View.VISIBLE);
+            square.setVisibility(View.GONE);
         }
         if(shopList.get(position).getSelected()){
             foodName.setPaintFlags(foodName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);

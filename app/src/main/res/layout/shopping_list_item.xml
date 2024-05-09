@@ -56,14 +56,23 @@
         android:visibility="visible" />
 
     <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/shopListSelectSquare"
+        android:layout_marginStart="205dp"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:src="@drawable/square"/>
+
+    <ImageView
         android:id="@+id/pushShopListItemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="3dp"
+        android:layout_marginStart="-35dp"
         android:src="@drawable/check"
         android:layout_gravity="center"
         android:visibility="gone"/>
+
 
 
 </LinearLayout>
